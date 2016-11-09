@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="ScrollViewSize">
+
+
+        <LinearLayout
+            android:id="@+id/profile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:elevation="4dp"
+            android:paddingBottom="12dp"
+            tools:ignore="UnusedAttribute"
+            android:paddingTop="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+
+
+            <ImageButton
+                android:id="@+id/user_profile_photo"
+                android:layout_width="104dp"
+                android:layout_height="111dp"
+                android:background="@drawable/perfil"
+                android:elevation="5dp"
+                android:padding="20dp"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="17dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                tools:ignore="ContentDescription,ObsoleteLayoutParam"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_vertical|center_horizontal" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/user_profile_photo"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                tools:ignore="InefficientWeight,ObsoleteLayoutParam">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="11dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignEnd="@+id/btnAdministrarPerfil"
+                    android:layout_toEndOf="@+id/user_profile_photo"
+                    tools:ignore="NestedWeights,ObsoleteLayoutParam"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:text="Andrea Arroyo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtUsuarioNombre"
+                        android:layout_weight="1"
+                        android:paddingRight="20dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+
+                    <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/heart_outline"
+                    android:id="@+id/imageButton2"
+                    tools:ignore="ContentDescription,ObsoleteLayoutParam,RtlHardcoded,RtlSymmetry,VectorDrawableCompat"
+                    android:background="@android:color/transparent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignStart="@+id/btnAdministrarPerfil"
+                        android:layout_weight="1"
+                        android:paddingLeft="10dp" />
+
+                    <TextView
+                        android:text="55"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/txtFavoritos"
+                        tools:ignore="HardcodedText,ObsoleteLayoutParam"
+                        android:layout_marginStart="10dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toEndOf="@+id/imageButton2"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:textAlignment="center"
+                        android:gravity="center_vertical" />
+
+                    <ImageButton
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/ic_star"
+                        tools:ignore="ContentDescription,ObsoleteLayoutParam,RtlHardcoded,RtlSymmetry,VectorDrawableCompat"
+                        android:background="@android:color/transparent"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/btnAdministrarPerfil"
+                        app:srcCompat="@drawable/ic_star_border_black_24dp"
+                        android:tint="@color/primary_text"
+                        android:layout_weight="1"
+                        android:paddingLeft="10dp" />
+
+                    <TextView
+                        android:text="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/textView2"
+                        tools:ignore="HardcodedText,ObsoleteLayoutParam"
+                        android:layout_marginStart="10dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toEndOf="@+id/imageButton2"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal" />
+                </LinearLayout>
+
+                <Button
+                    android:text="Administrar Perfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btnAdministrarPerfil"
+                    tools:ignore="HardcodedText,InvalidId,ObsoleteLayoutParam"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:text="Cerrar Sesión "
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btnCerrarSesion"
+                    tools:ignore="HardcodedText,InvalidId,ObsoleteLayoutParam"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/profile_layout"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/heart_outline"
+                    android:id="@+id/btnFavoritoPerfil"
+                    android:layout_weight="1"
+                    tools:ignore="ContentDescription,VectorDrawableCompat"
+                    android:background="@android:color/transparent" />
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_event_white_24dp"
+                    android:id="@+id/btnEventos"
+                    android:layout_weight="1"
+                    tools:ignore="ContentDescription,VectorDrawableCompat"
+                    android:tint="@color/primary_text"
+                    android:background="@android:color/transparent" />
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@android:drawable/ic_menu_info_details"
+                    android:id="@+id/btnInfoPerfil"
+                    android:layout_weight="1"
+                    android:tint="@color/accent"
+                    android:backgroundTint="@android:color/transparent"
+                    tools:ignore="ContentDescription,UnusedAttribute" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_Info2"
+                tools:ignore="InefficientWeight,InvalidId"
+                android:visibility="visible"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="Correo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:text="Info2Layout"
+                    android:id="@+id/usuario_correo1"
+                    tools:ignore="HardcodedText,UnusedAttribute" />
+
+                <TextView
+                    android:text="Carrera"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView4"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:text="ITC"
+                    tools:ignore="HardcodedText,UnusedAttribute" />
+
+                <TextView
+                    android:text="Twitter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtTwitter1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:text="No tienes vinculada tu cuenta"
+                    tools:ignore="HardcodedText,UnusedAttribute"
+                    android:id="@+id/txtUsuarioTwitter" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_Info"
+                tools:ignore="InvalidId"
+                android:visibility="gone">
+
+                <TextView
+                    android:text="Correo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtCorreo"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:text="sonia.arroyo@udem.edu"
+                    android:id="@+id/usuario_correo"
+                    tools:ignore="HardcodedText,UnusedAttribute" />
+
+                <TextView
+                    android:text="Carrera"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lblCarrera"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:text="ITC"
+                    tools:ignore="HardcodedText,UnusedAttribute" />
+
+                <TextView
+                    android:text="Twitter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lblTwitter"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:text="AndreaArroyo10"
+                    tools:ignore="HardcodedText,UnusedAttribute" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="229dp"
+                tools:ignore="InefficientWeight,InvalidId"
+                android:id="@+id/layout_Favoritos"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="308dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_eventos"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

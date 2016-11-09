@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Feria Internacional</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_login">Iniciar Sesion</string>
+    <string name="title_activity_acercaDe">Acerca de</string>
+
+
+    <!-- Strings relacionados al inicio de sesión -->
+    <string name="prompt_email">Correo</string>
+    <string name="prompt_password">Contraseña (Opcional)</string>
+    <string name="action_sign_in">Iniciar sesión o Registrarse</string>
+    <string name="action_sign_in_short">Iniciar sesión</string>
+    <string name="error_invalid_email">Este correo es incorrecto</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es requerido</string>
+    <string name="permission_rationale">"Se necesitan permisos de contacto para completar el correo"
+        Contacts permissions are needed for providing email completions."
+    </string>
+
+    <!-- Inicio Google-->
+    <string name="server_client_id">254526817018-fcun090paii06pe7d0n3ei7397vneu76.apps.googleusercontent.com</string>
+
+    <!-- Button text -->
+    <string name="btn_logout_from_google">Logout from Google</string>
+    <string name="btn_revoke_access">Revoke Access</string>
+    <string name="loading">Cargando</string>
+
+
+    <!-- Strings relacionados a los eventos
+    <string name="evento_titulo">Este campo es requerido</string>
+    <string name="evento_fechaInicio">Este campo es requerido</string>
+    <string name="evento_fechaFinal">Este campo es requerido</string>
+    -->
+    <string name="evento_descripcion">Descripción</string>
+    <string name="evento_MeInteresa">Me interesa</string>
+
+
+    <!--Acerca de -->
+    <string name="fecha_FeriaEnCurso">Fechas</string>
+    <string name="edicion_actualJSON">http://feriaint.herokuapp.com/edicion/json</string>
+
+    <!--Enviar correo-->
+    <string name="enviar_correo">Enviar</string>
+    <string name="title_activity_example">ExampleActivity</string>
+
+
+</resources>

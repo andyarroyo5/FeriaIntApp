@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_number": "254526817018",
+    "project_id": "feriaint"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254526817018:android:93068773af9de6bd",
+        "android_client_info": {
+          "package_name": "edu.udem.feriaint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254526817018-e9eie2s3cdvfuj83r68kktjgnml65iuu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.udem.feriaint",
+            "certificate_hash": "2EE17FFB7322E728C493D31DB87F2D5571CA2302"
+          }
+        },
+        {
+          "client_id": "254526817018-fcun090paii06pe7d0n3ei7397vneu76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsogkjW8Pw4m9nwAK4nmqYlbaMEQjpXWc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-86892602-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

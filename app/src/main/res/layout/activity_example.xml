@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.udem.feriaint.Activities.Detalle_EventoActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:theme="@style/AppTheme.NoActionBar"
+        android:weightSum="1"
+        android:baselineAligned="false"
+        android:background="@android:color/white">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
+            android:background="@android:color/background_light"
+            android:theme="@style/AppTheme.NoActionBar"
+            app:subtitleTextAppearance="@color/primary_text"
+            app:titleTextColor="@color/primary_text"
+            android:visibility="visible"
+            android:weightSum="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/corea_logo"
+                android:id="@+id/imageView2"
+                tools:ignore="ContentDescription"
+                android:scaleType="fitStart" />
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_revert"
+                android:id="@+id/imageButton7"
+                android:layout_weight="1"
+                tools:ignore="ContentDescription" />
+
+        </android.support.v7.widget.Toolbar>
+
+
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="?android:attr/colorBackground">
+
+     </android.support.v4.view.ViewPager>
+    <ViewStub
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout="@layout/activity_detalle_evento"
+        android:id="@+id/viewStub" />
+
+
+</android.support.design.widget.CoordinatorLayout>

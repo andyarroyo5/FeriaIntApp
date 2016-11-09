@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.udem.feriaint">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- servicios Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- servicios calendario -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
+    <application
+        android:name=".Parser.AppController"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Activities.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".Activities.AcercaDe"
+            android:label="@string/title_activity_acercaDe"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".Activities.Detalle_EventoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ExampleActivity"
+            android:label="@string/title_activity_example"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Detalle_ContCultural"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Filtrar_Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".Activities.ActivityInicial">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".TwitterInicioSesion"></activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8f89e7c01d71e8b241c240db16bd1122048d8c9a" />
+
+
+
+
+    </application>
+
+</manifest>
