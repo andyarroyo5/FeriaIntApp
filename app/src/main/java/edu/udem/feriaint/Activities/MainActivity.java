@@ -58,13 +58,6 @@ public class MainActivity extends AppCompatActivity {
         TAG=this.getClass().getSimpleName();
         setLayoutMain();
         setCurrentUser();
-
-
-
-
-
-
-
     }
 
 
@@ -87,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
    public Usuario getCurrentUsuario()
     {
-
         Bundle bUsuario=new Bundle();
         bUsuario.putParcelable("usuario", (Parcelable) currentUsuario);
         return currentUsuario;

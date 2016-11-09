@@ -58,7 +58,6 @@ public class Fragment_Perfil extends Fragment{
         super.onCreate(savedInstanceState);
 
 
-        currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
 
         Bundle bTwitter =getActivity().getIntent().getExtras();
 
@@ -164,10 +163,13 @@ public class Fragment_Perfil extends Fragment{
 
     public void agregarUsuario(Bundle bTwitter) throws ParseException {
 
+        twitter=true;
+        currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
+        System.out.println(currentUsuario.getTwitter());
+        usuarioNombre = bTwitter.getString("user","error");
 
-        //Ya existe usuario?
 
-        UsuarioDB usuarioDB= new UsuarioDB(getContext());
+        /*UsuarioDB usuarioDB= new UsuarioDB(getContext());
 
         usuarioDB.open();
         ArrayList<Usuario> lista=usuarioDB.getTodosLosUsuarios();
@@ -185,13 +187,10 @@ public class Fragment_Perfil extends Fragment{
             {
                 System.out.println(lista.get(i));
             }
-        }
+        }*/
 
 
-        usuarioNombre = bTwitter.getString("user","error");
-        twitter=true;
-
-        usuarioDB.close();
+     //   usuarioDB.close();
         //  bTwitter.putParcelable("usuario", (Parcelable) usuarioNuevo);
 
 

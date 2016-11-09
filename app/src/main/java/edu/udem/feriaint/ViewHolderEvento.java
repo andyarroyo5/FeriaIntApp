@@ -38,6 +38,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
     private ImageButton compartir;
     private CardView cv_evento;
     private ImageButton twitter;
+    SimpleDateFormat fechaFormato;
 
     private Evento evento;
 
@@ -45,14 +46,12 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
     public ViewHolderEvento(View v) {
         super(v);
 
+        fechaFormato= new SimpleDateFormat("EEEE dd hh:mm");
 
         titulo = (TextView) v.findViewById(R.id.evento_titulo);
         fecha = (TextView) v.findViewById(R.id.evento_fecha);
         horario = (TextView) v.findViewById(R.id.evento_horario);
         lugar = (TextView) v.findViewById(R.id.evento_lugar);
-
-
-
 
         //Botones
         cv_evento=(CardView) v.findViewById(R.id.cv_evento);
@@ -188,45 +187,34 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
         getCompartir().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast t= Toast.makeText(v.getContext(),
-                        "Compartir", Toast.LENGTH_SHORT);
 
-                t.show();
+                String[] TO = {""};
+                String[] CC = {""};
+                Intent compartir = new Intent(Intent.ACTION_SEND);
+
+
+                String mensaje="¿Vamos?"+"\n"
+                        +evento.getTitulo()
+                        +(evento.getLugar()!=null ? "\nLugar: "+evento.getLugar():"")
+                        + fechaFormato.format(evento.getFechaInicio());
+
+                compartir.setData(Uri.parse("mailto:"));
+                compartir.setType("text/plain");
+                compartir.putExtra(Intent.EXTRA_EMAIL, TO);
+                compartir.putExtra(Intent.EXTRA_CC, CC);
+                compartir.putExtra(Intent.EXTRA_SUBJECT, evento.getTitulo());
+                compartir.putExtra(Intent.EXTRA_TEXT, mensaje);
 
                 try {
-                    mandarCorreo(v);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    v.getContext().startActivity(Intent.createChooser(compartir, "Compartir..."));
+                    //finish();
+                    Log.i("Termino mandar...", "");
+                }
+                catch (android.content.ActivityNotFoundException ex) {
+                    //  Toast.makeText(EnviarCorreo.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    protected void mandarCorreo(View v) throws ParseException {
-        Log.i("Send email", "");
-        String[] TO = {""};
-        String[] CC = {""};
-        Intent compartir = new Intent(Intent.ACTION_SEND);
-
-
-        String mensaje="¿Vamos?"+"\n"
-                +evento.getTitulo()+(evento.getLugar()!=null ? "\nLugar: "+evento.getLugar():"")+(evento.getHorarioInicio()!=null ? "\nHorario: "+evento.formatoHora(evento.getHorarioInicio())+"- "+ evento.formatoHora(evento.getHorarioFinal()):"");
-
-        compartir.setData(Uri.parse("mailto:"));
-        compartir.setType("text/plain");
-        compartir.putExtra(Intent.EXTRA_EMAIL, TO);
-        compartir.putExtra(Intent.EXTRA_CC, CC);
-        compartir.putExtra(Intent.EXTRA_SUBJECT, evento.getTitulo());
-        compartir.putExtra(Intent.EXTRA_TEXT, mensaje);
-
-        try {
-            v.getContext().startActivity(Intent.createChooser(compartir, "Compartir..."));
-            //finish();
-            Log.i("Termino mandar...", "");
-        }
-        catch (android.content.ActivityNotFoundException ex) {
-            //  Toast.makeText(EnviarCorreo.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -235,20 +223,23 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
         getAgregarEvento().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast t=
-                        Toast.makeText(v.getContext(),
-                                "Agregar a Calendario", Toast.LENGTH_SHORT);
-
-                t.show();
-
                 //Intent mandarCorreo=new Intent(v.getContext(), EnviarCorreo.class);
                 //v.getContext().startActivity(mandarCorreo);
 
-                try {
-                    agregarEvento(v);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                Intent calendario = new Intent(Intent.ACTION_INSERT);
+
+                calendario.setType("vnd.android.cursor.item/event");
+                calendario.putExtra(CalendarContract.Events.TITLE, evento.getTitulo());
+                calendario.putExtra(CalendarContract.Events.EVENT_LOCATION, evento.getLugar() != null ? evento.getLugar() : "");
+                calendario.putExtra(CalendarContract.Events.DTSTART, evento.getLugar() != null ? evento.getLugar() : "");
+                calendario.putExtra(CalendarContract.Events.DESCRIPTION, evento.getDescripcion() != null ? evento.getDescripcion() : "");
+                calendario.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, evento.getFechaInicio());
+
+
+                calendario.setData(CalendarContract.Events.CONTENT_URI);
+                v.getContext().startActivity(calendario);
+
+
             }
         });
     }
@@ -256,43 +247,21 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
     public void hacerTweet()
     {
 
-
         getTwitter().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-                SimpleDateFormat fecha= new SimpleDateFormat("EEEE dd hh:mm");
+                //SimpleDateFormat fecha= new SimpleDateFormat("EEEE dd hh:mm");
                 TweetComposer.Builder builder = null;
 
                     builder = new TweetComposer.Builder(v.getContext())
-                            .text(evento.getTitulo()+" en "+evento.getLugar()+ " el "+ fecha.format(evento.getFechaInicio() )+ " #FeriaIntUDEM");
-
+                            .text(evento.getTitulo()+" en "+evento.getLugar()+ " el "+ fechaFormato.format(evento.getFechaInicio() )+ " #FeriaIntUDEM");
 
                 //.image(myImageUri);
                 builder.show();
 
             }
         });
-
-
-    }
-    protected void agregarEvento(View v) throws ParseException {
-
-        //long startTime=evento.formatoCalFecha(evento.getFechaInicio() != null ? evento.getFechaInicio() : evento.getFecha());
-
-        Intent calendario = new Intent(Intent.ACTION_INSERT);
-
-        calendario.setType("vnd.android.cursor.item/event");
-        calendario.putExtra(CalendarContract.Events.TITLE, evento.getTitulo());
-        calendario.putExtra(CalendarContract.Events.EVENT_LOCATION, evento.getLugar() != null ? evento.getLugar() : "");
-        calendario.putExtra(CalendarContract.Events.DTSTART, evento.getLugar() != null ? evento.getLugar() : "");
-        calendario.putExtra(CalendarContract.Events.DESCRIPTION, evento.getDescripcion() != null ? evento.getDescripcion() : "");
-        calendario.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, evento.getFechaInicio());
-
-
-        calendario.setData(CalendarContract.Events.CONTENT_URI);
-        v.getContext().startActivity(calendario);
-
 
 
     }
@@ -303,12 +272,6 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 ImageButton fav= (ImageButton) v.findViewById(R.id.evento_agregar_favoritos);
-                Toast t=
-                        Toast.makeText(v.getContext(),
-                                "Agregar a Favoritos", Toast.LENGTH_SHORT);
-
-                t.show();
-
 
 
                 if (evento.isFavorito())

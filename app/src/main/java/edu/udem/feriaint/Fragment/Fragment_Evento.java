@@ -74,6 +74,14 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
             {
                 Log.d(TAG, "falseTodos");
                 eJson.execute();
+                eventoAdapter=eJson.getAdapter();
+                if(eventoAdapter!=null)
+                {
+                    mRecyclerView.setAdapter(eventoAdapter);
+                    eventoAdapter.notifyDataSetChanged();
+                }
+
+
                /* if(eJson.getListaEventos().size()==0)
                {
                    mRecyclerView.setVisibility(View.GONE);

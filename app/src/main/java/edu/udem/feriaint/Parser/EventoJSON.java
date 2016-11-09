@@ -152,7 +152,9 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     protected void onPostExecute( Void result) {
         super.onPostExecute(result);
         // Dismiss the progress dialog
-       layoutAdapter();
+       //layoutAdapter();
+        eventoAdapter = new EventoAdapter(this.listaEventos);
+
        eventoDB.close();
 
     }
@@ -161,8 +163,12 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     {
         eventoAdapter = new EventoAdapter(this.listaEventos);
         //Especificar Adapter
-        mRecyclerView.setAdapter(eventoAdapter);
-        eventoAdapter.notifyDataSetChanged();
+
+    }
+
+    public EventoAdapter getAdapter()
+    {
+        return eventoAdapter;
     }
 
 
