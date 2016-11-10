@@ -1,12 +1,9 @@
 package edu.udem.feriaint.Activities;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,29 +13,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.w3c.dom.Text;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import edu.udem.feriaint.Adapters.TabPagerAdapter;
 import edu.udem.feriaint.Data.BDHandler;
-import edu.udem.feriaint.Data.EventoDB;
-import edu.udem.feriaint.Data.UsuarioDB;
-import edu.udem.feriaint.Filtrar_Activity;
-import edu.udem.feriaint.Fragment.Fragment_Perfil;
-import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.TwitterInicioSesion;
-
-import com.twitter.sdk.android.Twitter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         TAG=this.getClass().getSimpleName();
         setLayoutMain();
         setCurrentUser();
+
+          try {
+
+          bdHandler=new BDHandler(this);
+          bdHandler.onUpgrade(bdHandler.getReadableDatabase(),bdHandler.getBDVersion(), bdHandler.getBDVersion()+1);
+            Log.e(TAG, "UPGRADE db "+bdHandler.getBDVersion());
+        } catch (Exception e) {
+            Log.e(TAG, "UPGRADE db "+e.toString());
+       }
     }
 
 
@@ -67,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent tIntent=getIntent();
         Bundle bUsuario=tIntent.getExtras();
+        bUsuario.putString("tipo","twitter");
 
         //if correo else twitter
 
@@ -80,14 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
    public Usuario getCurrentUsuario()
     {
-        Bundle bUsuario=new Bundle();
-        bUsuario.putParcelable("usuario", (Parcelable) currentUsuario);
+        //Bundle bUsuario=new Bundle();
+        //bUsuario.putParcelable("usuario", (Parcelable) currentUsuario);
         return currentUsuario;
     }
 
     protected void setLayoutMain()
     {
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         //Get Edicion país
@@ -149,4 +139,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "+ ON RESUME +");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.v(TAG, "- ON PAUSE -");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.v(TAG, "-- ON STOP --");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+         Log.v(TAG, "- ON DESTROY -");
+    }
 }

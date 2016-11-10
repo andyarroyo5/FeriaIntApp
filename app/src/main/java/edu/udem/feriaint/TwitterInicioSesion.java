@@ -76,6 +76,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 main.putExtra("token",session.getAuthToken());
                 main.putExtra("id",session.getUserId());
                 main.putExtra("session",session.getClass());
+                main.putExtra("tipo","twitter");
 
 
                 startActivity(main);

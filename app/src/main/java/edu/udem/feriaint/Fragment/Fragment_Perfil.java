@@ -25,7 +25,9 @@ import java.util.ArrayList;
 
 import edu.udem.feriaint.Activities.ActivityInicial;
 import edu.udem.feriaint.Activities.MainActivity;
+import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Data.UsuarioDB;
+import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.R;
 import edu.udem.feriaint.SessionRecorder;
@@ -36,6 +38,8 @@ import edu.udem.feriaint.TwitterInicioSesion;
  */
 
 public class Fragment_Perfil extends Fragment{
+
+    private String TAG;
 
     ImageButton btnFavoritoPerfil;
     ImageButton btnEventosPerfil;
@@ -48,6 +52,7 @@ public class Fragment_Perfil extends Fragment{
 
     String usuarioNombre;
     boolean twitter=false;
+    Bundle bUsuario;
 
     public Fragment_Perfil() {
     }
@@ -57,22 +62,68 @@ public class Fragment_Perfil extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        TAG=getClass().getSimpleName();
+
+        currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
+
+        bUsuario =getActivity().getIntent().getExtras();
+        System.out.println(bUsuario.getString("tipo"));
+        Object array[]= bUsuario.keySet().toArray();
 
 
-        Bundle bTwitter =getActivity().getIntent().getExtras();
+        for (int i=0;i<bUsuario.keySet().size();i++)
+        {
+
+            System.out.println(array[i].toString());
+        }
+       //Intent intent=getContext().getIntent();
+      Bundle b = getArguments();
+        if(b!=null) {
+            Object array2[] = b.keySet().toArray();
+            for (int i = 0; i < b.keySet().size(); i++) {
+
+                System.out.println(array2[i].toString());
+            }
+            // if ((b.containsKey("tipo")))
+            //   Log.d("BUNDLE", b.getString("tipo"));
+        }
+        getBundleInfo();
 
         //Log.e("PERFIL", String.valueOf(bTwitter)+bTwitter.getString("user"));
-        if (bTwitter != null) {
 
-            try {
-                agregarUsuario(bTwitter);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        try {
+            getEventosTodos();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
     }
 
+    private void getBundleInfo() {
+
+
+        bUsuario =getActivity().getIntent().getExtras();
+       if ((bUsuario.containsKey("tipo")))
+        switch(bUsuario.getString("tipo"))
+        {
+            case "evento":
+                Log.d("BUNDLE",bUsuario.getString("tipo") );
+                break;
+            case "twitter":
+                Log.d("BUNDLE",bUsuario.getString("tipo") );
+                usuarioNombre=bUsuario.getString("user");
+                //  agregarUsuario(bUsuario);
+
+                break;
+
+            case "ejemplo":
+                Bundle b = getArguments();
+                String s = b.getString("tipo");
+                Log.d("BUNDLE", s);
+                break;
+        }
+
+    }
 
 
     @Override
@@ -157,6 +208,9 @@ public class Fragment_Perfil extends Fragment{
             }
         });
 
+
+
+
         return rootView;
     }
 
@@ -197,6 +251,20 @@ public class Fragment_Perfil extends Fragment{
     }
 
 
+
+    public void getEventosTodos() throws ParseException {
+
+        EventoDB eventoDB= new EventoDB(getContext());
+
+        currentUsuario.setListaEventosFavoritos(eventoDB.getTodosLosEventos());
+
+        Log.d(TAG, "entrada TODOS"+ currentUsuario.getListaEventosFavoritos().size());
+
+        for  (int i =0; i<currentUsuario.getListaEventosFavoritos().size(); i++)
+        {
+            Log.d(TAG, currentUsuario.getListaEventosFavoritos().get(i).toString());
+        }
+    }
 
 }
 

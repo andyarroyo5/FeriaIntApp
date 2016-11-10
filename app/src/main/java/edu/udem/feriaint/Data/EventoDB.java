@@ -79,10 +79,42 @@ public class EventoDB {
         }
     }
 
+    public void insertarFavoritos(Evento evento) {
 
-    public void eliminar(Evento evento)
-    {
+
+        open();
+        ContentValues values = new ContentValues();
         try {
+
+            Log.e(TAG, " EVENTOfAV"+ evento.toString());
+
+            values.put(BDHandler.TITULO, evento.getTitulo());
+            values.put(BDHandler.FECHA_INICIO, String.valueOf(evento.getFechaInicio()));
+            values.put(BDHandler.FECHA_FINAL, String.valueOf(evento.getFechaFinal()));
+            values.put(BDHandler.LUGAR, evento.getLugar());
+            values.put(BDHandler.DESCRIPCION, evento.getDescripcion());
+            values.put(BDHandler.TIPO, evento.getDescripcion());
+
+            bd.insert(BDHandler.TABLA_EVENTO, null, values);
+            Log.e(TAG, " Agregar en BD "+ evento.toString());
+
+            close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Error while trying to add post to database");
+
+        }
+
+        close();
+    }
+
+
+    public void eliminarFavoritos(Evento evento)
+    {
+        open();
+        try {
+
 
             String selectQuery = "SELECT  * FROM " + BDHandler.TABLA_EVENTO +"WHERE"+BDHandler.ID_EVENTO+"="+evento.getId();
 
@@ -94,6 +126,7 @@ public class EventoDB {
             Log.d(TAG, "Error while trying to add post to database");
         }
 
+        close();
     }
 
    /* public void getEvento(int id) {
@@ -114,6 +147,7 @@ public class EventoDB {
     // Getting All Contacts
     public ArrayList<Evento> getTodosLosEventos() throws ParseException {
 
+        open();
         SimpleDateFormat fechaf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -144,6 +178,7 @@ public class EventoDB {
 
         // return eventos
          System.out.println("Terminar getTODOS..."+String.valueOf(cursor.moveToFirst()));
+        close();
         return listaEventos;
     }
 

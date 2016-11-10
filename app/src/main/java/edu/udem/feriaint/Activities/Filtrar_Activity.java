@@ -1,4 +1,4 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import edu.udem.feriaint.Adapters.TemaAdapter;
 import edu.udem.feriaint.Modelos.Tema;
+import edu.udem.feriaint.R;
 
 public class Filtrar_Activity extends AppCompatActivity {
 

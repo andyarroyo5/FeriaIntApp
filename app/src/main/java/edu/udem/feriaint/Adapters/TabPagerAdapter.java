@@ -6,15 +6,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 
 
-import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Fragment.Fragment_ContenidoCultural;
 import edu.udem.feriaint.Fragment.Fragment_Evento;
 import edu.udem.feriaint.Fragment.Fragment_Perfil;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.Fragment_Home;
+import edu.udem.feriaint.Fragment.Fragment_Home;
 
 /**
  * Created by Andrea Arroyo on 06/10/2016.

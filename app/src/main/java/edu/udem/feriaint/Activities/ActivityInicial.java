@@ -64,6 +64,8 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
     }
 
     private void startThemeActivity(Session activeSession) {
+
+       //if twitter
         Intent main= new Intent(this, MainActivity.class);
 
         TwitterSession session= Twitter.getSessionManager().getSession(activeSession.getId());
@@ -71,6 +73,7 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
         main.putExtra("token",session.getAuthToken());
         main.putExtra("id",session.getUserId());
         main.putExtra("session",session.getClass());
+        main.putExtra("tipo","twitter");
 
         startActivity(main);
         finish();

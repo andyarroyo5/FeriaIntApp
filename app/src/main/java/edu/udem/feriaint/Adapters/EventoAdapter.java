@@ -1,26 +1,16 @@
 package edu.udem.feriaint.Adapters;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.provider.CalendarContract;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import edu.udem.feriaint.Activities.Detalle_EventoActivity;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.ViewHolderEvento;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderEvento;
 
 /**
  * Created by Andrea Arroyo on 07/10/2016.
@@ -29,12 +19,13 @@ import edu.udem.feriaint.ViewHolderEvento;
 public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
 
     private ArrayList<Evento> listaEvento;
+    private ArrayList<Evento> listaEventosFavoritos;
 
 
     //Provide a suitable constructor
-    public EventoAdapter(ArrayList<Evento> listaEvento){
-
+    public EventoAdapter(ArrayList<Evento> listaEvento,ArrayList<Evento> listaEventosFavoritos ){
         this.listaEvento = listaEvento;
+        this.listaEventosFavoritos=listaEventosFavoritos;
     }
 
     //Create new views (invoked by the layout manager)
@@ -59,10 +50,13 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
         // - get element from arraylist at this position
         // - replace the contents of the view with that element
         final Evento evento = listaEvento.get(position);
+
+
         holder.setEvento(evento);
+        holder.setFavorito();
         holder.getTitulo().setText(String.valueOf(evento.getTitulo()));
         holder.getLugar().setText(evento.getLugar());
-        holder.agregarFavoritos();
+        listaEventosFavoritos=holder.agregarFavoritos(listaEventosFavoritos);
         holder.agregarCalendario();
         holder.verDetalleEvento();
         holder.compartir();
@@ -141,6 +135,9 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
         notifyDataSetChanged();
     }
 
+    public ArrayList<Evento> getListaEventosFavoritos() {
+        return listaEventosFavoritos;
+    }
 }
 
 

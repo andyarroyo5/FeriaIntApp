@@ -73,6 +73,21 @@ public class Usuario {
         this.puntos = puntos;
     }
 
+    public ArrayList<Evento> getListaEventosFavoritos() {
+        return listaEventosFavoritos;
+    }
+
+    public void setListaEventosFavoritos(ArrayList<Evento> listaEventosFavoritos) {
+        this.listaEventosFavoritos = listaEventosFavoritos;
+    }
+
+    public ArrayList<ContenidoCultural> getListaContCultFavoritos() {
+        return listaContCultFavoritos;
+    }
+
+    public void setListaContCultFavoritos(ArrayList<ContenidoCultural> listaContCultFavoritos) {
+        this.listaContCultFavoritos = listaContCultFavoritos;
+    }
 
     public String toString()
     {

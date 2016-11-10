@@ -4,14 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.ViewHolderContCultural;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderContCultural;
 
 /**
  * Created by Andrea Arroyo on 07/10/2016.

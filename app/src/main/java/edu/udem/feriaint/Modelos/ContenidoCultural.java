@@ -1,5 +1,7 @@
 package edu.udem.feriaint.Modelos;
 
+import java.util.ArrayList;
+
 /**
  * Created by Andrea Arroyo on 11/10/2016.
  */
@@ -8,6 +10,7 @@ public class ContenidoCultural {
 
     private String titulo;
     private int img;
+    private ArrayList contenido;
 
 
     public ContenidoCultural(String titulo) {

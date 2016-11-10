@@ -43,7 +43,7 @@ public class HttpHandler {
             Log.e(TAG, "Exception: " + e.getMessage());
         }
 
-        System.out.println("url"+reqUrl);
+       Log.d(TAG, reqUrl);
         return response;
     }
 

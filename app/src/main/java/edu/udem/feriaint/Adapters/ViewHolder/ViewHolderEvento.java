@@ -1,7 +1,9 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Adapters.ViewHolder;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -14,11 +16,15 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import edu.udem.feriaint.Activities.Detalle_EventoActivity;
+import edu.udem.feriaint.Data.EventoDB;
+import edu.udem.feriaint.Fragment.Fragment_Perfil;
 import edu.udem.feriaint.Modelos.Evento;
+import edu.udem.feriaint.R;
 
 /**
  * Created by Andrea Arroyo on 23/10/2016.
@@ -26,7 +32,7 @@ import edu.udem.feriaint.Modelos.Evento;
 
 public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
-
+    private String TAG;
     //each data item is just a string in this case
     private TextView titulo;
     private TextView fecha;
@@ -42,9 +48,16 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
     private Evento evento;
 
+    final private EventoDB eventoDB;
+    private View v;
+
+
 
     public ViewHolderEvento(View v) {
         super(v);
+
+        TAG=getClass().getSimpleName();
+        eventoDB=new EventoDB(v.getContext());
 
         fechaFormato= new SimpleDateFormat("EEEE dd hh:mm");
 
@@ -60,6 +73,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
         compartir = (ImageButton) v.findViewById(R.id.evento_compartir);
         twitter=(ImageButton)v.findViewById(R.id.btnTwitter);
         //Parte de las vistas
+
 
 
     }
@@ -266,7 +280,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
     }
 
-    public void agregarFavoritos()
+    public ArrayList<Evento> agregarFavoritos(final ArrayList<Evento> listaEventosFavoritos)
     {
         getAgregarFavoritos().setOnClickListener(new View.OnClickListener(){
             @Override
@@ -279,34 +293,65 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
                     evento.setFavorito(false);
 
                     fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.icons));
+                    listaEventosFavoritos.remove(listaEventosFavoritos.indexOf(evento));
 
-                    Toast toast=
-                            Toast.makeText(v.getContext(),
-                                    "No es Favorito", Toast.LENGTH_SHORT);
 
-                    toast.show();
+                        eventoDB.eliminarFavoritos(evento);
+                        Log.e(TAG,"FavBD, eliminar : " + evento.toString());
+
+
+
 
                 }
                 else {
                     evento.setFavorito(true);
 
                     fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
+                    listaEventosFavoritos.add(evento);
+
+
+                        eventoDB.insertarFavoritos(evento);
+                        Log.e(TAG,"FavBD, agregar : " + evento.toString());
 
 
 
-                    Toast toast=
-                            Toast.makeText(v.getContext(),
-                                    "Favorito", Toast.LENGTH_SHORT);
 
-                    toast.show();
                 }
 
             }
         });
 
 
+        Intent listaEventosFav=new Intent();
+        listaEventosFav.putExtra("tipo", "ejemplo");
+        listaEventosFav.putExtra("lista",listaEventosFavoritos);
+
+
+        Bundle lista=new Bundle();
+        lista.putString("tipo","ejemplo");
+        lista.putParcelableArrayList("lista",listaEventosFavoritos);
+        //Fragment_Perfil perfil=new Fragment_Perfil();
+        // perfil.setArguments(lista);
+
+        return listaEventosFavoritos;
+
     }
 
 
+    public void setFavorito()
+    {
+
+        if(evento!=null)
+        {
+            Log.d(TAG,evento.toString());
+        }
+
+        if (evento!=null && evento.isFavorito())
+        {
+            ImageButton fav= (ImageButton) v.findViewById(R.id.evento_agregar_favoritos);
+            fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
+        }
+
+    }
 
 }

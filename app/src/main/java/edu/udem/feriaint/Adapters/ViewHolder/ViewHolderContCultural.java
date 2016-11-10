@@ -1,4 +1,4 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Adapters.ViewHolder;
 
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -8,10 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-
-import edu.udem.feriaint.Activities.Detalle_EventoActivity;
+import edu.udem.feriaint.Activities.Detalle_ContCultural;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
+import edu.udem.feriaint.R;
 
 /**
  * Created by Andrea Arroyo on 24/10/2016.

@@ -1,18 +1,16 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import edu.udem.feriaint.ComplexRecyclerViewAdapter;
+import edu.udem.feriaint.Adapters.ComplexRecyclerViewAdapter;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
+import edu.udem.feriaint.R;
 
 
 import java.util.ArrayList;

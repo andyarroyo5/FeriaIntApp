@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.ViewHolderContCultural;
-import edu.udem.feriaint.ViewHolder_Tema;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolder_Tema;
 
 /**
  * Created by Andrea Arroyo on 25/10/2016.

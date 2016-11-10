@@ -48,7 +48,6 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     private BDHandler bdHandler;
 
 
-    private RecyclerView mRecyclerView;
     private ArrayList<Evento> listaEventos;
     private EventoAdapter eventoAdapter;
     //private SwipeRefreshLayout refreshLayout;
@@ -66,16 +65,7 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
 
     }
 
-    public EventoJSON(Context context, RecyclerView mRecyclerView) {
 
-       this.context = context;
-       url = "https://feriaint.herokuapp.com/app/eventos";
-       this.mRecyclerView = mRecyclerView;
-       listaEventos = new ArrayList<Evento>();
-       TAG=getClass().getSimpleName();
-       eventoDB= new EventoDB(context);
-
-    }
 
     public ArrayList<Evento> getListaEventos() { return listaEventos;  }
 
@@ -100,7 +90,7 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
         // Making a request to url and getting response
         String jsonStr = sh.makeServiceCall(url);
 
-        eventoDB.open();
+     //   eventoDB.open();
 
         if (jsonStr != null) {
             try {
@@ -112,26 +102,23 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
 
                 for (int i = 0; i < eventos.length(); i++) {
                     JSONObject evento = eventos.getJSONObject(i);
-                    String idJSON=evento.getString("user_id");
+                   // String idJSON=evento.getString("user_id");
                     String tituloJSON = evento.getString("titulo");
-                    String fecha=evento.getString("fechaInicio");
-                    Date fechaInicioJSON = fechaf.parse(fecha);
-                    System.out.println("FROM JSON"+ fecha + fechaInicioJSON.toString());
-
+                    Date fechaInicioJSON = fechaf.parse(evento.getString("fechaInicio"));
                     Date fechaFinalJSON = fechaf.parse(evento.getString("fechaFinal"));
                     String lugarJSON = evento.getString("lugar");
                     String descripcionJSON = evento.getString("descripcion");
-                    String tipoJSON = evento.getString("tipo");
+                    //String tipoJSON = evento.getString("tipo");
 
                     Evento e = new Evento(tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON);
-                    e.setId(Long.parseLong(idJSON));
-                    e.setTipo(tipoJSON);
+                    e.setId(i);
+                   // e.setTipo(tipoJSON);
 
 
                     listaEventos.add(e);
-                    Log.e(TAG,"BD, agregar : " + listaEventos.get(i).getTitulo()+" "+listaEventos.get(i).getId());
+                    //Log.e(TAG,"BD, agregar : " + listaEventos.get(i).getTitulo()+" "+listaEventos.get(i).getId());
 
-                         eventoDB.insert(e);
+                        // eventoDB.insert(e);
                 }
             } catch (final JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -153,41 +140,9 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
         super.onPostExecute(result);
         // Dismiss the progress dialog
        //layoutAdapter();
-        eventoAdapter = new EventoAdapter(this.listaEventos);
-
-       eventoDB.close();
+     //  eventoDB.close();
 
     }
 
-    public void layoutAdapter()
-    {
-        eventoAdapter = new EventoAdapter(this.listaEventos);
-        //Especificar Adapter
 
-    }
-
-    public EventoAdapter getAdapter()
-    {
-        return eventoAdapter;
-    }
-
-
-    public boolean getEventosTodos() throws ParseException {
-
-       eventoDB.open();
-       listaEventos=eventoDB.getTodosLosEventos();
-       eventoDB.close();
-
-        Log.d(TAG, "entrada TODOS"+ listaEventos.size());
-        if (listaEventos!=null && listaEventos.size()!=0)
-        {
-            layoutAdapter();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
 }

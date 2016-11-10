@@ -1,5 +1,8 @@
 package edu.udem.feriaint.Modelos;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,7 +15,7 @@ import java.util.List;
  * Created by Andrea Arroyo on 07/10/2016.
  */
 
-public class Evento {
+public class Evento implements Parcelable {
 
     private long id;
     private String titulo;
@@ -70,6 +73,31 @@ public class Evento {
         this.fechaFinal=fechaFinal;
         //this.fotoId = photoId;
     }*/
+
+    protected Evento(Parcel in) {
+        id = in.readLong();
+        titulo = in.readString();
+        lugar = in.readString();
+        descripcion = in.readString();
+        tipo = in.readString();
+        hashtag = in.readString();
+        favorito = in.readByte() != 0;
+        fecha = in.readString();
+        horarioInicio = in.readString();
+        horarioFinal = in.readString();
+    }
+
+    public static final Creator<Evento> CREATOR = new Creator<Evento>() {
+        @Override
+        public Evento createFromParcel(Parcel in) {
+            return new Evento(in);
+        }
+
+        @Override
+        public Evento[] newArray(int size) {
+            return new Evento[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -182,4 +210,22 @@ public class Evento {
         return getId()+" "+getTitulo()+" "+getFechaInicio()+" "+getFechaFinal()+" "+getLugar()+" "+getDescripcion();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(titulo);
+        parcel.writeString(lugar);
+        parcel.writeString(descripcion);
+        parcel.writeString(tipo);
+        parcel.writeString(hashtag);
+        parcel.writeByte((byte) (favorito ? 1 : 0));
+        parcel.writeString(fecha);
+        parcel.writeString(horarioInicio);
+        parcel.writeString(horarioFinal);
+    }
 }

@@ -1,6 +1,8 @@
 package edu.udem.feriaint.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,17 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
-import android.widget.Toast;;
+;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import edu.udem.feriaint.Adapters.EventoAdapter;
+import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Parser.EventoJSON;
 
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.RecyclerItemClickListener;
 
 /**
  * Created by Andrea Arroyo on 07/10/2016.
@@ -36,6 +41,8 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
     EventoAdapter eventoAdapter;
     private SwipeRefreshLayout swipeContainer;
     private ArrayList<Evento> listaEventos;
+    private ArrayList<Evento> listaEventosFavoritos;
+   // private Usuario currentUsuario;
     TextView txtError;
 
     @Override
@@ -43,6 +50,9 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         super.onCreate(savedInstanceState);
 
         TAG=this.getClass().getSimpleName();
+        //tomar todos los favoritos ?
+        listaEventosFavoritos=new ArrayList<Evento>();
+        eJson= new EventoJSON(getContext());
     }
 
     @Override
@@ -52,13 +62,13 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         // Inflate the layout for this fragment
        View rootView = inflater.inflate(R.layout.fragment_evento, container, false);
 
-       CalendarView cal=(CalendarView) rootView.findViewById(R.id.calendarView);
+      CalendarView cal=(CalendarView) rootView.findViewById(R.id.calendarView);
       txtError =(TextView) rootView.findViewById(R.id.txtError);
 
-                swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
+      swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(this);
-       mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+      swipeContainer.setOnRefreshListener(this);
+      mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
        if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
@@ -67,19 +77,21 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
        mLayoutManager = new LinearLayoutManager(getActivity());
        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        eJson= new EventoJSON(getContext(),mRecyclerView);
 
-        try {
-            if (!eJson.getEventosTodos())
+
+
+        eJson.execute();
+        listaEventos=eJson.getListaEventos();
+        //sample
+       // getSampleArrayList();
+        layoutAdapter();
+
+        //CON BD
+
+       /* try {
+            if (!getEventosTodos())
             {
                 Log.d(TAG, "falseTodos");
-                eJson.execute();
-                eventoAdapter=eJson.getAdapter();
-                if(eventoAdapter!=null)
-                {
-                    mRecyclerView.setAdapter(eventoAdapter);
-                    eventoAdapter.notifyDataSetChanged();
-                }
 
 
                /* if(eJson.getListaEventos().size()==0)
@@ -91,15 +103,15 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
                {
                    mRecyclerView.setVisibility(View.VISIBLE);
                    txtError.setVisibility(View.GONE);
-               }*/
+               }
 
             }
 
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
 
-
+        listaEventosFavoritos=getListaFavoritos();
         return rootView;
     }
 
@@ -109,10 +121,12 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         try {
           //  eJson.getEventosBD();
            System.out.println("On refresh");
-           EventoJSON refreshJSON=new EventoJSON(getContext(), mRecyclerView);
+           EventoJSON refreshJSON=new EventoJSON(getContext());
            //this.listaEventos=refreshJSON.getListaEventos();
             refreshJSON.execute();
             listaEventos=refreshJSON.getListaEventos();
+           // getSampleArrayList();
+            layoutAdapter();
            /* if(listaEventos.size()==0)
             {
                 mRecyclerView.setVisibility(View.GONE);
@@ -126,8 +140,6 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
             }*/
 
 
-
-
            swipeContainer.setRefreshing(false);
 
         } catch (Exception e) {
@@ -135,12 +147,80 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    public boolean getEventosTodos() throws ParseException {
 
-    public void getEventosJSON()
-    {
-       // eJson=new EventoJSON(getContext(),mRecyclerView, swipeContainer);
-        //eJson.execute();
+        EventoDB eventoDB= new EventoDB(getContext());
+        eventoDB.open();
+        listaEventos=eventoDB.getTodosLosEventos();
+        eventoDB.close();
+
+        Log.d(TAG, "entrada TODOS"+ listaEventos.size());
+        if (listaEventos!=null && listaEventos.size()!=0)
+        {
+            layoutAdapter();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
+
+    public void layoutAdapter()
+    {
+        eventoAdapter = new EventoAdapter(listaEventos, listaEventosFavoritos);
+        //Especificar Adapter
+
+        mRecyclerView.setAdapter(eventoAdapter);
+        eventoAdapter.notifyDataSetChanged();
+    }
+
+    private void getSampleArrayList() {
+
+
+        Date p=new Date();
+        Calendar c= new GregorianCalendar();
+        c.getTime();
+
+        listaEventos.add(new Evento("Ceremonia inaugural y conferencia",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
+
+        listaEventos.add(new Evento("Evento2",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
+        listaEventos.add(new Evento("Evento3",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
+
+    }
+
+
+    public ArrayList<Evento> getListaFavoritos()
+    {
+        listaEventosFavoritos=eventoAdapter.getListaEventosFavoritos();
+
+
+        for  (int i =0; i<listaEventosFavoritos.size(); i++)
+        {
+            Log.d(TAG, listaEventosFavoritos.get(i).toString());
+        }
+
+        Log.d(TAG, "GET ListaEventosFavoritos");
+
+
+        Intent mandarListaFav=new Intent();
+        mandarListaFav.putExtra("lista", (ArrayList<? extends Parcelable>) listaEventosFavoritos);
+        mandarListaFav.putExtra("tipo", "evento");
+
+
+        Bundle lista=new Bundle();
+        lista.putString("tipo","ejemplo");
+        lista.putParcelableArrayList("lista", (ArrayList<? extends Parcelable>) listaEventosFavoritos);
+        Fragment_Perfil perfil=new Fragment_Perfil();
+        perfil.setArguments(lista);
+
+
+
+
+        return listaEventosFavoritos;
+    }
+
 
 
 

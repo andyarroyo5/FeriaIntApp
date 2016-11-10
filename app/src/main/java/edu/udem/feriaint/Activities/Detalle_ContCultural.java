@@ -1,9 +1,11 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import edu.udem.feriaint.R;
 
 public class Detalle_ContCultural extends AppCompatActivity {
 
@@ -11,7 +13,6 @@ public class Detalle_ContCultural extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle__cont_cultural);
-
 
         Bundle b=getIntent().getExtras();
 

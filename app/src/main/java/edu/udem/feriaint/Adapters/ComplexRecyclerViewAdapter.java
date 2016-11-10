@@ -1,25 +1,20 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Adapters;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import edu.udem.feriaint.Activities.Detalle_EventoActivity;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.ViewHolder1;
-import edu.udem.feriaint.ViewHolder2;
-import edu.udem.feriaint.Fragment_Home;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolder1;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolder2;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderContCultural;
+import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderEvento;
 
 /**
  * Created by Andrea Arroyo on 23/10/2016.
@@ -67,7 +62,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         switch (viewType) {
             case EVENTO:
                 View v1 = inflater.inflate(R.layout.item_eventos, viewGroup, false);
-                viewHolder = new ViewHolderEvento (v1);
+                viewHolder = new ViewHolderEvento(v1);
                 break;
             case IMAGE:
                 View v2 = inflater.inflate(R.layout.layout_viewholder2, viewGroup, false);
@@ -117,7 +112,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         vh.getLugar().setText(evento.getLugar());
 
 
-        vh.agregarFavoritos();
+     //   vh.agregarFavoritos();
         vh.agregarCalendario();
         vh.verDetalleEvento();
         vh.compartir();
