@@ -102,7 +102,7 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
 
                 for (int i = 0; i < eventos.length(); i++) {
                     JSONObject evento = eventos.getJSONObject(i);
-                   // String idJSON=evento.getString("user_id");
+                    String idJSON=evento.getString("id");
                     String tituloJSON = evento.getString("titulo");
                     Date fechaInicioJSON = fechaf.parse(evento.getString("fechaInicio"));
                     Date fechaFinalJSON = fechaf.parse(evento.getString("fechaFinal"));
@@ -111,7 +111,7 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
                     //String tipoJSON = evento.getString("tipo");
 
                     Evento e = new Evento(tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON);
-                    e.setId(i);
+                    e.setId(Long.parseLong(idJSON));
                    // e.setTipo(tipoJSON);
 
 

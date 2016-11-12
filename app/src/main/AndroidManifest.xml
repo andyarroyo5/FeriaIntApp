@@ -58,7 +58,7 @@
             android:name="io.fabric.ApiKey"
             android:value="8f89e7c01d71e8b241c240db16bd1122048d8c9a" />
 
-        <activity android:name=".TriviaActivity" />
+        <activity android:name=".Activities.TriviaActivity" />
         <activity android:name=".Activities.AdminPerfil_Activity"></activity>
     </application>
 
