@@ -1,6 +1,7 @@
 package edu.udem.feriaint.Adapters.ViewHolder;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -48,7 +49,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
     private Evento evento;
 
-    final private EventoDB eventoDB;
+     private EventoDB eventoDB;
     private View v;
 
 
@@ -57,7 +58,8 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
         super(v);
 
         TAG=getClass().getSimpleName();
-        eventoDB=new EventoDB(v.getContext());
+
+
 
         fechaFormato= new SimpleDateFormat("EEEE dd hh:mm");
 
@@ -280,78 +282,40 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
     }
 
-    public ArrayList<Evento> agregarFavoritos(final ArrayList<Evento> listaEventosFavoritos)
-    {
+    public void agregarFavoritos() throws ParseException {
         getAgregarFavoritos().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 ImageButton fav= (ImageButton) v.findViewById(R.id.evento_agregar_favoritos);
-
+                eventoDB=new EventoDB(v.getContext());
 
                 if (evento.isFavorito())
                 {
-                    evento.setFavorito(false);
+                    //  evento.setFavorito(false);
 
-                    fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.icons));
-                    listaEventosFavoritos.remove(listaEventosFavoritos.indexOf(evento));
-
-
-                        eventoDB.eliminarFavoritos(evento);
+                   fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.icons));
+                    //fav.setColorFilter(R.color.icons,  PorterDuff.Mode.SRC_IN);
                         Log.e(TAG,"FavBD, eliminar : " + evento.toString());
-
-
-
-
                 }
                 else {
-                    evento.setFavorito(true);
 
                     fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
-                    listaEventosFavoritos.add(evento);
-
-
-                        eventoDB.insertarFavoritos(evento);
+                   // fav.setColorFilter(R.color.colorAccent,  PorterDuff.Mode.SRC_IN);
                         Log.e(TAG,"FavBD, agregar : " + evento.toString());
-
-
-
 
                 }
 
+                eventoDB.setEventoFavorito(evento);
             }
         });
-
-
-        Intent listaEventosFav=new Intent();
-        listaEventosFav.putExtra("tipo", "ejemplo");
-        listaEventosFav.putExtra("lista",listaEventosFavoritos);
-
-
-        Bundle lista=new Bundle();
-        lista.putString("tipo","ejemplo");
-        lista.putParcelableArrayList("lista",listaEventosFavoritos);
-        //Fragment_Perfil perfil=new Fragment_Perfil();
-        // perfil.setArguments(lista);
-
-        return listaEventosFavoritos;
 
     }
 
 
     public void setFavorito()
     {
-
-        if(evento!=null)
-        {
-            Log.d(TAG,evento.toString());
-        }
-
-        if (evento!=null && evento.isFavorito())
-        {
-            ImageButton fav= (ImageButton) v.findViewById(R.id.evento_agregar_favoritos);
+            ImageButton fav= getAgregarFavoritos();
             fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
-        }
-
     }
 
 }

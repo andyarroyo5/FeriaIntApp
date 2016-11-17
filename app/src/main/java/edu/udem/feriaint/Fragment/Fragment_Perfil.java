@@ -2,8 +2,11 @@ package edu.udem.feriaint.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,25 +15,22 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.LoginEvent;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.vision.text.Text;
-import com.twitter.sdk.android.Twitter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-import edu.udem.feriaint.Activities.ActivityInicial;
+import edu.udem.feriaint.Activities.AdminPerfil_Activity;
 import edu.udem.feriaint.Activities.MainActivity;
+import edu.udem.feriaint.Adapters.ComplexRecyclerViewAdapter;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Data.UsuarioDB;
+import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.SessionRecorder;
 import edu.udem.feriaint.TwitterInicioSesion;
 
 /**
@@ -41,18 +41,36 @@ public class Fragment_Perfil extends Fragment{
 
     private String TAG;
 
+    int REQUEST_CODE=555;
+
     ImageButton btnFavoritoPerfil;
     ImageButton btnEventosPerfil;
     ImageButton btnInfoPerfil;
+    Button btnAdminPerfil;
+
     LinearLayout lytFav;
-    LinearLayout lytCurrent;
+    LinearLayout lytInfo;
+    LinearLayout lytEventos;
     Button cerrarSesion;
+
+    TextView usuarioNombre;
+    TextView usuarioCorreo;
+    TextView usuarioCarrera;
+    TextView usuarioTwitter;
+
+    RecyclerView rvEventos;
+    RecyclerView rvContCultural;
 
     Usuario currentUsuario;
 
-    String usuarioNombre;
+   // String usuarioNombre;
     boolean twitter=false;
     Bundle bUsuario;
+
+    RecyclerView mRecyclerViewEventos;
+    RecyclerView mRecyclerViewFavoritos;
+    RecyclerView.LayoutManager mLayoutManager;
+    ComplexRecyclerViewAdapter compAdapter;
 
     public Fragment_Perfil() {
     }
@@ -64,66 +82,11 @@ public class Fragment_Perfil extends Fragment{
 
         TAG=getClass().getSimpleName();
 
-        currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
+        //currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
 
-        bUsuario =getActivity().getIntent().getExtras();
-        System.out.println(bUsuario.getString("tipo"));
-        Object array[]= bUsuario.keySet().toArray();
-
-
-        for (int i=0;i<bUsuario.keySet().size();i++)
-        {
-
-            System.out.println(array[i].toString());
-        }
-       //Intent intent=getContext().getIntent();
-      Bundle b = getArguments();
-        if(b!=null) {
-            Object array2[] = b.keySet().toArray();
-            for (int i = 0; i < b.keySet().size(); i++) {
-
-                System.out.println(array2[i].toString());
-            }
-            // if ((b.containsKey("tipo")))
-            //   Log.d("BUNDLE", b.getString("tipo"));
-        }
-        getBundleInfo();
-
-        //Log.e("PERFIL", String.valueOf(bTwitter)+bTwitter.getString("user"));
-
-        try {
-            getEventosTodos();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
     }
 
-    private void getBundleInfo() {
-
-
-        bUsuario =getActivity().getIntent().getExtras();
-       if ((bUsuario.containsKey("tipo")))
-        switch(bUsuario.getString("tipo"))
-        {
-            case "evento":
-                Log.d("BUNDLE",bUsuario.getString("tipo") );
-                break;
-            case "twitter":
-                Log.d("BUNDLE",bUsuario.getString("tipo") );
-                usuarioNombre=bUsuario.getString("user");
-                //  agregarUsuario(bUsuario);
-
-                break;
-
-            case "ejemplo":
-                Bundle b = getArguments();
-                String s = b.getString("tipo");
-                Log.d("BUNDLE", s);
-                break;
-        }
-
-    }
 
 
     @Override
@@ -132,16 +95,33 @@ public class Fragment_Perfil extends Fragment{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        lytFav=(LinearLayout) rootView.findViewById(R.id.layout_Info);
-        lytCurrent=(LinearLayout) rootView.findViewById(R.id.layout_Info2);
+        lytInfo=(LinearLayout) rootView.findViewById(R.id.layout_Info);
+        lytFav=(LinearLayout) rootView.findViewById(R.id.layout_Favoritos);
+        lytEventos=(LinearLayout) rootView.findViewById(R.id.layout_eventos);
+
+        mRecyclerViewEventos = (RecyclerView) rootView.findViewById(R.id.rv_eventos);
+        mRecyclerViewFavoritos = (RecyclerView) rootView.findViewById(R.id.rv_favoritos);
+
         btnFavoritoPerfil= (ImageButton) rootView.findViewById(R.id.btnFavoritoPerfil);
         btnEventosPerfil = (ImageButton) rootView.findViewById(R.id.btnEventos);
         btnInfoPerfil=(ImageButton) rootView.findViewById(R.id.btnInfoPerfil);
+        btnAdminPerfil=(Button) rootView.findViewById(R.id.btnAdministrarPerfil);
+
         cerrarSesion = (Button) rootView.findViewById(R.id.btnCerrarSesion);
 
-        TextView usuarioTwitter=(TextView) rootView.findViewById(R.id.txtUsuarioTwitter);
-        usuarioTwitter.setText(usuarioNombre);
+        usuarioCorreo=(TextView) rootView.findViewById(R.id.txtUsuarioCorreo);
+        usuarioNombre=(TextView) rootView.findViewById(R.id.txtUsuarioNombre);
+        usuarioCarrera=(TextView) rootView.findViewById(R.id.txtUsuarioCarrera);
+        usuarioTwitter=(TextView) rootView.findViewById(R.id.txtUsuarioTwitter);
 
+
+        try {
+            getUsuario();
+            getBundleInfo();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        setUsuarioInfo();
 
         btnFavoritoPerfil.setOnClickListener(new View.OnClickListener()
         {
@@ -152,7 +132,25 @@ public class Fragment_Perfil extends Fragment{
                 btnInfoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
                 btnEventosPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
                 lytFav.setVisibility(LinearLayout.VISIBLE);
-                lytCurrent.setVisibility(LinearLayout.GONE);
+                lytInfo.setVisibility(LinearLayout.GONE);
+                lytEventos.setVisibility(LinearLayout.GONE);
+
+
+                //Recycler Viewer
+
+                if (mRecyclerViewFavoritos != null) {
+                    mRecyclerViewFavoritos.setHasFixedSize(true);
+                }
+
+                mLayoutManager = new LinearLayoutManager(getActivity());
+                mRecyclerViewFavoritos.setLayoutManager(mLayoutManager);
+
+
+                ArrayList<Object> feed= getFavoritos();
+
+                compAdapter=new ComplexRecyclerViewAdapter(feed);
+                mRecyclerViewFavoritos.setAdapter(compAdapter);
+                compAdapter.notifyDataSetChanged();
             }
         });
 
@@ -166,6 +164,31 @@ public class Fragment_Perfil extends Fragment{
                 btnFavoritoPerfil.setColorFilter(getContext().getResources().getColor(R.color.primary_text));
                 btnInfoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
 
+                lytEventos.setVisibility(LinearLayout.VISIBLE);
+                lytInfo.setVisibility(LinearLayout.GONE);
+                lytFav.setVisibility(LinearLayout.GONE);
+
+                //Recycler Viewer
+
+                if (mRecyclerViewEventos != null) {
+                    mRecyclerViewEventos.setHasFixedSize(true);
+                }
+
+                mLayoutManager = new LinearLayoutManager(getActivity());
+                mRecyclerViewEventos.setLayoutManager(mLayoutManager);
+
+
+                ArrayList<Object> feed= null;
+                try {
+                    feed = getEventos();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                compAdapter=new ComplexRecyclerViewAdapter(feed);
+                mRecyclerViewEventos.setAdapter(compAdapter);
+                compAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -178,28 +201,35 @@ public class Fragment_Perfil extends Fragment{
                 btnEventosPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
                 btnFavoritoPerfil.setColorFilter(getContext().getResources().getColor(R.color.primary_text));
                 lytFav.setVisibility(LinearLayout.GONE);
-                lytCurrent.setVisibility(LinearLayout.VISIBLE);
+                lytEventos.setVisibility(LinearLayout.GONE);
+                lytInfo.setVisibility(LinearLayout.VISIBLE);
 
 
             }
         });
 
 
+        btnAdminPerfil.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent adminPerfilIntent=new Intent(getContext(), AdminPerfil_Activity.class);
+                adminPerfilIntent.putExtra("nombre",usuarioNombre.getText());
+                adminPerfilIntent.putExtra("correo",usuarioCorreo.getText());
+                adminPerfilIntent.putExtra("carrera",usuarioCarrera.getText());
+                adminPerfilIntent.putExtra("twitter",usuarioTwitter.getText());
+                adminPerfilIntent.putExtra("usuario", (Parcelable) currentUsuario);
+                startActivity(adminPerfilIntent);
+              //  startActivityForResult(adminPerfilIntent,REQUEST_CODE);
+
+
+            }
+        });
 
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*if(twitter) {
-                    Twitter.getSessionManager().clearActiveSession();
-
-                    SessionRecorder.recordSessionInactive("About: accounts deactivated");
-                    Answers.getInstance().logLogin(new LoginEvent().putMethod("Twitter").putSuccess(false));
-
-
-                    Toast.makeText(getContext(), "Haz cerrado sesión",
-                            Toast.LENGTH_SHORT).show();
-                }*/
 
 
                 Intent cerrarS=new Intent(getContext(), TwitterInicioSesion.class);
@@ -208,63 +238,117 @@ public class Fragment_Perfil extends Fragment{
             }
         });
 
-
-
-
         return rootView;
     }
 
 
-    public void agregarUsuario(Bundle bTwitter) throws ParseException {
 
-        twitter=true;
-        currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
-        System.out.println(currentUsuario.getTwitter());
-        usuarioNombre = bTwitter.getString("user","error");
+    private void getBundleInfo() {
 
-
-        /*UsuarioDB usuarioDB= new UsuarioDB(getContext());
-
-        usuarioDB.open();
-        ArrayList<Usuario> lista=usuarioDB.getTodosLosUsuarios();
-        if (lista.size()==0)
+       bUsuario =getActivity().getIntent().getExtras();
+       if ((bUsuario.containsKey("tipo")))
+        switch(bUsuario.getString("tipo"))
         {
-            currentUsuario=new Usuario( bTwitter.getString("user"));
-            currentUsuario.setNombre("Andrea");
-            System.out.println(currentUsuario);
-            usuarioDB.insert(currentUsuario);
+            case "evento":
+                Log.d("BUNDLE",bUsuario.getString("tipo") );
+                break;
+            case "twitter":
+                Log.d("BUNDLE",bUsuario.getString("tipo") );
+              currentUsuario.setTwitter(bUsuario.getString("user"));
 
+                Log.d("BUNDLE",currentUsuario.toString());
+
+                //  agregarUsuario(bUsuario);
+
+                break;
+
+            case "ejemplo":
+                Bundle b = getArguments();
+                String s = b.getString("tipo");
+                Log.d("BUNDLE", s);
+                break;
         }
         else
-        {
-            for (int i=0; i<lista.size(); i++)
-            {
-                System.out.println(lista.get(i));
-            }
-        }*/
+       {
 
+           Log.d(TAG, "bundle without tipo");
 
-     //   usuarioDB.close();
-        //  bTwitter.putParcelable("usuario", (Parcelable) usuarioNuevo);
+       }
 
 
     }
 
 
+    public void getUsuario() throws ParseException {
+        UsuarioDB usuario=new UsuarioDB(getContext());
 
-    public void getEventosTodos() throws ParseException {
+        currentUsuario=usuario.getTodosLosUsuarios();
+
+        Log.e(TAG,"GET IN PERFIL"+currentUsuario.toString());
+
+    }
+
+
+    public void setUsuarioInfo()
+    {
+        usuarioNombre.setText(currentUsuario.getNombre());
+        usuarioCorreo.setText(currentUsuario.getCorreo()!=""? currentUsuario.getCarrera():"No tienes agregado tu mail ");
+        usuarioCarrera.setText(currentUsuario.getCarrera()!="" ? currentUsuario.getCarrera():"No tienes agregada tu carrera" );
+        usuarioTwitter.setText(currentUsuario.getTwitter());
+
+        Log.e(TAG,currentUsuario.toString());
+
+    }
+
+
+
+     private ArrayList<Object> getEventos() throws ParseException {
+
+
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+        ArrayList<Object> listaEventos = new ArrayList<>();
 
         EventoDB eventoDB= new EventoDB(getContext());
 
-        currentUsuario.setListaEventosFavoritos(eventoDB.getTodosLosEventos());
+         try {
+             eventos=eventoDB.getTodosLosEventos();
+             if(eventos!=null)
+             for  (int i =0; i<eventos.size(); i++)
+             {
+                 if(eventos.get(i).isFavorito())
+                 {
+                     currentUsuario.getListaEventosFavoritos().add(eventos.get(i));
+                     listaEventos.add(eventos.get(i));
+                 }
+             }
 
-        Log.d(TAG, "entrada TODOS"+ currentUsuario.getListaEventosFavoritos().size());
 
-        for  (int i =0; i<currentUsuario.getListaEventosFavoritos().size(); i++)
-        {
-            Log.d(TAG, currentUsuario.getListaEventosFavoritos().get(i).toString());
-        }
+         } catch (ParseException e) {
+             e.printStackTrace();
+         }
+
+
+
+        return listaEventos;
     }
+
+    private ArrayList<Object> getFavoritos() {
+        ArrayList<Object> items = new ArrayList<>();
+
+        Date p=new Date();
+        Calendar c= new GregorianCalendar();
+        c.getTime();
+
+        items.add("image");
+        items.add(new ContenidoCultural("Corea y su gastronomía",R.drawable.evento));
+        items.add(new ContenidoCultural("Fun Facts",R.drawable.evento2));
+        items.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));
+
+        return items;
+    }
+
+
+
 
 }
 

@@ -35,7 +35,10 @@ public class EventoDB {
             BDHandler.FECHA_INICIO,
             BDHandler.FECHA_FINAL,
             BDHandler.LUGAR,
-            BDHandler.DESCRIPCION
+            BDHandler.DESCRIPCION,
+            BDHandler.TIPO,
+            BDHandler.FAVORITO
+
     };
 
 
@@ -56,19 +59,20 @@ public class EventoDB {
     }
 
 
-    public void insert(Evento evento) {
+    public void insertarEvento(Evento evento) {
 
 
+        open();
         ContentValues values = new ContentValues();
         try {
-
+        values.put(BDHandler.ID_EVENTO, evento.getId());
         values.put(BDHandler.TITULO, evento.getTitulo());
         values.put(BDHandler.FECHA_INICIO, String.valueOf(evento.getFechaInicio()));
-            Log.e(TAG, " FECHA INICIO"+ evento.getFechaInicio());
         values.put(BDHandler.FECHA_FINAL, String.valueOf(evento.getFechaFinal()));
         values.put(BDHandler.LUGAR, evento.getLugar());
         values.put(BDHandler.DESCRIPCION, evento.getDescripcion());
         values.put(BDHandler.TIPO, evento.getDescripcion());
+        values.put(BDHandler.FAVORITO, evento.isFavorito());
 
         bd.insert(BDHandler.TABLA_EVENTO, null, values);
             Log.e(TAG, " Agregar en BD "+ evento);
@@ -77,37 +81,10 @@ public class EventoDB {
             e.printStackTrace();
             Log.d(TAG, "Error while trying to add post to database");
         }
-    }
-
-    public void insertarFavoritos(Evento evento) {
-
-
-        open();
-        ContentValues values = new ContentValues();
-        try {
-
-            Log.e(TAG, " EVENTOfAV"+ evento.toString());
-
-            values.put(BDHandler.TITULO, evento.getTitulo());
-            values.put(BDHandler.FECHA_INICIO, String.valueOf(evento.getFechaInicio()));
-            values.put(BDHandler.FECHA_FINAL, String.valueOf(evento.getFechaFinal()));
-            values.put(BDHandler.LUGAR, evento.getLugar());
-            values.put(BDHandler.DESCRIPCION, evento.getDescripcion());
-            values.put(BDHandler.TIPO, evento.getDescripcion());
-
-            bd.insert(BDHandler.TABLA_EVENTO, null, values);
-            Log.e(TAG, " Agregar en BD "+ evento.toString());
-
-            close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Log.d(TAG, "Error while trying to add post to database");
-
-        }
 
         close();
     }
+
 
 
     public void eliminarFavoritos(Evento evento)
@@ -119,7 +96,7 @@ public class EventoDB {
             String selectQuery = "SELECT  * FROM " + BDHandler.TABLA_EVENTO +"WHERE"+BDHandler.ID_EVENTO+"="+evento.getId();
 
             //bd.delete()
-            Log.e(TAG, " Agregar en BD "+ evento);
+            Log.e(TAG, " Eliminar evento "+ evento);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,20 +106,28 @@ public class EventoDB {
         close();
     }
 
-   /* public void getEvento(int id) {
+   public Evento getEvento(long id) {
 
+       String selectQuery = "SELECT  * FROM " + BDHandler.TABLA_EVENTO+" WHERE"+BDHandler.ID_EVENTO+"="+id;
 
-        Cursor cursor = bd.query( BDHandler.TABLA_EVENTOS, new String[] { BDHandler.ID_EVENTO,
-                        BDHandler.ID_EVENTO,  BDHandler.ID_EVENTO,  BDHandler.ID_EVENTO,  BDHandler.ID_EVENTO },  BDHandler.ID_EVENTO + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null , null);
-        if (cursor != null)
+       Evento evento = new Evento();
+       Cursor cursor = bd.rawQuery(selectQuery, null);
             cursor.moveToFirst();
 
-        Evento evento = new Evento(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4),cursor.getString(5));
+       evento.setId(Integer.parseInt(cursor.getString(0)));
+       evento.setTitulo(cursor.getString(1));
+       evento.setFechaInicio(new Date(cursor.getString(2)));
+       evento.setFechaFinal(new Date(cursor.getString(3)));
+       evento.setLugar(cursor.getString(4));
+       evento.setDescripcion(cursor.getString(5));
+       evento.setTipo(cursor.getString(6));
+       Log.d(TAG, "Favorito Get"+cursor.getString(7)+ Boolean.parseBoolean(cursor.getString(7)));
+       evento.setFavorito(Boolean.parseBoolean(cursor.getString(7)));
+
+
         // return contact
         return evento;
-    }*/
+    }
 
     // Getting All Contacts
     public ArrayList<Evento> getTodosLosEventos() throws ParseException {
@@ -169,20 +154,70 @@ public class EventoDB {
                 evento.setFechaFinal(new Date(cursor.getString(3)));
                 evento.setLugar(cursor.getString(4));
                 evento.setDescripcion(cursor.getString(5));
+                evento.setTipo(cursor.getString(6));
+                evento.setFavorito(Boolean.parseBoolean(cursor.getString(7)));
 
-               Log.e(TAG, " Get evento "+ evento);
+               Log.e(TAG, " Get evento "+cursor.getString(7)+" "+ evento);
                 listaEventos.add(evento);
 
             } while (cursor.moveToNext());
         }
 
+        else
+        {
+            Log.e(TAG, " Get evento no hay");
+        }
+
         // return eventos
-         System.out.println("Terminar getTODOS..."+String.valueOf(cursor.moveToFirst()));
+
         close();
         return listaEventos;
     }
 
 
+
+    public void setEventoFavorito(Evento evento)
+    {
+        open();
+        boolean fav;
+
+        ContentValues cv = new ContentValues();
+
+        Log.e(TAG, String.valueOf(evento.isFavorito()));
+        if (evento.isFavorito())
+        {
+            cv.put(BDHandler.FAVORITO, false);
+            cv.put(BDHandler.FAVORITO, 0);
+            fav=false;
+        }
+        else
+        {
+            cv.put(BDHandler.FAVORITO, true);
+            cv.put(BDHandler.FAVORITO, 1);
+             fav=true;
+        }
+
+
+
+        Log.e(TAG, " SET EVENTO FAV "+ evento+" "+fav);
+
+
+        //bd.update(BDHandler.TABLA_EVENTO, cv, BDHandler.ID_EVENTO+"= "+evento.getId(), null);
+
+        String query="UPDATE "+BDHandler.TABLA_EVENTO+" SET "+ BDHandler.FAVORITO+" = '"+fav+  "' where "+  BDHandler.ID_EVENTO+"= "+evento.getId();
+
+
+        bd.execSQL(query);
+
+        Cursor cursor =bd.rawQuery("SELECT * From "+BDHandler.TABLA_EVENTO+" where "+  BDHandler.ID_EVENTO+"= "+evento.getId(),null);
+        if (cursor.moveToFirst()) {
+
+            Log.e(TAG,cursor.getString(7));
+        }
+
+        close();
+
+    }
 
 
 }

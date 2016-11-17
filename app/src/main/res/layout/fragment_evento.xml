@@ -8,11 +8,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.udem.feriaint.Activities.MainActivity">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.54"
+        tools:ignore="InefficientWeight,ObsoleteLayoutParam">
+
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:ignore="UselessParent"
         android:weightSum="1">
 
@@ -23,26 +31,21 @@
             android:layout_height="70dp"
             android:id="@+id/calendarView" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swipeContainer"
-            android:layout_width="match_parent"
-            android:layout_height="386dp"
-            android:layout_weight="0.54"
-            tools:ignore="InefficientWeight">
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height = "465dp"
+            android:layout_height = "match_parent"
             android:layout_toEndOf="@+id/section_label"
             tools:ignore="ObsoleteLayoutParam"
-            android:background="@color/cardview_light_background">
+            android:background="@color/cardview_light_background"
+            tools:listitem="@layout/item_eventos">
 
         </android.support.v7.widget.RecyclerView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+
 
         <TextView
             android:text="Ups, al  parecer hay un problema con el internet"
@@ -54,5 +57,5 @@
             android:id="@+id/txtError" />
     </LinearLayout>
 
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

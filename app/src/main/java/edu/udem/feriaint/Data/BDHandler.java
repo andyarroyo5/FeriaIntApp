@@ -37,6 +37,7 @@ public class BDHandler extends SQLiteOpenHelper {
     public static final String LUGAR = "lugar";
     public static final String DESCRIPCION = "descripcion";
     public static final String TIPO = "tipo";
+    public static final String FAVORITO = "favorito";
 
 
     String CREAR_TABLA_EVENTO = "CREATE TABLE " + TABLA_EVENTO + "("
@@ -46,7 +47,8 @@ public class BDHandler extends SQLiteOpenHelper {
             + FECHA_FINAL + " TEXT,"
             + LUGAR + " TEXT,"
             + DESCRIPCION + " TEXT,"
-            + TIPO + " TEXT"+")";
+            + TIPO + " TEXT,"
+            + FAVORITO + " TEXT"+")";
 
 
     public static final String TABLA_USUARIO = "Usuario";
@@ -56,28 +58,18 @@ public class BDHandler extends SQLiteOpenHelper {
     public static final String CORREO = "correo";
     public static final String NOMBRE = "nombre";
     public static final String CARRERA = "carrera";
-    public static final String PUNTOS = "puntos";
     public static final String TWITTER="twitter";
+    public static final String PUNTOS = "puntos";
+
 
     String CREAR_TABLA_USUARIO = "CREATE TABLE " + TABLA_USUARIO + "("
             + ID_USUARIO + " INTEGER PRIMARY KEY,"
             + CORREO+ " TEXT,"
             + NOMBRE + " TEXT,"
             + CARRERA + " TEXT,"
-            + PUNTOS+ " TEXT,"
-            + TWITTER+" TEXT"+")";
+            + TWITTER+" TEXT, "
+            + PUNTOS+ " TEXT"+")";
 
-
-    private static final String TABLA_USUARIO_EVENTO = "UsuarioEvento";
-
-    // Contacts Table Columns names
-    private static final String ID_USUARIO_EVENTO = "id_UsuarioEvento";
-    private static final String USUARIO_ID = "usuario_id";
-    private static final String EVENTO_ID = "evento_id";
-
-    String CREAR_TABLA_USUARIO_EVENTO = "CREATE TABLE " + TABLA_USUARIO_EVENTO + "("
-            + ID_USUARIO_EVENTO + " INTEGER PRIMARY KEY," + USUARIO_ID + " INTEGER,"
-            + EVENTO_ID + " INTEGER"+")";
 
 
 
@@ -97,7 +89,6 @@ public class BDHandler extends SQLiteOpenHelper {
 
         bd.execSQL(CREAR_TABLA_EVENTO);
         bd.execSQL(CREAR_TABLA_USUARIO);
-       // bd.execSQL( CREAR_TABLA_USUARIO_EVENTO);
 
     }
 
@@ -107,9 +98,7 @@ public class BDHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_EVENTO);
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIO);
-       // bd.execSQL("DROP TABLE IF EXISTS " + CREAR_TABLA_USUARIO_EVENTO);
-
-        // Create tables again
+             // Create tables again
         onCreate(bd);
     }
 

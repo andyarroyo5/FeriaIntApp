@@ -45,37 +45,36 @@ public class UsuarioDB {
 
     }
 
-    public void insert(Usuario usuarioNuevo) {
+    public void insertar(Usuario usuarioNuevo) {
 
-
+        open();
         ContentValues values = new ContentValues();
         try {
 
-            values.put(BDHandler.TWITTER, usuarioNuevo.getTwitter());
-            values.put(BDHandler.NOMBRE, usuarioNuevo.getNombre());
-            /*
-            values.put(BDHandler.CORREO, usuario.getCorreo());
-            values.put(BDHandler.NOMBRE, usuario.getNombre());
-            values.put(BDHandler.CARRERA, usuario.getCarrera());
+            values.put(BDHandler.NOMBRE, usuario.getNombre()!=null?  usuario.getNombre(): "");
+            values.put(BDHandler.CORREO, usuario.getCorreo()!=null?  usuario.getCorreo(): "");
+            values.put(BDHandler.CARRERA, usuario.getCarrera()!=null?  usuario.getCarrera(): "");
+            values.put(BDHandler.TWITTER, usuario.getTwitter()!=null?  usuario.getTwitter(): "");
             values.put(BDHandler.PUNTOS, usuario.getPuntos());
 
-            */
-            long id = bd.insert(BDHandler.TABLA_USUARIO,null , values);
+            long id= bd.insert(BDHandler.TABLA_USUARIO,null, values);
             usuarioNuevo.setId(id);
-            this.usuario=usuarioNuevo;
-            Log.e(TAG, " Agregar en BD "+ usuarioNuevo);
+            setUsuario(usuarioNuevo);
+            Log.e(TAG, " Agregar en BD "+ usuarioNuevo.toString());
 
         } catch (SQLException e) {
             e.printStackTrace();
             Log.d(TAG, "Error while trying to add post to database");
         }
+
+        close();
     }
 
     public void eliminar(Usuario usuario)
     {
         try {
 
-            String selectQuery = "SELECT  * FROM " + BDHandler.TABLA_USUARIO +"WHERE"+BDHandler.ID_USUARIO+"="+usuario.getId();
+            String selectQuery = "SELECT  * FROM " + BDHandler.TABLA_USUARIO +" WHERE"+BDHandler.ID_USUARIO+"="+usuario.getId();
 
             //bd.delete()
             Log.e(TAG, " Agregar en BD "+ usuario);
@@ -87,10 +86,10 @@ public class UsuarioDB {
 
     }
 
-    public ArrayList<Usuario> getTodosLosUsuarios() throws ParseException {
+    public Usuario getTodosLosUsuarios() throws ParseException {
 
-
-        ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
+        open();
+       ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + BDHandler.TABLA_USUARIO;
 
@@ -99,29 +98,67 @@ public class UsuarioDB {
 
 
         // looping through all rows and adding to list
+        cursor.moveToFirst();
+
         if (cursor.moveToFirst()) {
             do {
                 Usuario usuario = new Usuario();
                 usuario.setId(Integer.parseInt(cursor.getString(0)));
-                usuario.setTwitter(cursor.getString(1));
+                Log.e(TAG, " CURSOR -0 " + cursor.getString(0));
+                usuario.setNombre(cursor.getString(1));
+                Log.e(TAG, " CURSOR -1 " + cursor.getString(1));
+                usuario.setCorreo(cursor.getString(2));
+                Log.e(TAG, " CURSOR -2 " + cursor.getString(2));
+                usuario.setCarrera(cursor.getString(3));
+                Log.e(TAG, " CURSOR -3 " + cursor.getString(3));
+                usuario.setTwitter(cursor.getString(4));
+                Log.e(TAG, " CURSOR -4 " + cursor.getString(4));
+                usuario.setPuntos(cursor.getInt(5));
+                Log.e(TAG, " CURSOR -5 " + cursor.getString(5));
 
-                Log.e(TAG, " Get usuario "+ usuario);
+                Log.e(TAG, " Get usuario " + usuario);
                 listaUsuarios.add(usuario);
 
             } while (cursor.moveToNext());
+            close();
         }
 
-        // return eventos
-        System.out.println("Terminar getTODOSUSUARIO..."+String.valueOf(cursor.moveToFirst()));
-        return listaUsuarios;
+
+
+                return usuario;
+
+
+        }
+
+
+
+    public void actualizar (Usuario usuario)
+    {
+        open();
+
+
+        ContentValues cv = new ContentValues();
+        cv.put(BDHandler.NOMBRE, usuario.getNombre());
+        cv.put(BDHandler.CORREO, usuario.getCorreo());
+        cv.put(BDHandler.CARRERA, usuario.getCarrera());
+        cv.put(BDHandler.TWITTER, usuario.getTwitter());
+
+       setUsuario(usuario);
+        Log.e(TAG,usuario.toString());
+
+        bd.update(BDHandler.TABLA_USUARIO, cv, BDHandler.ID_USUARIO+"= "+usuario.getId(), null);
+        close();
+
     }
-
-
 
     public Usuario getUsuario()
     {
         return usuario;
     }
 
+    public void setUsuario(Usuario usuario)
+    {
+        this.usuario=usuario;
+    }
 
 }

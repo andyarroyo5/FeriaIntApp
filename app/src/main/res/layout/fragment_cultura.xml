@@ -21,7 +21,8 @@
             android:layout_height="453dp"
             android:id="@+id/recycler_view_cultura"
             android:layout_weight="0.21"
-            tools:ignore="InefficientWeight" />
+            tools:ignore="InefficientWeight"
+            tools:listitem="@layout/item_contenido_cultural" />
 
     </LinearLayout>
 

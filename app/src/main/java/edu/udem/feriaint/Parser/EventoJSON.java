@@ -35,6 +35,7 @@ import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.R;
 
+
 /**
  * Created by Andrea Arroyo on 15/10/2016.
  */
@@ -46,13 +47,16 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     private Context context;
     private String url;
     private BDHandler bdHandler;
-
+    private EventoDB eventoDB;
+    private ArrayList<Evento> listaBD;
+    EventoAdapter eventoAdapter;
+    ProgressDialog pd;
+    RecyclerView mRecyclerView;
 
     private ArrayList<Evento> listaEventos;
-    private EventoAdapter eventoAdapter;
-    //private SwipeRefreshLayout refreshLayout;
 
-   private EventoDB eventoDB;
+
+
     //private SQLiteDatabase bd;
 
     public EventoJSON(Context context) {
@@ -61,10 +65,22 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
         url = "https://feriaint.herokuapp.com/app/eventos";
         listaEventos = new ArrayList<Evento>();
         TAG=getClass().getSimpleName();
-        eventoDB= new EventoDB(context);
-
+        eventoDB=new EventoDB(context);
     }
 
+    public void setRecyclerViewer( RecyclerView mRecyclerViewer)
+    {
+        this.mRecyclerView=mRecyclerViewer;
+    }
+
+
+    /*@Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        pd = new ProgressDialog(context);
+        pd.setMessage("loading");
+        pd.show();
+    }*/
 
 
     public ArrayList<Evento> getListaEventos() { return listaEventos;  }
@@ -72,25 +88,11 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     @Override
     protected Void doInBackground(Void... voids) {
 
-       // bd.onUpgrade(bd,bd.getBDVersion(),bd.getBDVersion()+1);
-
-      /*  try {
-
-          bdHandler=new BDHandler(context);
-          bdHandler.onUpgrade(bdHandler.getReadableDatabase(),bdHandler.getBDVersion(), bdHandler.getBDVersion()+1);
-            Log.e(TAG, "UPGRADE db "+bdHandler.getBDVersion());
-        } catch (Exception e) {
-            Log.e(TAG, "UPGRADE db "+e.toString());
-       }*/
-
-
         SimpleDateFormat fechaf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         HttpHandler sh = new HttpHandler();
 
         // Making a request to url and getting response
         String jsonStr = sh.makeServiceCall(url);
-
-     //   eventoDB.open();
 
         if (jsonStr != null) {
             try {
@@ -108,18 +110,18 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
                     Date fechaFinalJSON = fechaf.parse(evento.getString("fechaFinal"));
                     String lugarJSON = evento.getString("lugar");
                     String descripcionJSON = evento.getString("descripcion");
-                    //String tipoJSON = evento.getString("tipo");
+                    String tipoJSON = descripcionJSON;
+
+                    //evento.getString("tipo");
 
                     Evento e = new Evento(tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON);
                     e.setId(Long.parseLong(idJSON));
-                   // e.setTipo(tipoJSON);
-
+                    e.setFavorito(false);
+                    e.setTipo(tipoJSON);
 
                     listaEventos.add(e);
-                    //Log.e(TAG,"BD, agregar : " + listaEventos.get(i).getTitulo()+" "+listaEventos.get(i).getId());
-
-                        // eventoDB.insert(e);
                 }
+
             } catch (final JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
 
@@ -131,6 +133,17 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
             Log.e(TAG, "Couldn't get json from server.");
 
         }
+
+
+
+        try {
+            agregarEventos();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
         return null;
 
     }
@@ -139,9 +152,95 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     protected void onPostExecute( Void result) {
         super.onPostExecute(result);
         // Dismiss the progress dialog
-       //layoutAdapter();
-     //  eventoDB.close();
 
+
+            try {
+                if (mRecyclerView!=null)
+                layoutAdapter();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+      /*  if (pd != null)
+        {
+            pd.dismiss();
+        }*/
+        Log.e(TAG,"--TERMINO BACKGROUND--");
+    }
+
+    public boolean getEventosTodos() throws ParseException {
+
+        listaBD=eventoDB.getTodosLosEventos();
+
+        if (listaBD!=null && listaBD.size()!=0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    public void agregarEventos() throws ParseException {
+        if (getEventosTodos()) {
+
+            Log.e(TAG, " EVENTOS JSON" + listaEventos.size()+"EVENTOS REFRESH - BD"+listaBD.size());
+
+            //Si la lista actualizada tiene más eventos que los que estan en base de datos
+
+
+
+            int size=listaEventos.size();
+
+            if(listaEventos.size()<listaBD.size() )
+            {
+                Log.d(TAG,"se quito de bd "+listaEventos.size()+listaBD.size());
+            }
+            else
+            {
+                for (int i = 0; i < listaEventos.size(); i++) {
+
+                    for (int j = 0; j < listaBD.size(); j++) {
+                        if (listaBD.get(j).getId() == (listaEventos.get(i).getId())) {
+                            Log.d(TAG, "REMOVE LISTA" + listaEventos.get(i).getId());
+                            //listaEventos.add(listaBD.get(i));
+                            listaBD.remove(listaEventos.get(i));
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            if(listaEventos.size()>listaBD.size() )
+                Log.d(TAG,"LISTA QUEDO"+listaEventos.size()+listaBD.size());
+
+        } else {
+            Log.e(TAG, "BD vacia");
+            Log.e(TAG, " EVENTOS JSON" + listaEventos.size()+"EVENTOS bd"+listaBD.size());
+
+            insertarEventos();
+        }
+    }
+
+    public void insertarEventos()
+    {
+        for (int i = 0; i < listaEventos.size(); i++)
+        {
+            eventoDB.insertarEvento(listaEventos.get(i));
+        }
+    }
+
+
+    public void layoutAdapter() throws ParseException {
+        listaEventos=eventoDB.getTodosLosEventos();
+        eventoAdapter = new EventoAdapter(listaEventos);
+
+        //Especificar Adapter
+        mRecyclerView.setAdapter(eventoAdapter);
+        eventoAdapter.notifyDataSetChanged();
     }
 
 

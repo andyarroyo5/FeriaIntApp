@@ -207,7 +207,7 @@ public class Evento implements Parcelable {
 
     public String toString ()
     {
-        return getId()+" "+getTitulo()+" "+getFechaInicio()+" "+getFechaFinal()+" "+getLugar()+" "+getDescripcion();
+        return "ID: "+getId()+" "+getTitulo()+" "+getFechaInicio()+" "+getFechaFinal()+" "+" favorito "+isFavorito()+" "+getLugar()+" "+getDescripcion();
     }
 
     @Override
@@ -223,7 +223,7 @@ public class Evento implements Parcelable {
         parcel.writeString(descripcion);
         parcel.writeString(tipo);
         parcel.writeString(hashtag);
-        parcel.writeByte((byte) (favorito ? 1 : 0));
+        parcel.writeString((String) (favorito ? "true" : "false"));
         parcel.writeString(fecha);
         parcel.writeString(horarioInicio);
         parcel.writeString(horarioFinal);

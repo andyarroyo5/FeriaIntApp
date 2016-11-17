@@ -1,5 +1,7 @@
 package edu.udem.feriaint.Adapters;
 
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +21,14 @@ import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderEvento;
 public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
 
     private ArrayList<Evento> listaEvento;
-    private ArrayList<Evento> listaEventosFavoritos;
+
 
 
     //Provide a suitable constructor
-    public EventoAdapter(ArrayList<Evento> listaEvento,ArrayList<Evento> listaEventosFavoritos ){
+    public EventoAdapter(ArrayList<Evento> listaEvento ){
         this.listaEvento = listaEvento;
-        this.listaEventosFavoritos=listaEventosFavoritos;
     }
+
 
     //Create new views (invoked by the layout manager)
     @Override
@@ -53,10 +55,19 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
 
 
         holder.setEvento(evento);
-        holder.setFavorito();
+
+       // holder.getAgregarFavoritos().callOnClick();
+        if(evento.isFavorito())
+        holder.getAgregarFavoritos().setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorAccent));
+
+
         holder.getTitulo().setText(String.valueOf(evento.getTitulo()));
         holder.getLugar().setText(evento.getLugar());
-        listaEventosFavoritos=holder.agregarFavoritos(listaEventosFavoritos);
+        try {
+            holder.agregarFavoritos();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         holder.agregarCalendario();
         holder.verDetalleEvento();
         holder.compartir();
@@ -135,9 +146,6 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
         notifyDataSetChanged();
     }
 
-    public ArrayList<Evento> getListaEventosFavoritos() {
-        return listaEventosFavoritos;
-    }
 }
 
 

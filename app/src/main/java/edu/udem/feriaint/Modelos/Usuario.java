@@ -1,5 +1,8 @@
 package edu.udem.feriaint.Modelos;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -7,7 +10,7 @@ import java.util.ArrayList;
  * Created by Andrea Arroyo on 06/11/2016.
  */
 
-public class Usuario {
+public class Usuario implements Parcelable {
 
     private long id;
     private String correo;
@@ -19,11 +22,43 @@ public class Usuario {
     private ArrayList<Evento> listaEventosFavoritos;
     private ArrayList<ContenidoCultural> listaContCultFavoritos;
 
-    public Usuario(){}
+    public Usuario(){
+
+        listaEventosFavoritos=new ArrayList<Evento>();
+        listaContCultFavoritos=new ArrayList<ContenidoCultural>();
+
+    }
     public Usuario(String twitter) {
+
         this.twitter = twitter;
+
+        listaEventosFavoritos=new ArrayList<Evento>();
+        listaContCultFavoritos=new ArrayList<ContenidoCultural>();
+
     }
 
+
+    protected Usuario(Parcel in) {
+        id = in.readLong();
+        correo = in.readString();
+        nombre = in.readString();
+        carrera = in.readString();
+        twitter = in.readString();
+        puntos = in.readInt();
+        listaEventosFavoritos = in.createTypedArrayList(Evento.CREATOR);
+    }
+
+    public static final Creator<Usuario> CREATOR = new Creator<Usuario>() {
+        @Override
+        public Usuario createFromParcel(Parcel in) {
+            return new Usuario(in);
+        }
+
+        @Override
+        public Usuario[] newArray(int size) {
+            return new Usuario[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -91,8 +126,22 @@ public class Usuario {
 
     public String toString()
     {
-        return getId()+" "+getNombre()+" "+getCorreo()+" "+getTwitter()+" "+getPuntos()+" "+getCarrera();
+        return getId()+" "+"NOMBRE "+getNombre()+" "+"CORREO "+getCorreo()+" "+"CARRERA "+getCarrera()+" "+"TWITTER "+getTwitter()+" "+"PUNTOS "+getPuntos();
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(nombre);
+        parcel.writeString(correo);
+        parcel.writeString(carrera);
+        parcel.writeString(twitter);
+
+    }
 }

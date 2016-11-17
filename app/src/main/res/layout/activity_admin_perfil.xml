@@ -39,7 +39,7 @@
             android:layout_marginTop="10dp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -49,7 +49,9 @@
             android:padding="20dp"
             android:text="Andrea Arroyo"
             android:id="@+id/usuario_nombre"
-            tools:ignore="HardcodedText,UnusedAttribute" />
+            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute" />
+
+
         <TextView
             android:text="Correo"
             android:layout_width="match_parent"
@@ -59,7 +61,7 @@
             android:layout_marginTop="10dp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -69,7 +71,7 @@
             android:padding="20dp"
             android:text="sonia.arroyo@udem.edu"
             android:id="@+id/usuario_correo"
-            tools:ignore="HardcodedText,UnusedAttribute" />
+            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute" />
 
         <TextView
             android:text="Carrera"
@@ -80,7 +82,7 @@
             android:layout_marginTop="10dp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -91,7 +93,8 @@
             android:elevation="4dp"
             android:padding="20dp"
             android:text="ITC"
-            tools:ignore="HardcodedText,UnusedAttribute" />
+            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute"
+            android:id="@+id/usuario_carrera" />
 
         <TextView
             android:text="Twitter"
@@ -102,7 +105,7 @@
             android:layout_marginTop="10dp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -113,15 +116,16 @@
             android:elevation="4dp"
             android:padding="20dp"
             android:text="No tienes vinculada tu cuenta"
-            tools:ignore="HardcodedText,UnusedAttribute"
-            android:id="@+id/txtUsuarioTwitter" />
+            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute"
+            android:id="@+id/usuario_twitter" />
 
         <Button
             android:text="Guardar Cambios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button5"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:onClick="guardarCambios" />
     </LinearLayout>
 
 

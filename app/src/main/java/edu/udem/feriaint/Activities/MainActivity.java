@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import edu.udem.feriaint.Adapters.TabPagerAdapter;
 import edu.udem.feriaint.Data.BDHandler;
+import edu.udem.feriaint.Data.UsuarioDB;
 import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.R;
 
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private TabPagerAdapter mTabPagerAdapter;
     private ViewPager mViewPager;
     private BDHandler bdHandler;
-    private  Intent login;
     public Usuario currentUsuario;
 
     private String TAG ;
@@ -35,19 +35,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
         TAG=this.getClass().getSimpleName();
+
+
+        setContentView(R.layout.activity_main);
+
+        upgradeBD();
         setLayoutMain();
         setCurrentUser();
-
-          try {
-
-          bdHandler=new BDHandler(this);
-          bdHandler.onUpgrade(bdHandler.getReadableDatabase(),bdHandler.getBDVersion(), bdHandler.getBDVersion()+1);
-            Log.e(TAG, "UPGRADE db "+bdHandler.getBDVersion());
-        } catch (Exception e) {
-            Log.e(TAG, "UPGRADE db "+e.toString());
-       }
     }
 
 
@@ -60,21 +56,22 @@ public class MainActivity extends AppCompatActivity {
         bUsuario.putString("tipo","twitter");
 
         //if correo else twitter
-
         currentUsuario.setTwitter(bUsuario.getString("user"));
         currentUsuario.setNombre("Andrea");
+       // currentUsuario.setCarrera("ITC");
 
+        //Add User BD
+        UsuarioDB usuarioDB=new UsuarioDB(this);
+        usuarioDB.insertar(currentUsuario);
 
         String msg = "@" + bUsuario.getString("user") + " logged in!";
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
-   public Usuario getCurrentUsuario()
+  /* public Usuario getCurrentUsuario()
     {
-        //Bundle bUsuario=new Bundle();
-        //bUsuario.putParcelable("usuario", (Parcelable) currentUsuario);
         return currentUsuario;
-    }
+    }*/
 
     protected void setLayoutMain()
     {
@@ -101,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         mTabPagerAdapter.setColorTabs(tabLayout,getApplicationContext());
 
 
+        //Filtro por temas
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +113,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void upgradeBD()
+    {
+        try {
+
+          bdHandler=new BDHandler(this);
+          bdHandler.onUpgrade(bdHandler.getReadableDatabase(),bdHandler.getBDVersion(), bdHandler.getBDVersion()+1);
+            Log.e(TAG, "UPGRADE db "+bdHandler.getBDVersion());
+        } catch (Exception e) {
+            Log.e(TAG, "UPGRADE db "+e.toString());
+       }
+    }
 
 
     @Override
@@ -137,6 +146,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(acercaDe);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, "+ ON START +");
+
+
+        //ver si existe en web
+
     }
 
     @Override
