@@ -1,9 +1,9 @@
 package edu.udem.feriaint.Activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,10 +16,14 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import java.util.concurrent.ExecutionException;
+
 import edu.udem.feriaint.Adapters.TabPagerAdapter;
 import edu.udem.feriaint.Data.BDHandler;
 import edu.udem.feriaint.Data.UsuarioDB;
+import edu.udem.feriaint.Modelos.Edicion;
 import edu.udem.feriaint.Modelos.Usuario;
+import edu.udem.feriaint.Parser.EdicionJSON;
 import edu.udem.feriaint.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private TabPagerAdapter mTabPagerAdapter;
     private ViewPager mViewPager;
     private BDHandler bdHandler;
-    public Usuario currentUsuario;
+    private EdicionJSON edicionJSON;
+
+
+    public static Usuario currentUsuario;
+    public static Edicion edicion;
 
     private String TAG ;
 
@@ -38,12 +46,19 @@ public class MainActivity extends AppCompatActivity {
 
         TAG=this.getClass().getSimpleName();
 
-
         setContentView(R.layout.activity_main);
 
         upgradeBD();
-        setLayoutMain();
+        try {
+            getEdicionJSON();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         setCurrentUser();
+        setLayoutMain();
+
     }
 
 
@@ -90,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mTabPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         tabLayout.setupWithViewPager(mViewPager);
         //Configuar los íconos en las pestañas
@@ -98,13 +113,15 @@ public class MainActivity extends AppCompatActivity {
         mTabPagerAdapter.setColorTabs(tabLayout,getApplicationContext());
 
 
+
         //Filtro por temas
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Filtrar por temas", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                String tab= String.valueOf(tabLayout.getSelectedTabPosition());
+                Log.d(TAG, "GET in FAB"+ tab);
 
                 Intent filtrar=new Intent(getApplicationContext(), Filtrar_Activity.class);
                 startActivityForResult(filtrar, 55);
@@ -125,6 +142,17 @@ public class MainActivity extends AppCompatActivity {
        }
     }
 
+    public void getEdicionJSON() throws ExecutionException, InterruptedException {
+        edicionJSON=new EdicionJSON(this);
+        //edicionJSON.execute();
+        edicion= edicionJSON.execute().get();
+        //while(!edicionJSON.getStatus().equals(AsyncTask.Status.FINISHED));
+
+
+
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,8 +166,17 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Intent sigin = new Intent(this, AcercaDe.class);
-                startActivity(sigin);
+
+                if (edicionJSON.getStatus() == AsyncTask.Status.FINISHED)
+            {
+
+                Intent acercaDe = new Intent(this, AcercaDe.class);
+                acercaDe.putExtra("pais", edicion.getPais());
+                acercaDe.putExtra("fechaInicio", edicion.getFechaInicio());
+                acercaDe.putExtra("fechaFinal", edicion.getFechaFinal());
+                startActivity(acercaDe);
+            }
+
                 break;
             case R.id.app_bar_search:
                 Intent acercaDe = new Intent(this, AcercaDe.class);

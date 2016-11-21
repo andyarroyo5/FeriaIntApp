@@ -8,28 +8,43 @@ import java.util.ArrayList;
 
 public class Tema {
 
-    int id;
-    String tema;
+    long id;
+    String nombre;
     ArrayList<Evento> listaEventos;
+    ArrayList<Evento> listaContCultural;
     //color?
 
     public Tema(String tema) {
-        this.tema = tema;
+        this.nombre = tema;
     }
 
-    public int getId() {
+    public Tema(Long temaId, String temaNombre) {
+        this.id=temaId;
+        this.nombre=temaNombre;
+    }
+
+    public Tema() {
+
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getTema() {
-        return tema;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setTema(String tema) {
-        this.tema = tema;
+    public void setNombre(String tema) {
+        this.nombre = tema;
+    }
+
+    public String toString()
+    {
+        return getId()+" Tema: "+getNombre();
     }
 }

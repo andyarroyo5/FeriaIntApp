@@ -2,15 +2,19 @@ package edu.udem.feriaint.Adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Fragment.Fragment_ContenidoCultural;
 import edu.udem.feriaint.Fragment.Fragment_Evento;
 import edu.udem.feriaint.Fragment.Fragment_Perfil;
+import edu.udem.feriaint.Modelos.Edicion;
+import edu.udem.feriaint.Parser.EdicionJSON;
 import edu.udem.feriaint.R;
 import edu.udem.feriaint.Fragment.Fragment_Home;
 
@@ -19,6 +23,9 @@ import edu.udem.feriaint.Fragment.Fragment_Home;
  */
 
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
+
+    private String TAG;
+    private Edicion edicion;
 
     //private TabLayout tabLayout;
     private int[] tabIcons = {
@@ -53,6 +60,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     }
 
 
+
     @Override
     public int getCount() {
         // Show 3 total pages.
@@ -65,7 +73,9 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
 
             case 0: // siempre empieza desde 0
-                return new Fragment_Home();
+
+                Fragment_Home home=new Fragment_Home();
+                return home;
 
             case 1:
                 return new Fragment_Evento();
@@ -96,6 +106,16 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                 return "Perfil";
         }*/
         return null;
+    }
+
+    public void getEdicion(Context context)
+    {
+       EdicionJSON edicionJSON=new EdicionJSON(context);
+        edicionJSON.execute();
+        if (edicionJSON.getStatus() == AsyncTask.Status.FINISHED) {
+            edicion = edicionJSON.getEdicion();
+        }
+
     }
 
 }

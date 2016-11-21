@@ -41,10 +41,15 @@ public class ContenidoCulturalAdapter extends RecyclerView.Adapter<ViewHolderCon
         final ContenidoCultural cont_cult = listaContenido.get(position);
         holder.setContenidoCultural(cont_cult);
         holder.getTitulo().setText(cont_cult.getTitulo());
-        holder.getImgContenido().setImageResource(cont_cult.getImg());
+        holder.getTema().setText(cont_cult.getTema().getNombre());
         holder.verDetalleContCult();
 
+        //holder.getImgPortada().setImageResource(cont_cult.getImg());
+
     }
+
+
+
 
     @Override
     public int getItemCount() {

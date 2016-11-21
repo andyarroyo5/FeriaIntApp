@@ -41,7 +41,7 @@ public class TemaAdapter extends RecyclerView.Adapter<ViewHolder_Tema> {
 
         final Tema temas = listaTemas.get(position);
 
-        holder.getTema().setText((temas.getTema()));
+        holder.getTema().setText((temas.getNombre()));
     }
 
 

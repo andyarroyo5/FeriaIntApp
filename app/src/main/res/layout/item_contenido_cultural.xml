@@ -29,17 +29,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="192dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/evento"
-                    android:scaleType="centerCrop"
-                    tools:ignore="ContentDescription,ObsoleteLayoutParam"
-                    android:layout_weight="1"
-                    android:layout_alignParentBottom="true"
-                    android:id="@+id/contenido_imagen" />
+                android:layout_height="192dp"
+                android:background="@color/accent">
 
                 <TextView
                     android:id="@+id/contenido_titulo"
@@ -57,6 +48,16 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true" />
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    tools:ignore="ContentDescription,ObsoleteLayoutParam"
+                    android:layout_weight="1"
+                    android:id="@+id/contenido_img_portada"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -66,35 +67,24 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
 
-                <ImageButton
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/heart_outline"
-                    android:id="@+id/imageButton3"
-                    android:layout_weight="0.35"
-                    android:tint="@color/colorAccent"
-                    tools:ignore="ContentDescription,UnusedAttribute,VectorDrawableCompat"
-                    android:layout_width="0dp"
-                    android:foregroundTintMode="multiply"
-                    android:background="@android:color/transparent"
-                    android:tintMode="src_atop" />
-
                 <TextView
-                    android:text="lo han agregado a sus favoritos"
-                    android:layout_width="0dp"
+                    android:text="Relaciones Internacionales"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/textView5"
-                    android:layout_weight="1"
+                    android:id="@+id/txtTemaNombre"
                     android:gravity="center_vertical"
                     tools:ignore="HardcodedText"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp" />
+                    android:paddingRight="10dp"
+                    android:textAlignment="center" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="10dp">
 
                 <ImageButton
                     android:layout_width="wrap_content"

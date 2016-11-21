@@ -223,7 +223,7 @@ public class Evento implements Parcelable {
         parcel.writeString(descripcion);
         parcel.writeString(tipo);
         parcel.writeString(hashtag);
-        parcel.writeString((String) (favorito ? "true" : "false"));
+        parcel.writeString((favorito ? "true" : "false"));
         parcel.writeString(fecha);
         parcel.writeString(horarioInicio);
         parcel.writeString(horarioFinal);

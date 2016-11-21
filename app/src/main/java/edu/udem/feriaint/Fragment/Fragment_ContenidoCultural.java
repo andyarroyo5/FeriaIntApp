@@ -1,10 +1,13 @@
 package edu.udem.feriaint.Fragment;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +18,19 @@ import java.util.List;
 import edu.udem.feriaint.Adapters.ContenidoCulturalAdapter;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
+import edu.udem.feriaint.Parser.ContCulturalJSON;
 import edu.udem.feriaint.R;
 
 /**
  * Created by Andrea Arroyo on 11/10/2016.
  */
 
-public class Fragment_ContenidoCultural extends android.support.v4.app.Fragment {
+public class Fragment_ContenidoCultural extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    public String TAG;
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
+    SwipeRefreshLayout swipeContainerCultura;
     ArrayList<ContenidoCultural> listaContenidoCultural;
     ContenidoCulturalAdapter mContenidoCulturalAdapter;
 
@@ -35,6 +41,7 @@ public class Fragment_ContenidoCultural extends android.support.v4.app.Fragment 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TAG=this.getClass().getSimpleName();
 
     }
 
@@ -44,6 +51,8 @@ public class Fragment_ContenidoCultural extends android.support.v4.app.Fragment 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_cultura, container, false);
 
+        swipeContainerCultura=(SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainerCultura);
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_cultura);
 
         if (mRecyclerView != null) {
@@ -51,25 +60,36 @@ public class Fragment_ContenidoCultural extends android.support.v4.app.Fragment 
         }
 
         listaContenidoCultural=new ArrayList<>();
-        inicializarDatos();
         mLayoutManager =  new GridLayoutManager(getActivity(),2);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mContenidoCulturalAdapter=new ContenidoCulturalAdapter(listaContenidoCultural);
-        mRecyclerView.setAdapter(mContenidoCulturalAdapter);
-        mContenidoCulturalAdapter.notifyDataSetChanged();
+        //swipeContainerCultura.setRefreshing(true);
+        getJSON();
 
 
         return rootView;
     }
 
-    private void inicializarDatos() {
+    private void getJSON() {
 
-        listaContenidoCultural.add(new ContenidoCultural("Corea y su gastronomía",R.drawable.evento));
-        listaContenidoCultural.add(new ContenidoCultural("Fun Facts",R.drawable.evento2));
-        listaContenidoCultural.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));
+        ContCulturalJSON contCultJson=new ContCulturalJSON(getContext());
+        contCultJson.setRecyclerViewer(mRecyclerView);
+        contCultJson.setSwipeContainer(swipeContainerCultura);
+        contCultJson.execute();
+
+        if (contCultJson.getStatus() == AsyncTask.Status.FINISHED) {
+            swipeContainerCultura.setRefreshing(false);
+        }
+
+        //Log.d(TAG, String.valueOf(contCultJson.execute().getStatus()));
 
     }
 
+    @Override
+    public void onRefresh() {
+
+
+        getJSON();
+
+    }
 }

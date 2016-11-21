@@ -1,16 +1,8 @@
 package edu.udem.feriaint.Data;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
-import edu.udem.feriaint.Modelos.Evento;
 
 /**
  * Created by laboratorio on 10/16/16.
@@ -70,8 +62,41 @@ public class BDHandler extends SQLiteOpenHelper {
             + TWITTER+" TEXT, "
             + PUNTOS+ " TEXT"+")";
 
+    public static final String TABLA_TEMA_CONTCULTURAL = "Tema";
+
+    // Contacts Table Columns names
+    public static final String ID_TEMA_CONTCULTURAL = "id_Tema";
+    public static final String NOMBRE_TEMA_CONTCULTURAL = "nombre";
 
 
+    String CREAR_TABLA_TEMA_CONTCULTURAL = "CREATE TABLE " + TABLA_TEMA_CONTCULTURAL + "("
+            + ID_TEMA_CONTCULTURAL + " INTEGER PRIMARY KEY,"
+            + NOMBRE_TEMA_CONTCULTURAL + " TEXT "+")";
+
+    public static final String TABLA_TEMA_EVENTOS = "Tema_Eventos";
+
+    // Contacts Table Columns names
+    public static final String ID_TEMA_EVENTOS = "id_Tema";
+    public static final String NOMBRE_TEMA_EVENTOS = "nombre";
+
+
+    String CREAR_TABLA_TEMA_EVENTOS = "CREATE TABLE " + TABLA_TEMA_EVENTOS + "("
+            + ID_TEMA_EVENTOS + " INTEGER PRIMARY KEY,"
+            + NOMBRE_TEMA_EVENTOS + " TEXT "+")";
+
+    public static final String TABLA_EDICION = "Edicion";
+
+    // Contacts Table Columns names
+    public static final String ID_EDICION = "id_Edicion";
+    public static final String PAIS = "pais";
+    public static final String FECHA_INICIO_EDICION = "fecha_inicio_edicion";
+    public static final String FECHA_FINAL_EDICION = "fecha_final_edicion";
+
+    String CREAR_TABLA_EDICION = "CREATE TABLE " + TABLA_EDICION + "("
+            + ID_EDICION + " INTEGER PRIMARY KEY,"
+            + PAIS + " TEXT, "
+            + FECHA_INICIO_EDICION + " TEXT,"
+            + FECHA_FINAL_EDICION + "TEXT"+")";
 
     public BDHandler(Context context) {
         super(context, BD_NOMBRE, null, BD_VERSION);
@@ -89,6 +114,8 @@ public class BDHandler extends SQLiteOpenHelper {
 
         bd.execSQL(CREAR_TABLA_EVENTO);
         bd.execSQL(CREAR_TABLA_USUARIO);
+        bd.execSQL(CREAR_TABLA_TEMA_CONTCULTURAL);
+        bd.execSQL(CREAR_TABLA_EDICION);
 
     }
 
@@ -98,6 +125,8 @@ public class BDHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_EVENTO);
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIO);
+        bd.execSQL("DROP TABLE IF EXISTS " + TABLA_TEMA_CONTCULTURAL);
+        bd.execSQL("DROP TABLE IF EXISTS " + TABLA_EDICION);
              // Create tables again
         onCreate(bd);
     }

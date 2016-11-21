@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 
 import edu.udem.feriaint.Adapters.TemaAdapter;
+import edu.udem.feriaint.Data.TemaContCulturalBD;
 import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.R;
 
@@ -56,7 +57,8 @@ public class Filtrar_Activity extends AppCompatActivity {
 
     private void inicializarDatos() {
         listaTemas=new ArrayList<Tema>();
-
+        TemaContCulturalBD temaBD=new TemaContCulturalBD(getApplicationContext());
+        listaTemas=temaBD.getTemas();
         listaTemas.add(new Tema("Literatura"));
         listaTemas.add(new Tema("Arte"));
         listaTemas.add(new Tema("Entretenimiento"));

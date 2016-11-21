@@ -49,6 +49,8 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     private BDHandler bdHandler;
     private EventoDB eventoDB;
     private ArrayList<Evento> listaBD;
+    private SwipeRefreshLayout swipeContainerEventos;
+
     EventoAdapter eventoAdapter;
     ProgressDialog pd;
     RecyclerView mRecyclerView;
@@ -74,13 +76,18 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     }
 
 
-    /*@Override
+    public void setSwipeContainer (SwipeRefreshLayout swipeContainerEventos)
+    {
+        this.swipeContainerEventos=swipeContainerEventos;
+
+    }
+
+    @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        pd = new ProgressDialog(context);
-        pd.setMessage("loading");
-        pd.show();
-    }*/
+
+        swipeContainerEventos.setRefreshing(true);
+    }
 
 
     public ArrayList<Evento> getListaEventos() { return listaEventos;  }
@@ -157,6 +164,8 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
             try {
                 if (mRecyclerView!=null)
                 layoutAdapter();
+
+                swipeContainerEventos.setRefreshing(false);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

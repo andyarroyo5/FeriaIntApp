@@ -156,10 +156,6 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
         getCVEvento().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast t= Toast.makeText(v.getContext(),
-                        "EVENTO DETALLE", Toast.LENGTH_SHORT);
-
-                t.show();
 
                 SimpleDateFormat dia=new SimpleDateFormat("dd");
                 SimpleDateFormat mes=new SimpleDateFormat("MMMM");

@@ -61,7 +61,7 @@ public class Fragment_Perfil extends Fragment{
     RecyclerView rvEventos;
     RecyclerView rvContCultural;
 
-    Usuario currentUsuario;
+   // Usuario currentUsuario;
 
    // String usuarioNombre;
     boolean twitter=false;
@@ -115,12 +115,12 @@ public class Fragment_Perfil extends Fragment{
         usuarioTwitter=(TextView) rootView.findViewById(R.id.txtUsuarioTwitter);
 
 
-        try {
+     /*   try {
             getUsuario();
             getBundleInfo();
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
         setUsuarioInfo();
 
         btnFavoritoPerfil.setOnClickListener(new View.OnClickListener()
@@ -219,9 +219,9 @@ public class Fragment_Perfil extends Fragment{
                 adminPerfilIntent.putExtra("correo",usuarioCorreo.getText());
                 adminPerfilIntent.putExtra("carrera",usuarioCarrera.getText());
                 adminPerfilIntent.putExtra("twitter",usuarioTwitter.getText());
-                adminPerfilIntent.putExtra("usuario", (Parcelable) currentUsuario);
-                startActivity(adminPerfilIntent);
-              //  startActivityForResult(adminPerfilIntent,REQUEST_CODE);
+               // adminPerfilIntent.putExtra("usuario", (Parcelable) currentUsuario);
+              //  startActivity(adminPerfilIntent);
+               startActivityForResult(adminPerfilIntent,REQUEST_CODE);
 
 
             }
@@ -241,8 +241,7 @@ public class Fragment_Perfil extends Fragment{
         return rootView;
     }
 
-
-
+    /*
     private void getBundleInfo() {
 
        bUsuario =getActivity().getIntent().getExtras();
@@ -286,17 +285,28 @@ public class Fragment_Perfil extends Fragment{
 
         Log.e(TAG,"GET IN PERFIL"+currentUsuario.toString());
 
+    }*/
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == MainActivity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+               // mPostsAdapter.notifyDataSetChanged();
+                setUsuarioInfo();
+            }
+        }
     }
 
 
     public void setUsuarioInfo()
     {
-        usuarioNombre.setText(currentUsuario.getNombre());
-        usuarioCorreo.setText(currentUsuario.getCorreo()!=""? currentUsuario.getCarrera():"No tienes agregado tu mail ");
-        usuarioCarrera.setText(currentUsuario.getCarrera()!="" ? currentUsuario.getCarrera():"No tienes agregada tu carrera" );
-        usuarioTwitter.setText(currentUsuario.getTwitter());
+        usuarioNombre.setText(MainActivity.currentUsuario.getNombre());
+        usuarioCorreo.setText(MainActivity.currentUsuario.getCorreo()!=""? MainActivity.currentUsuario.getCarrera():"No tienes agregado tu mail ");
+        usuarioCarrera.setText(MainActivity.currentUsuario.getCarrera()!="" ? MainActivity.currentUsuario.getCarrera():"No tienes agregada tu carrera" );
+        usuarioTwitter.setText(MainActivity.currentUsuario.getTwitter());
 
-        Log.e(TAG,currentUsuario.toString());
+        Log.e(TAG,MainActivity.currentUsuario.toString());
 
     }
 
@@ -317,7 +327,7 @@ public class Fragment_Perfil extends Fragment{
              {
                  if(eventos.get(i).isFavorito())
                  {
-                     currentUsuario.getListaEventosFavoritos().add(eventos.get(i));
+                     MainActivity.currentUsuario.getListaEventosFavoritos().add(eventos.get(i));
                      listaEventos.add(eventos.get(i));
                  }
              }
@@ -333,8 +343,8 @@ public class Fragment_Perfil extends Fragment{
     }
 
     private ArrayList<Object> getFavoritos() {
-        ArrayList<Object> items = new ArrayList<>();
-
+       ArrayList<Object> items = new ArrayList<>();
+/*
         Date p=new Date();
         Calendar c= new GregorianCalendar();
         c.getTime();
@@ -343,8 +353,9 @@ public class Fragment_Perfil extends Fragment{
         items.add(new ContenidoCultural("Corea y su gastronomía",R.drawable.evento));
         items.add(new ContenidoCultural("Fun Facts",R.drawable.evento2));
         items.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));
-
+*/
         return items;
+
     }
 
 

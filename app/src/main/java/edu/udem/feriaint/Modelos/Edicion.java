@@ -11,14 +11,16 @@ public class Edicion {
     private String pais;
     private Date fechaInicio;
     private Date fechaFinal;
-    String fecha;
+    private String imgLogo;
 
 
     public Edicion(){}
 
-    public Edicion(String pais, String fecha) {
+
+    public Edicion(String pais, Date fechaInicio, Date fechaFinal) {
         this.pais = pais;
-        this.fecha=fecha;
+        this.fechaInicio=fechaInicio;
+        this.fechaFinal=fechaFinal;
     }
 
     public String getPais() {
@@ -45,11 +47,9 @@ public class Edicion {
         this.fechaFinal = fechaFinal;
     }
 
-    public String getFecha() {
-        return fecha;
-    }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public String toString()
+    {
+        return  getPais()+" "+getFechaInicio()+" "+getFechaFinal();
     }
 }

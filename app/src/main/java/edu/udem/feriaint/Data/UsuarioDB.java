@@ -24,12 +24,10 @@ public class UsuarioDB {
 
     SQLiteOpenHelper bdhandler;
     SQLiteDatabase bd;
-    Usuario usuario;
+
 
 
     public UsuarioDB (Context context){
-
-        usuario=new Usuario();
         bdhandler = new BDHandler(context);
     }
 
@@ -51,15 +49,14 @@ public class UsuarioDB {
         ContentValues values = new ContentValues();
         try {
 
-            values.put(BDHandler.NOMBRE, usuario.getNombre()!=null?  usuario.getNombre(): "");
-            values.put(BDHandler.CORREO, usuario.getCorreo()!=null?  usuario.getCorreo(): "");
-            values.put(BDHandler.CARRERA, usuario.getCarrera()!=null?  usuario.getCarrera(): "");
-            values.put(BDHandler.TWITTER, usuario.getTwitter()!=null?  usuario.getTwitter(): "");
-            values.put(BDHandler.PUNTOS, usuario.getPuntos());
+            values.put(BDHandler.NOMBRE, usuarioNuevo.getNombre()!=null?  usuarioNuevo.getNombre(): "");
+            values.put(BDHandler.CORREO, usuarioNuevo.getCorreo()!=null?  usuarioNuevo.getCorreo(): "");
+            values.put(BDHandler.CARRERA, usuarioNuevo.getCarrera()!=null?  usuarioNuevo.getCarrera(): "");
+            values.put(BDHandler.TWITTER, usuarioNuevo.getTwitter()!=null?  usuarioNuevo.getTwitter(): "");
+            values.put(BDHandler.PUNTOS, usuarioNuevo.getPuntos());
 
             long id= bd.insert(BDHandler.TABLA_USUARIO,null, values);
             usuarioNuevo.setId(id);
-            setUsuario(usuarioNuevo);
             Log.e(TAG, " Agregar en BD "+ usuarioNuevo.toString());
 
         } catch (SQLException e) {
@@ -104,17 +101,11 @@ public class UsuarioDB {
             do {
                 Usuario usuario = new Usuario();
                 usuario.setId(Integer.parseInt(cursor.getString(0)));
-                Log.e(TAG, " CURSOR -0 " + cursor.getString(0));
                 usuario.setNombre(cursor.getString(1));
-                Log.e(TAG, " CURSOR -1 " + cursor.getString(1));
                 usuario.setCorreo(cursor.getString(2));
-                Log.e(TAG, " CURSOR -2 " + cursor.getString(2));
                 usuario.setCarrera(cursor.getString(3));
-                Log.e(TAG, " CURSOR -3 " + cursor.getString(3));
                 usuario.setTwitter(cursor.getString(4));
-                Log.e(TAG, " CURSOR -4 " + cursor.getString(4));
                 usuario.setPuntos(cursor.getInt(5));
-                Log.e(TAG, " CURSOR -5 " + cursor.getString(5));
 
                 Log.e(TAG, " Get usuario " + usuario);
                 listaUsuarios.add(usuario);
@@ -122,12 +113,7 @@ public class UsuarioDB {
             } while (cursor.moveToNext());
             close();
         }
-
-
-
-                return usuario;
-
-
+                return listaUsuarios.get(0);
         }
 
 
@@ -143,7 +129,6 @@ public class UsuarioDB {
         cv.put(BDHandler.CARRERA, usuario.getCarrera());
         cv.put(BDHandler.TWITTER, usuario.getTwitter());
 
-       setUsuario(usuario);
         Log.e(TAG,usuario.toString());
 
         bd.update(BDHandler.TABLA_USUARIO, cv, BDHandler.ID_USUARIO+"= "+usuario.getId(), null);
@@ -151,14 +136,6 @@ public class UsuarioDB {
 
     }
 
-    public Usuario getUsuario()
-    {
-        return usuario;
-    }
 
-    public void setUsuario(Usuario usuario)
-    {
-        this.usuario=usuario;
-    }
 
 }

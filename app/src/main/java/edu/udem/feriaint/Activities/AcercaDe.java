@@ -27,8 +27,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 
+import java.text.SimpleDateFormat;
+
 import edu.udem.feriaint.Modelos.Edicion;
 import edu.udem.feriaint.Parser.AppController;
+import edu.udem.feriaint.Parser.EdicionJSON;
 import edu.udem.feriaint.R;
 
 
@@ -41,7 +44,7 @@ public class AcercaDe extends AppCompatActivity {
     private ProgressDialog pDialog;
     private TextView pais;
     private TextView fecha;
-    private String jsonResponse;
+
 
 
     private String urlJsonObj = "https://feriaint.herokuapp.com/app/edicion";
@@ -58,136 +61,28 @@ public class AcercaDe extends AppCompatActivity {
         TAG=this.getClass().getSimpleName();
 
         pDialog=new ProgressDialog(this);
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
+     //   pDialog.setMessage("Please wait...");
+      //  pDialog.setCancelable(false);
 
         //makeJsonRequest();
-        makeJsonArrayRequest();
+       // makeJsonArrayRequest();
 
         //pais=(TextView) findViewById(R.id.pais);
+
+        SimpleDateFormat fechaFormato= new SimpleDateFormat("EEEE MMM dd");
+
+        Bundle b= getIntent().getExtras();
+
+
+        String fechaInicio= fechaFormato.format(MainActivity.edicion.getFechaInicio());
+        String fechaFinal= fechaFormato.format(MainActivity.edicion.getFechaFinal());
+
+
         fecha=(TextView) findViewById(R.id.edicion_fecha);
-
+        //fecha.setText(b.getString("fechaInicio")+ "al "+ b.getString("fechaFinal"));
+        fecha.setText(fechaInicio+ " -  "+ fechaFinal);
 
 
     }
 
-
-    public void makeJsonRequest() {
-       showpDialog();
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.GET,
-                urlJsonObj, null, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, response.toString());
-
-                try {
-                    // Parsing json object response
-                    // response will be a json object
-                    String paisJSON = response.getString("pais");
-                    String fechaInicio = response.getString("fechaInicio");
-                    String fechaFinal = response.getString("fechaFinal");
-                    String fecha= fechaInicio+" al "+fechaFinal;
-
-
-                    jsonResponse = "";
-                    jsonResponse += "Pais: " + paisJSON + "\n\n";
-                    jsonResponse += "Fecha: " + fecha + "\n\n";
-
-                   // pais.setText(jsonResponse);
-                    //edicion=new Edicion(paisJSON,fecha);
-                    //System.out.println(edicion.getPais()+" "+edicion.getFecha());
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),
-                            "Error: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
-                }
-                hidepDialog();
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                // hide the progress dialog
-                hidepDialog();
-            }
-        });
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
-    }
-
-    private void makeJsonArrayRequest() {
-
-        showpDialog();
-
-        JsonArrayRequest req = new JsonArrayRequest(urlJsonObj,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
-
-                        try {
-                            // Parsing json array response
-                            // loop through each json object
-                            jsonResponse = "";
-                            for (int i = 0; i < response.length(); i++) {
-
-                                JSONObject edicion = (JSONObject) response
-                                        .get(i);
-
-                                String paisJSON = edicion.getString("pais");
-                                String fechaInicio = edicion.getString("fechaInicio");
-                                String fechaFinal = edicion.getString("fechaFinal");
-                                String fechaJSON= fechaInicio+" al "+fechaFinal;
-
-
-                                jsonResponse = "";
-                                jsonResponse += "Pais: " + paisJSON + "\n\n";
-                                jsonResponse += "Fecha: " + fechaJSON + "\n\n";
-
-                                pais.setText(paisJSON);
-                                fecha.setText(fechaJSON);
-                            }
-
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),
-                                    "Error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
-
-                        hidepDialog();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
-               hidepDialog();
-            }
-        });
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req);
-    }
-
-   private void showpDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
 }

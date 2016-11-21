@@ -135,7 +135,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
        // Log.e("COMPLEX",contcult.getTitulo());
         vh3.setContenidoCultural(contcult);
         vh3.getTitulo().setText(contcult.getTitulo());
-        vh3.getImgContenido().setImageResource(contcult.getImg());
+        //vh3.getImgPortada().setImageResource(contcult.getImg());
         vh3.verDetalleContCult();
 
     }

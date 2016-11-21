@@ -24,7 +24,7 @@ public class AdminPerfil_Activity extends AppCompatActivity {
     EditText carrera;
     EditText twitter;
 
-    Usuario currentUsuario;
+   // Usuario currentUsuario;
 
 
     @Override
@@ -39,11 +39,11 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         carrera=(EditText) findViewById(R.id.usuario_carrera);
         twitter=(EditText) findViewById(R.id.usuario_twitter);
 
-        nombre.setText(bUsuario.getString("nombre"));
-        correo.setText(bUsuario.getString("correo"));
-        carrera.setText(bUsuario.getString("carrera"));
-        twitter.setText(bUsuario.getString("twitter"));
-        currentUsuario=bUsuario.getParcelable("usuario");
+        nombre.setText(MainActivity.currentUsuario.getNombre());
+        correo.setText(MainActivity.currentUsuario.getCorreo());
+        carrera.setText(MainActivity.currentUsuario.getCarrera());
+        twitter.setText(MainActivity.currentUsuario.getTwitter());
+       // MaicurrentUsuario=bUsuario.getParcelable("usuario");
 
 
 
@@ -59,12 +59,12 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         UsuarioDB usuarioDB=new UsuarioDB(this);
         //Get usuario?
 
-        currentUsuario.setNombre(nombre.getText().toString());
-        currentUsuario.setCorreo(correo.getText().toString());
-        currentUsuario.setCarrera(carrera.getText().toString());
-        currentUsuario.setTwitter(twitter.getText().toString());
+        MainActivity.currentUsuario.setNombre(nombre.getText().toString());
+        MainActivity.currentUsuario.setCorreo(correo.getText().toString());
+        MainActivity. currentUsuario.setCarrera(carrera.getText().toString());
+        MainActivity.currentUsuario.setTwitter(twitter.getText().toString());
 
-        usuarioDB.actualizar(currentUsuario);
+        usuarioDB.actualizar(MainActivity.currentUsuario);
 
         /*
         resultInfo.putExtra("nombre",nombre.getText().toString());
@@ -72,17 +72,13 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         resultInfo.putExtra("carrera",carrera.getText().toString());
         resultInfo.putExtra("twitter",twitter.getText().toString());
 
-
-
         resultInfo.putString("nombre",nombre.getText().toString());
         resultInfo.putString("correo",correo.getText().toString());
         resultInfo.putString("carrera",carrera.getText().toString());
         resultInfo.putString("twitter",twitter.getText().toString());
 
         */
-
         //startActivity(resultInfo);
-
         finish();
     }
 

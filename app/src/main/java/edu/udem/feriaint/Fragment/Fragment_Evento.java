@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.EventoAdapter;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.Evento;
@@ -67,6 +68,10 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         eventoDB=new EventoDB(rootView.getContext());
 
         CalendarView cal=(CalendarView) rootView.findViewById(R.id.calendarView);
+        cal.setMinDate(MainActivity.edicion.getFechaInicio().getTime());
+        cal.setMaxDate(MainActivity.edicion.getFechaFinal().getTime());
+
+
 
      //   txtError =(TextView) rootView.findViewById(R.id.txtError);
       swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
@@ -116,7 +121,6 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
    public void layoutAdapter()
     {
         eventoAdapter = new EventoAdapter(listaEventos);
-
         //Especificar Adapter
         mRecyclerView.setAdapter(eventoAdapter);
         eventoAdapter.notifyDataSetChanged();
@@ -127,6 +131,7 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
     {
         EventoJSON refreshJSON=new EventoJSON(getContext());
         refreshJSON.setRecyclerViewer(mRecyclerView);
+        refreshJSON.setSwipeContainer(swipeContainer);
         refreshJSON.execute();
         try {
             listaEventos=eventoDB.getTodosLosEventos();
