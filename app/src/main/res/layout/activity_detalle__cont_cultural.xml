@@ -12,26 +12,27 @@
     tools:context="edu.udem.feriaint.Activities.Detalle_ContCultural"
     android:orientation="vertical">
 
-    <include
+    <!--include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/layout_toolbar" />
+        layout="@layout/layout_toolbar" />-->
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:id="@+id/scrollView">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:id="@+id/layoutDetalle">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/evento"
-                android:id="@+id/imgContCultural"
+                android:id="@+id/imgContCulturalPortada"
                 android:scaleType="fitXY"
                 tools:ignore="ContentDescription" />
 
@@ -40,19 +41,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtTituloContCult"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:padding="10dp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:textSize="36sp" />
 
-            <TextView
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.   Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh.   "
+            <fragment
+                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:id="@+id/youtubeplayerfragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtContenido"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:padding="10dp"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content"/>
+
+
         </LinearLayout>
+
+
     </ScrollView>
 
 </LinearLayout>

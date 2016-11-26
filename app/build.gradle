@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        mavenCentral()
     }
 
     dependencies {
@@ -53,7 +54,9 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:support-v4:24.2.1'
-
+    compile 'com.squareup.picasso:picasso:2.5.0'
+//api youtube
+   // compile 'com.google.apis:google-api-services-youtube:v3-rev180-1.22.0'
 
 
     testCompile 'junit:junit:4.12'
@@ -66,6 +69,10 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.google.firebase:firebase-core:9.8.0'
     compile 'com.google.firebase:firebase-auth:9.8.0'
+
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+
+
 
     // glide is added to load the g+ profile image. Ignore if you want
     compile 'com.github.bumptech.glide:glide:3.7.0'

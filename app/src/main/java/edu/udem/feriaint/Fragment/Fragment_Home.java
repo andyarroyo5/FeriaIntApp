@@ -48,7 +48,9 @@ public class Fragment_Home extends Fragment{
         }
 
        // mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+
+
+       /* mLayoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
@@ -56,7 +58,7 @@ public class Fragment_Home extends Fragment{
 
         compAdapter=new ComplexRecyclerViewAdapter(feed);
         mRecyclerView.setAdapter(compAdapter);
-        compAdapter.notifyDataSetChanged();
+        compAdapter.notifyDataSetChanged();*/
 
 
         return rootView;

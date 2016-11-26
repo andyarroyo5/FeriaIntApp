@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private BDHandler bdHandler;
     private EdicionJSON edicionJSON;
 
+    public static final String API_KEY = "AIzaSyBtSebTwZU2mmgbCAg0wXI9K9Sc42un7Ek";
 
     public static Usuario currentUsuario;
     public static Edicion edicion;
