@@ -108,14 +108,6 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
-    public void getEdicion(Context context)
-    {
-       EdicionJSON edicionJSON=new EdicionJSON(context);
-        edicionJSON.execute();
-        if (edicionJSON.getStatus() == AsyncTask.Status.FINISHED) {
-            edicion = edicionJSON.getEdicion();
-        }
 
-    }
 
 }

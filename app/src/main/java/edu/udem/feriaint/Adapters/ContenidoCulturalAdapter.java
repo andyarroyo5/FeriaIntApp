@@ -1,9 +1,13 @@
 package edu.udem.feriaint.Adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -39,12 +43,26 @@ public class ContenidoCulturalAdapter extends RecyclerView.Adapter<ViewHolderCon
     @Override
     public void onBindViewHolder(ViewHolderContCultural holder, int position) {
         final ContenidoCultural cont_cult = listaContenido.get(position);
+
+        if(cont_cult.getImgPortada()!=null )
+        {
+            Log.e("IMGPORTADA ADAPTER",cont_cult.getTitulo()+" "+cont_cult.getImgPortada());
+            Glide.with(holder.itemView.getContext())
+                    .load(cont_cult.getImgPortada())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.getImgPortada());
+
+            holder.getImgPortada().setVisibility(View.VISIBLE);
+        }
+
         holder.setContenidoCultural(cont_cult);
         holder.getTitulo().setText(cont_cult.getTitulo());
         holder.getTema().setText(cont_cult.getTema().getNombre());
         holder.verDetalleContCult();
 
-        //holder.getImgPortada().setImageResource(cont_cult.getImg());
+
+
+
 
     }
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.udem.feriaint.Activities.Detalle_ContCultural;
+import edu.udem.feriaint.Activities.TriviaActivity;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.R;
 
@@ -88,28 +89,42 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
 
-
-
-                for (int i=0; i<contenidoCultural.getFormato().size();i++)
-                {
-                    Log.d("ON CLICK DETALLE",contenidoCultural.getFormato().get(i).toString());
-                }
-
-                Intent detalle=new Intent(v.getContext(), Detalle_ContCultural.class);
-
-                //intent.putExtra("imgPortada", contenidoCultural);
-               // detalle.putExtra("tema", contenidoCultural.getTema().toString());
                 Bundle b = new Bundle();
-              //  b.putParcelable("contCult", contenidoCultural);
-                b.putString("titulo", contenidoCultural.getTitulo() );
-                b.putString("tema", contenidoCultural.getTema().getNombre() );
+
+                b.putString("titulo", contenidoCultural.getTitulo());
+                b.putString("tema", contenidoCultural.getTema().getNombre());
                 b.putStringArrayList("formato", contenidoCultural.getFormato());
                 b.putStringArrayList("contenido", contenidoCultural.getContenido());
+
+                Intent detalle;
+
+                if(contenidoCultural.getTipo().equalsIgnoreCase("trivia"))
+                {
+                     detalle = new Intent(v.getContext(), TriviaActivity.class);
+                }
+                else {
+
+
+                    for (int i = 0; i < contenidoCultural.getFormato().size(); i++) {
+                        Log.d("ON CLICK DETALLE", contenidoCultural.getContenido().get(i).toString());
+                    }
+
+                    detalle = new Intent(v.getContext(), Detalle_ContCultural.class);
+                    //intent.putExtra("imgPortada", contenidoCultural);
+                    // detalle.putExtra("tema", contenidoCultural.getTema().toString());
+
+                    //  b.putParcelable("contCult", contenidoCultural);
+
+
+
+                }
+
                 detalle.putExtras(b);
-               // detalle.putExtra("contenidoCultural", contenidoCultural);
                 v.getContext().startActivity(detalle);
             }
         });
+
+
 
     }
 

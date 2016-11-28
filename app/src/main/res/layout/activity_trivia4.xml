@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_trivia2"
     android:layout_width="match_parent"
@@ -8,106 +9,87 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.udem.feriaint.Activities.TriviaActivity">
+    android:background="@color/accent"
+    tools:context="edu.udem.feriaint.Activities.TriviaActivity"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.90"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:weightSum="1"
         tools:ignore="InefficientWeight,ObsoleteLayoutParam,UselessParent"
         android:background="@color/accent">
 
         <LinearLayout
-            android:id="@+id/linearLayout11"
+            android:id="@+id/scoreLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.20"
             android:orientation="vertical"
             android:weightSum="1"
             tools:ignore="NestedWeights">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/puntuacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:orientation="horizontal" >
+                android:gravity="center"
+                android:text="Puntos : 0"
+                android:textColor="#ffffff"
+                android:textSize="25.0sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,ObsoleteLayoutParam,RtlHardcoded" />
 
-                <TextView
-                    android:id="@+id/score"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Score : 1"
-                    android:textColor="#ffffff"
-                    android:textSize="25.0sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText,ObsoleteLayoutParam,RtlHardcoded" />
-
-                <TextView
-                    android:id="@+id/timers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="00:00:49"
-                    android:textColor="#ffffff"
-                    android:textSize="25.0sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText,ObsoleteLayoutParam,RtlHardcoded" />
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.60"
             android:orientation="vertical"
-            android:weightSum="1" >
+            android:weightSum="1"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/evento"
+                android:id="@+id/imgPregunta"
+                android:layout_weight="0.33"
+                tools:ignore="ContentDescription"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Que color no es parte de la bandera de Corea"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,ObsoleteLayoutParam"
+                android:padding="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:id="@+id/txtPreguntaActual"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.40"
-                android:id="@+id/txtPregunta"
-                tools:ignore="NestedWeights">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="Que color no es parte de la bandera de Corea"
-                    android:textColor="#ffffff"
-                    android:textSize="35.0sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText,ObsoleteLayoutParam"
-                    android:padding="10dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.20"
                 android:orientation="vertical"
-                android:weightSum="1" >
+                android:weightSum="1"
+                android:id="@+id/botonesLayout">
 
                 <Button
-                    android:id="@+id/button1"
+                    android:id="@+id/btn1"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -119,10 +101,12 @@
                     android:text="30"
                     android:textColor="#000000"
                     android:textSize="25.0sp"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText,NestedWeights"
+                    tools:targetApi="m"
+                    android:layout_weight="0.25" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/btn2"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -134,10 +118,11 @@
                     android:text="29"
                     android:textColor="#000000"
                     android:textSize="25.0sp"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="0.25" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/btn3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -149,9 +134,10 @@
                     android:text="32"
                     android:textColor="#000000"
                     android:textSize="25.0sp"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="0.25" />
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btn4"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -163,8 +149,9 @@
                     android:text="15"
                     android:textColor="#000000"
                     android:textSize="25.0sp"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="0.25" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

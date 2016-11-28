@@ -34,12 +34,15 @@ public class MainActivity extends AppCompatActivity {
     private BDHandler bdHandler;
     private EdicionJSON edicionJSON;
 
-    public static final String API_KEY = "AIzaSyBtSebTwZU2mmgbCAg0wXI9K9Sc42un7Ek";
+    public static final String API_KEY = String.valueOf(R.string.API_KEY_YT);
 
     public static Usuario currentUsuario;
     public static Edicion edicion;
 
     private String TAG ;
+
+
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,46 @@ public class MainActivity extends AppCompatActivity {
         // Configurar ViewPager con TabPagerAdapter
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mTabPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+
+                switch (position)
+                {
+                    case 0:
+                        //hideFab
+                        fab.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        //get temas eventos
+
+                        break;
+                    case 2:
+                        //get temas de edicion
+
+                        break;
+                    case 3:
+                        //hideFab
+                        fab.setVisibility(View.GONE);
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // noop
+                fab.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // fire event if the "My Site" page is being scrolled so the fragment can
+                // animate its fab to match
+               fab.setVisibility(View.INVISIBLE);
+            }
+        });
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
@@ -116,13 +159,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Filtro por temas
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String tab= String.valueOf(tabLayout.getSelectedTabPosition());
+                int tab= tabLayout.getSelectedTabPosition();
+
+
                 Log.d(TAG, "GET in FAB"+ tab);
+
+
 
                 Intent filtrar=new Intent(getApplicationContext(), Filtrar_Activity.class);
                 startActivityForResult(filtrar, 55);
@@ -148,9 +195,6 @@ public class MainActivity extends AppCompatActivity {
         //edicionJSON.execute();
         edicion= edicionJSON.execute().get();
         //while(!edicionJSON.getStatus().equals(AsyncTask.Status.FINISHED));
-
-
-
 
     }
 
@@ -185,6 +229,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+
+
 
     @Override
     protected void onStart() {

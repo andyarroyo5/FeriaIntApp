@@ -2,6 +2,7 @@ package edu.udem.feriaint.Activities;
 
 
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.squareup.picasso.Picasso;
 
@@ -37,18 +39,19 @@ import java.util.regex.Pattern;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.R;
 
-public class Detalle_ContCultural  extends AppCompatActivity{
+public class Detalle_ContCultural  extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
     private String TAG;
     ContenidoCultural contCult;
     private View v;
     private LinearLayout linearLayout;
-    private  ScrollView sv;
+    private ScrollView sv;
     private TextView tituloContCult;
+    private String videoId;
+    private boolean video=false;
+    private int thumbnailId;
     private ArrayList<String> videosId;
-    private ArrayList<YouTubePlayerView> videos;
-
-
+    private ArrayList<Integer> imageVideoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +59,31 @@ public class Detalle_ContCultural  extends AppCompatActivity{
         //setContentView(R.layout.activity_detalle__cont_cultural);
 
 
+        TAG = this.getClass().getSimpleName();
 
-
-        TAG=this.getClass().getSimpleName();
-
+        videosId=new ArrayList<>();
+        imageVideoId=new ArrayList<>();
 
         v = getLayoutInflater().inflate(R.layout.activity_detalle__cont_cultural, null);
 
-         sv = (ScrollView) v.findViewById(R.id.scrollView);
+        sv = (ScrollView) v.findViewById(R.id.scrollView);
         linearLayout = (LinearLayout) v.findViewById(R.id.layoutDetalle);
 
-        videosId=new ArrayList<>();
-        videos=new ArrayList<YouTubePlayerView>();
-
-
-        tituloContCult=(TextView) v.findViewById(R.id.txtTituloContCult);
+        tituloContCult = (TextView) v.findViewById(R.id.txtTituloContCult);
         //ImageView img=(ImageView) findViewById(R.id.imgContCultural);
 
 
         //getObject
-        Bundle b=getIntent().getExtras();
-       // contCult=b.getParcelable("contCult");
+        Bundle b = getIntent().getExtras();
+        // contCult=b.getParcelable("contCult");
 
-        contCult=new ContenidoCultural(b.getString("titulo"), b.getString("tema"));
+        contCult = new ContenidoCultural(b.getString("titulo"), b.getString("tema"));
 
         contCult.setFormato(b.getStringArrayList("formato"));
         contCult.setContenido(b.getStringArrayList("contenido"));
 
         tituloContCult.setText(contCult.getTitulo());
-        Log.d(TAG,contCult.toString());
+        Log.d(TAG, contCult.toString());
 
         try {
             setLayout();
@@ -96,35 +95,34 @@ public class Detalle_ContCultural  extends AppCompatActivity{
     }
 
 
-
     public void setLayout() throws IOException {
-        boolean imgPortada=false;
-       // ArrayList<String> formato=contCult.getFormato();
+        boolean imgPortada = false;
+        // ArrayList<String> formato=contCult.getFormato();
+        thumbnailId=0;
 
-        for ( String f: contCult.getFormato()) {
+        for (int i = 0; i < contCult.getFormato().size(); i++) {
+            String f = contCult.getFormato().get(i);
+            String contenido = contCult.getContenido().get(i);
+            Log.e(TAG, "add layout " + f + " " + contenido);
+            switch (f) {
 
-            String contenido =contCult.getContenido().get(contCult.getFormato().indexOf(f));
-        Log.e(TAG,"add layout "+ f +" "+contenido);
-            switch (f){
 
-
-                case "lineaTexto" :
+                case "lineaTexto":
                     TextView lt = new TextView(this);
                     lt.setText(contenido);
                     linearLayout.addView(lt);
 
                     break;
 
-                case "areaTexto" :
+                case "areaTexto":
                     TextView at = new TextView(this);
                     at.setText(contenido);
                     linearLayout.addView(at);
                     break;
 
-                case "imagen" :
+                case "imagen":
 
                     ImageView img = new ImageView(this);
-
 
 
                     // img.setText(f);
@@ -133,16 +131,15 @@ public class Detalle_ContCultural  extends AppCompatActivity{
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     img.setImageBitmap(bmp);*/
 
-                    if (!imgPortada)
-                    {
-                        ImageView portada=(ImageView) v.findViewById(R.id.imgContCulturalPortada);
+                    /*if (!imgPortada) {
+                        ImageView portada = (ImageView) v.findViewById(R.id.imgContCulturalPortada);
 
                         Picasso.with(this).load(contenido).into(portada);
 
                         Log.d(TAG, "No tiene Img Portada");
-                        imgPortada=true;
+                        imgPortada = true;
 
-                    }
+                    }*/
 
                     Glide.with(v.getContext())
                             .load(contenido)
@@ -152,81 +149,94 @@ public class Detalle_ContCultural  extends AppCompatActivity{
                     linearLayout.addView(img);
 
                     break;
-                case "video" :
+                case "video":
 
 
+                video=false;
+                    //si no es youtube
                    /* VideoView video = new VideoView(this);
                     video.setMediaController(new MediaController(this));
                     video.setVideoURI(Uri.parse(contenido));*/
 
-                    final ImageView imagenVideo=new ImageView(this);
+                    final ImageView imagenVideo = new ImageView(this);
+                    videoId = getVideoId(contenido);
+                    videosId.add(videoId);
 
-
-                    //YouTubePlayerView videoYT = new YouTubePlayerView(this);
-                   // YouTubePlayerFragment myYouTubePlayerFragment=new YouTubePlayerFragment();
-                  // final YouTubePlayerView videoYT = new YouTubePlayerView(this);
-
-
-                    //final YouTubeFragment fragment = (YouTubeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_youtube);
-
-                    String videoId=getVideoId(contenido);
-
-
-                    YouTubeThumbnailView thumbnail=new YouTubeThumbnailView(this);
 
 
                     Glide.with(v.getContext())
-                            .load("http://img.youtube.com/vi/"+ videoId+"/0.jpg")
+                            .load("http://img.youtube.com/vi/" + videoId + "/0.jpg")
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imagenVideo);
 
 
-                    //thumbnail.setImageURI(Uri.parse("http://img.youtube.com/vi/"+ videoId+"/0.jpg"));
-                    thumbnail.setImageDrawable(imagenVideo.getDrawable());
-                    imagenVideo.setOnClickListener(new View.OnClickListener()
-                    {
+
+                    final YouTubePlayer.OnInitializedListener mOnInitListener=new YouTubePlayer.OnInitializedListener() {
                         @Override
-                        public void onClick(View view)
-                        {
-                            //YouTubePlayerView videoYT = new YouTubePlayerView(getApplicationContext());
-                           // videoYT.initialize(MainActivity.API_KEY, (YouTubePlayer.OnInitializedListener) getApplicationContext());
+                        public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
+                            if(!restored)
+                            {
+                                youTubePlayer.loadVideo(videoId);
+                            }
+                        }
+
+                        @Override
+                        public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+                            Log.e("onclick", "Falla ONCLICK");
+                        }
+                    };
+
+                    linearLayout.addView(imagenVideo);
 
 
-                            Log.e("onClick", "IMAGEN TO VIDEO");
+                    imagenVideo.setId(thumbnailId);
+                    imagenVideo.setOnClickListener(new View.OnClickListener()  {
+                        @Override
+                        public void onClick(View view) {
+
+                            videoId= videosId.get(imagenVideo.getId());
+
+
+
+                            if(thumbnailId>1)
+                            {
+
+                                Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+                                intent.putExtra("VIDEO_ID", videoId);
+                                startActivity(intent);
+                            }
+                            /*Intent intent =YouTubeStandalonePlayer.createVideoIntent(, MainActivity.API_KEY, videoId);
+                            startActivity(intent);*/
+                            else
+                            {
+                                reproducirVideo(imagenVideo.getId());
+                            }
+
+
+                            Log.e("onClick", "IMAGEN TO VIDEO" + imagenVideo.getId());
 
                         }
                     });
 
-                    /*myYouTubePlayerFragment.setVideoId(videoId);
-                    videosId.add(videoId);
-                    videos.add(videoYT);*/
-
-                  //  videoYT.initialize(MainActivity.API_KEY,this);
 
 
-                    linearLayout.addView(thumbnail);
 
+                    thumbnailId++;
 
                     break;
-                case "audio" :
+                case "audio":
                   /*  MediaPlayer audio = new MediaPlayer();
                     audio.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     audio.setDataSource(contenido);
                     audio.prepare();
                     audio.start();*/
-
-                    VideoView video = new VideoView(this);
-                    video.setMediaController(new MediaController(this));
-                    video.setVideoURI(Uri.parse(contenido));
-
-                    linearLayout.addView(video);
-
                     break;
 
 
-                case "paginaWeb" :
+                case "paginaWeb":
                     tituloContCult.setVisibility(View.GONE);
-                    WebView paginaWeb=new WebView(this);
+                    WebView paginaWeb = new WebView(this);
                     paginaWeb.loadUrl(contenido);
 
                     paginaWeb.getSettings().setJavaScriptEnabled(true);
@@ -237,18 +247,16 @@ public class Detalle_ContCultural  extends AppCompatActivity{
 
                     break;
 
-                case "trivia2" :
+                case "trivia2":
 
 
                     break;
-                case "trivia4" : break;
+                case "trivia4":
+                    break;
 
 
-
-
-
-
-                default: break;
+                default:
+                    break;
             }
 
 
@@ -257,10 +265,52 @@ public class Detalle_ContCultural  extends AppCompatActivity{
 
 
 
+    setContentView(v);
 
-        setContentView(v);
+}
 
+
+    public void reproducirVideo(int id)
+    {
+
+        if (!imageVideoId.isEmpty())
+        {
+
+
+
+           // linearLayout.removeViewAt(imageVideoId.get(1));
+            Log.e(TAG,"VIDEO quitar ID"+imageVideoId.get(1));
+            //Quitar Video
+            linearLayout.removeViewAt(imageVideoId.get(1));
+
+            ImageView imagenPasada=(ImageView) v.findViewById(imageVideoId.get(0));
+            imagenPasada.setVisibility(View.VISIBLE);
+            imagenPasada.setVerticalScrollbarPosition(imageVideoId.get(1));
+            imageVideoId.remove(1);
+            imageVideoId.remove(0);
+
+        }
+
+        //linearLayout.removeViewAt(imagenVideo.getVerticalScrollbarPosition());
+
+        //invisibles imagenes
+
+        ImageView imagenVideo=(ImageView) v.findViewById(id);
+
+      // YouTubePlayerView videoYT= (YouTubePlayerView)v.findViewById(R.id.player_view);
+        YouTubePlayerView videoYT=new YouTubePlayerView(this);
+        videoYT.setVerticalScrollbarPosition(imagenVideo.getVerticalScrollbarPosition());
+        imagenVideo.setVisibility(View.GONE);
+       // videoYT.setVisibility(View.VISIBLE);
+        videoYT.setId(v.generateViewId());
+        Log.e(TAG,"VIDEO ID"+videoYT.getId());
+        linearLayout.addView(videoYT);
+        videoYT.initialize(MainActivity.API_KEY,this);
+
+        imageVideoId.add(imagenVideo.getId());
+        imageVideoId.add(videoYT.getVerticalScrollbarPosition());
     }
+
 
     public static String getVideoId(String youtubeUrl) {
         String vId = null;
@@ -275,5 +325,18 @@ public class Detalle_ContCultural  extends AppCompatActivity{
     }
 
 
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
 
+        if(!restored)
+        {
+            youTubePlayer.loadVideo(videoId);
+        }
+
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+    }
 }

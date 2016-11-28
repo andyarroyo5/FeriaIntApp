@@ -32,13 +32,13 @@ public class UsuarioDB {
     }
 
     public void open(){
-        Log.i(TAG,"BD abierta");
+        //Log.i(TAG,"BD abierta");
         bd = bdhandler.getWritableDatabase();
 
 
     }
     public void close(){
-        Log.i(TAG, "BD cerrada");
+       // Log.i(TAG, "BD cerrada");
         bdhandler.close();
 
     }

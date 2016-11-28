@@ -4,6 +4,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_login">Iniciar Sesion</string>
     <string name="title_activity_acercaDe">Acerca de</string>
+    <string name="API_KEY_YT">AIzaSyBtSebTwZU2mmgbCAg0wXI9K9Sc42un7Ek</string>
 
 
     <!-- Strings relacionados al inicio de sesión -->

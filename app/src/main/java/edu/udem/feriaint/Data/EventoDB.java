@@ -47,13 +47,13 @@ public class EventoDB {
     }
 
     public void open(){
-        Log.i(TAG,"BD abierta");
+       // Log.i(TAG,"BD abierta");
         bd = bdhandler.getWritableDatabase();
 
 
     }
     public void close(){
-        Log.i(TAG, "BD cerrada");
+       // Log.i(TAG, "BD cerrada");
         bdhandler.close();
 
     }
@@ -75,7 +75,7 @@ public class EventoDB {
         values.put(BDHandler.FAVORITO, evento.isFavorito());
 
         bd.insert(BDHandler.TABLA_EVENTO, null, values);
-            Log.e(TAG, " Agregar en BD "+ evento);
+         //   Log.e(TAG, " Agregar en BD "+ evento);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,7 +121,7 @@ public class EventoDB {
        evento.setLugar(cursor.getString(4));
        evento.setDescripcion(cursor.getString(5));
        evento.setTipo(cursor.getString(6));
-       Log.d(TAG, "Favorito Get"+cursor.getString(7)+ Boolean.parseBoolean(cursor.getString(7)));
+      // Log.d(TAG, "Favorito Get"+cursor.getString(7)+ Boolean.parseBoolean(cursor.getString(7)));
        evento.setFavorito(Boolean.parseBoolean(cursor.getString(7)));
 
 
@@ -157,7 +157,7 @@ public class EventoDB {
                 evento.setTipo(cursor.getString(6));
                 evento.setFavorito(Boolean.parseBoolean(cursor.getString(7)));
 
-               Log.e(TAG, " Get evento "+cursor.getString(7)+" "+ evento);
+              // Log.e(TAG, " Get evento "+cursor.getString(7)+" "+ evento);
                 listaEventos.add(evento);
 
             } while (cursor.moveToNext());
@@ -165,7 +165,7 @@ public class EventoDB {
 
         else
         {
-            Log.e(TAG, " Get evento no hay");
+            //Log.e(TAG, " Get evento no hay");
         }
 
         // return eventos
@@ -199,7 +199,7 @@ public class EventoDB {
 
 
 
-        Log.e(TAG, " SET EVENTO FAV "+ evento+" "+fav);
+     //   Log.e(TAG, " SET EVENTO FAV "+ evento+" "+fav);
 
 
         //bd.update(BDHandler.TABLA_EVENTO, cv, BDHandler.ID_EVENTO+"= "+evento.getId(), null);

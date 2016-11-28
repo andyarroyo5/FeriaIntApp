@@ -95,7 +95,16 @@ public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
                     //Agregar a bd TemaContCultural
                     Tema tema=new Tema(temaId, temaNombre);
 
-                    if (!listaTemas.contains(tema) && tema.getNombre()!="")
+                        boolean nuevo=true;
+                        for (Tema t:listaTemas ) {
+                            if (tema.getId()==t.getId())
+                            {
+                                nuevo=false;
+                            }
+
+                        }
+
+                    if (nuevo)
                         temaBD.insertar(tema);
 
 
@@ -113,7 +122,10 @@ public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
                         String cont=contenido.getString("contenido");
 
                         if (formato.equals("imagen") && contCultural.getImgPortada()==null)
+                        {
                             contCultural.setImgPortada(cont);
+                            Log.e(TAG,"Portada "+cont);
+                        }
 
                         Log.e(TAG,formato+" "+cont);
 

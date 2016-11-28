@@ -124,6 +124,12 @@ public class Usuario implements Parcelable {
         this.listaContCultFavoritos = listaContCultFavoritos;
     }
 
+
+    public void agregarPuntos(int puntos)
+    {
+        this.puntos+=puntos;
+    }
+
     public String toString()
     {
         return getId()+" "+"NOMBRE "+getNombre()+" "+"CORREO "+getCorreo()+" "+"CARRERA "+getCarrera()+" "+"TWITTER "+getTwitter()+" "+"PUNTOS "+getPuntos();
