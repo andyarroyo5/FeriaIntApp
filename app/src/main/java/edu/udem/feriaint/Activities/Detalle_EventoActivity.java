@@ -54,7 +54,7 @@ public class Detalle_EventoActivity extends  ListActivity{
 
 
         tituloE.setText(b.getString("titulo"));
-        fecha.setText(b.getString("fecha"));
+        fecha.setText(b.getString("fechaInicio")+" - " + b.getString("fechaFinal"));
         lugar.setText(b.getString("lugar"));
         dia.setText(b.getString("dia"));
         mes.setText(b.getString("mes"));
@@ -76,7 +76,7 @@ public class Detalle_EventoActivity extends  ListActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.acercade:
                 Intent intent = new Intent(this, AcercaDe.class);
                 startActivity(intent);
                 break;

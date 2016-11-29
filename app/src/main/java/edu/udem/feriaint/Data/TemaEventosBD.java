@@ -18,7 +18,7 @@ import edu.udem.feriaint.Modelos.Tema;
 
 public class TemaEventosBD {
 
-    public static final String TAG =this getClass().getSimpleName();
+    public static final String TAG ="TEMAS EVENTOS BD";
 
     SQLiteOpenHelper bdhandler;
     SQLiteDatabase bd;
@@ -31,13 +31,13 @@ public class TemaEventosBD {
     }
 
     public void open(){
-        Log.i(TAG,"BD abierta");
+       // Log.i(TAG,"BD abierta");
         bd = bdhandler.getWritableDatabase();
 
 
     }
     public void close(){
-        Log.i(TAG, "BD cerrada");
+        //Log.i(TAG, "BD cerrada");
         bdhandler.close();
 
     }
@@ -53,7 +53,7 @@ public class TemaEventosBD {
             values.put(BDHandler.NOMBRE_TEMA_CONTCULTURAL, temaNuevo.getNombre());
 
             bd.insert(BDHandler.TABLA_TEMA_CONTCULTURAL, null, values);
-            Log.e(TAG, " Agregar en BD "+ temaNuevo);
+          //  Log.e(TAG, " Agregar en BD "+ temaNuevo);
 
         } catch (SQLException e) {
             e.printStackTrace();

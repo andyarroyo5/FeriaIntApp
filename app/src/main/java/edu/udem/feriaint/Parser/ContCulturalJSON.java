@@ -86,30 +86,15 @@ public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
 
                     Long id =contCult.getLong("id");
                     String titulo=contCult.getString("titulo");
+
+                    //información relacionada al TEMA
                     Long temaId=contCult.getLong("tema_id");
                     String temaNombre=contCult.getString("tema_nombre");
-                    String tipo=contCult.getString("tipo");
-
-
-
-                    //Agregar a bd TemaContCultural
                     Tema tema=new Tema(temaId, temaNombre);
 
-                        boolean nuevo=true;
-                        for (Tema t:listaTemas ) {
-                            if (tema.getId()==t.getId())
-                            {
-                                nuevo=false;
-                            }
-
-                        }
-
-                    if (nuevo)
-                        temaBD.insertar(tema);
-
+                    String tipo=contCult.getString("tipo");
 
                   ContenidoCultural contCultural=new ContenidoCultural(titulo,tema);
-
 
                     contCultural.setId(id);
                     contCultural.setTipo(tipo);
@@ -181,7 +166,6 @@ public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
     public void layoutAdapter() throws ParseException {
 
         contenidoAdapter = new ContenidoCulturalAdapter(listaContenidos);
-
         //Especificar Adapter
         mRecyclerView.setAdapter(contenidoAdapter);
         contenidoAdapter.notifyDataSetChanged();

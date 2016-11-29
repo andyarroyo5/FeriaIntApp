@@ -7,15 +7,13 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import edu.udem.feriaint.Data.BDHandler;
+
 import edu.udem.feriaint.Modelos.Evento;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Andrea Arroyo on 17/10/2016.

@@ -13,18 +13,16 @@
     tools:context="edu.udem.feriaint.Activities.Detalle_EventoActivity"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:weightSum="1"
-        android:baselineAligned="false"
-        android:background="@android:color/white">
-
-        <include layout="@layout/layout_toolbar"/>
-
-    </android.support.design.widget.AppBarLayout>
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar4"
+        app:title="Evento"
+        app:titleTextColor="@color/primary_text"/>
 
     <ImageView
         android:layout_width="match_parent"

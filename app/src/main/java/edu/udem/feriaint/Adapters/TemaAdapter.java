@@ -1,11 +1,15 @@
 package edu.udem.feriaint.Adapters;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.R;
@@ -17,6 +21,7 @@ import edu.udem.feriaint.Adapters.ViewHolder.ViewHolder_Tema;
 
 public class TemaAdapter extends RecyclerView.Adapter<ViewHolder_Tema> {
 
+    private String TAG=getClass().getSimpleName();
     private ArrayList<Tema> listaTemas;
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -39,9 +44,11 @@ public class TemaAdapter extends RecyclerView.Adapter<ViewHolder_Tema> {
     @Override
     public void onBindViewHolder(ViewHolder_Tema holder, int position) {
 
-        final Tema temas = listaTemas.get(position);
+        final Tema tema = listaTemas.get(position);
 
-        holder.getTema().setText((temas.getNombre()));
+        holder.getBoxTema().setBackgroundColor(tema.getColor());
+        holder.getTema().setText((tema.getNombre()));
+
     }
 
 
@@ -49,5 +56,8 @@ public class TemaAdapter extends RecyclerView.Adapter<ViewHolder_Tema> {
     public int getItemCount() {
         return listaTemas.size();
     }
+
+
+
 }
 

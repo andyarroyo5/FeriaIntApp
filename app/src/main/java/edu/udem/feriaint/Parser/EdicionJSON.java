@@ -99,10 +99,6 @@ public class EdicionJSON  extends AsyncTask<Object, Object, Edicion> {
     protected void onPostExecute(Edicion result) {
         super.onPostExecute(result);
         Log.e(TAG, "AFTER FINISHED"+ MainActivity.edicion.toString());
-
-
-
-
     }
 
 

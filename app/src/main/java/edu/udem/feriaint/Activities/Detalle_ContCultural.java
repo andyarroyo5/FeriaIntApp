@@ -71,8 +71,6 @@ public class Detalle_ContCultural  extends YouTubeBaseActivity implements YouTub
 
         tituloContCult = (TextView) v.findViewById(R.id.txtTituloContCult);
         //ImageView img=(ImageView) findViewById(R.id.imgContCultural);
-
-
         //getObject
         Bundle b = getIntent().getExtras();
         // contCult=b.getParcelable("contCult");

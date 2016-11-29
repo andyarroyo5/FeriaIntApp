@@ -13,14 +13,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import edu.udem.feriaint.Adapters.TemaAdapter;
-import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Tema;
 
 /**
  * Created by Andrea Arroyo on 18/11/2016.
  */
 
-public class TemaJSON extends AsyncTask<Void, Void, Void > {
+public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
 
     private Context context;
     RecyclerView mRecyclerView;
@@ -28,11 +27,17 @@ public class TemaJSON extends AsyncTask<Void, Void, Void > {
     private String url;
     private ArrayList<Tema> listaTemas;
     private TemaAdapter temaAdapter;
+    private String tipo;
 
     private String TAG;
 
-    public TemaJSON(Context context) {
+    public TemaJSON(Context context, String url, String tipo) {
+
+        listaTemas=new ArrayList<Tema>();
         this.context = context;
+        this.url=url;
+        this.tipo=tipo;
+
     }
 
     public void setmRecyclerView(RecyclerView mRecyclerView) {
@@ -52,9 +57,7 @@ public class TemaJSON extends AsyncTask<Void, Void, Void > {
 
 
     @Override
-    protected Void doInBackground(Void... voids) {
-
-
+    protected ArrayList<Tema> doInBackground(Object... voids) {
 
         HttpHandler sh = new HttpHandler();
 
@@ -69,26 +72,20 @@ public class TemaJSON extends AsyncTask<Void, Void, Void > {
                 for (int i = 0; i < temaArray.length(); i++) {
                     JSONObject temaJSON = temaArray.getJSONObject(i);
 
+                    Long temaId=temaJSON.getLong("id");
+                    String temaNombre=temaJSON.getString("nombre");
 
-                    Long temaId=temaJSON.getLong("tema_id");
-                    String temaNombre=temaJSON.getString("tema_nombre");
-
-
-
-                    //Agregar a bd TemaContCultural
-                    Tema tema=new Tema(temaId, temaNombre);
-
-
+                    Tema tema=new Tema(temaId, temaNombre,tipo);
                     Log.e(TAG,tema.toString());
+                    listaTemas.add(tema);
                 }
 
-                Log.d(TAG,"LISTA QUEDO"+listaTemas.size());
+
+                Log.d(TAG,"LISTA TEMAS QUEDO"+listaTemas.size());
 
 
             } catch (final JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
-
-
             }
         } else {
             Log.e(TAG, "Couldn't get json from server.");
@@ -96,22 +93,24 @@ public class TemaJSON extends AsyncTask<Void, Void, Void > {
         }
 
 
-        return null;
+        return listaTemas;
     }
 
     @Override
-    protected void onPostExecute( Void result) {
+    protected void onPostExecute( ArrayList<Tema> result) {
         super.onPostExecute(result);
 
+        Log.e(TAG,"TERMINO TemaJSON "+tipo);
 
-        try {
+        /*
+         try {
             if (mRecyclerView!=null)
                 layoutAdapter();
 
 
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void layoutAdapter() throws ParseException {

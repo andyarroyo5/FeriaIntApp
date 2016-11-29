@@ -1,18 +1,11 @@
 package edu.udem.feriaint.Parser;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.CalendarView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,26 +14,20 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.Exchanger;
 
 import edu.udem.feriaint.Adapters.EventoAdapter;
 
 import edu.udem.feriaint.Data.BDHandler;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.Evento;
-import edu.udem.feriaint.R;
 
 
 /**
  * Created by Andrea Arroyo on 15/10/2016.
  */
 
-public class EventoJSON extends AsyncTask<Void, Void, Void >{
+public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
 
     private String TAG;
     private ProgressDialog pDialog;
@@ -85,7 +72,7 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
+        if (swipeContainerEventos!=null)
         swipeContainerEventos.setRefreshing(true);
     }
 
@@ -93,7 +80,7 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
     public ArrayList<Evento> getListaEventos() { return listaEventos;  }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected ArrayList<Evento> doInBackground(Object... voids) {
 
         SimpleDateFormat fechaf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         HttpHandler sh = new HttpHandler();
@@ -111,21 +98,26 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
 
                 for (int i = 0; i < eventos.length(); i++) {
                     JSONObject evento = eventos.getJSONObject(i);
-                    String idJSON=evento.getString("id");
+
+
+                    Long idJSON=evento.getLong("id");
                     String tituloJSON = evento.getString("titulo");
                     Date fechaInicioJSON = fechaf.parse(evento.getString("fechaInicio"));
                     Date fechaFinalJSON = fechaf.parse(evento.getString("fechaFinal"));
                     String lugarJSON = evento.getString("lugar");
                     String descripcionJSON = evento.getString("descripcion");
-                    String tipoJSON = descripcionJSON;
+                    Long tema_idJSON=evento.getLong("tema_id");
+                    String hashtagJSON=evento.getString("hashtag");
 
-                    //evento.getString("tipo");
 
-                    Evento e = new Evento(tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON);
-                    e.setId(Long.parseLong(idJSON));
-                    e.setFavorito(false);
-                    e.setTipo(tipoJSON);
 
+
+                    //TODO get var tipo
+                    //String tipoJSON = descripcionJSON;
+
+                    Evento e = new Evento(idJSON,tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON,tema_idJSON,hashtagJSON);
+                    //e.setFavorito(false);
+                    Log.e(TAG, "evento agregado"+ e.getTitulo()+" "+ e.getTema_id());
                     listaEventos.add(e);
                 }
 
@@ -151,29 +143,32 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
 
 
 
-        return null;
+        return listaEventos;
 
     }
 
     @Override
-    protected void onPostExecute( Void result) {
+    protected void onPostExecute( ArrayList<Evento> result) {
         super.onPostExecute(result);
         // Dismiss the progress dialog
-
 
             try {
                 if (mRecyclerView!=null)
                 layoutAdapter();
 
+                if (swipeContainerEventos!=null)
                 swipeContainerEventos.setRefreshing(false);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
+        //animación mientras espera
       /*  if (pd != null)
         {
             pd.dismiss();
         }*/
+
+
         Log.e(TAG,"--TERMINO BACKGROUND--");
     }
 
@@ -224,7 +219,12 @@ public class EventoJSON extends AsyncTask<Void, Void, Void >{
             }
 
             if(listaEventos.size()>listaBD.size() )
+            {
                 Log.d(TAG,"LISTA QUEDO"+listaEventos.size()+listaBD.size());
+                //si quedaron eventos que no estaban en la BD agregar
+                insertarEventos();
+            }
+
 
         } else {
             Log.e(TAG, "BD vacia");

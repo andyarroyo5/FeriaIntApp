@@ -20,31 +20,23 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/app_name" />
+        <!-- android:theme="@style/AppTheme" -->
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".Activities.AcercaDe"
-            android:label="@string/title_activity_acercaDe"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.Detalle_EventoActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_acercaDe" />
+        <activity android:name=".Activities.Detalle_EventoActivity" />
         <activity
             android:name=".ExampleActivity"
-            android:label="@string/title_activity_example"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.Detalle_ContCultural"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.Filtrar_Activity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_example" />
+        <activity android:name=".Activities.Detalle_ContCultural" />
+        <activity android:name=".Activities.Filtrar_Activity" />
         <activity android:name=".Activities.ActivityInicial">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,8 +51,9 @@
             android:value="8f89e7c01d71e8b241c240db16bd1122048d8c9a" />
 
         <activity android:name=".Activities.TriviaActivity" />
-        <activity android:name=".Activities.AdminPerfil_Activity"></activity>
-        <activity android:name=".Activities.PlayerActivity"></activity>
+        <activity android:name=".Activities.AdminPerfil_Activity" />
+        <activity android:name=".Activities.PlayerActivity" />
+        <activity android:name=".Activities.EjemploActivity"></activity>
     </application>
 
 </manifest>

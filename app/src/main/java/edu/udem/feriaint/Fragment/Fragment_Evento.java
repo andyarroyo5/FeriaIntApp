@@ -1,6 +1,7 @@
 package edu.udem.feriaint.Fragment;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,7 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
     private EventoDB eventoDB;
    // private Usuario currentUsuario;
     TextView txtError;
+    CalendarView cal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,10 +69,13 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
 
         eventoDB=new EventoDB(rootView.getContext());
 
-        CalendarView cal=(CalendarView) rootView.findViewById(R.id.calendarView);
+        cal=(CalendarView) rootView.findViewById(R.id.calendarView);
+
+
         cal.setMinDate(MainActivity.edicion.getFechaInicio().getTime());
         cal.setMaxDate(MainActivity.edicion.getFechaFinal().getTime());
 
+        cal.setDate(cal.getDate());
 
 
      //   txtError =(TextView) rootView.findViewById(R.id.txtError);
@@ -132,6 +137,7 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         EventoJSON refreshJSON=new EventoJSON(getContext());
         refreshJSON.setRecyclerViewer(mRecyclerView);
         refreshJSON.setSwipeContainer(swipeContainer);
+       // if(refreshJSON.getStatus()!= AsyncTask.Status.PENDING)
         refreshJSON.execute();
         try {
             listaEventos=eventoDB.getTodosLosEventos();

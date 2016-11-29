@@ -5,11 +5,7 @@ import android.os.Parcelable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Andrea Arroyo on 07/10/2016.
@@ -23,56 +19,37 @@ public class Evento implements Parcelable {
     private Date fechaFinal;
     private String lugar;
     private String descripcion;
-    private String tipo;
-
+    private long tema_id;
     private String hashtag;
 
-    private boolean favorito;
+    private String tipo;
+    private boolean favorito=false;
 
+
+    /*
+    Alguna idea para mayor detalle de evento
     private String fecha;
     private String horarioInicio;
     private String horarioFinal;
+    //int fotoId; si hay foto
+ */
 
-    //int fotoId;
 
 
     public Evento() { }
 
-
-    public Evento(String titulo, String fecha, String lugar) {
-        this.titulo = titulo;
-        this.fecha = fecha;
-        this.lugar=lugar;
-        //this.fotoId = photoId;
-    }
-   /* public Evento(String titulo, String fecha,String horarioInicio, String horarioFinal, String lugar,String descripcion) {
-        this.titulo = titulo;
-        this.fecha = fecha;
-        this.lugar=lugar;
-        this.horarioInicio=horarioInicio;
-        this.horarioFinal=horarioFinal;
-        this.descripcion=descripcion;
-        //this.fotoId = photoId;
-    }*/
-
-    public Evento(String titulo, Date fechaInicio, Date fechaFinal, String lugar,String descripcion) {
+    public Evento(Long id, String titulo, Date fechaInicio, Date fechaFinal, String lugar, String descripcion, Long tema_id, String hashtag) {
+        this.id = id;
         this.titulo = titulo;
         this.lugar=lugar;
         this.fechaInicio=fechaInicio;
         this.fechaFinal=fechaFinal;
         this.descripcion=descripcion;
-        //this.fotoId = photoId;
+        this.tema_id=tema_id;
+        this.hashtag=hashtag;
+
+        //Al crear favorito false
     }
-    /*public Evento(String titulo, String fechaInicio, String fechaFinal, String lugar, String horario,String descripcion) {
-        this.titulo = titulo;
-       // this.fecha = fechaInicio+" al "+fechaFinal;
-        this.lugar=lugar;
-        //this.horario=horario;
-        this.descripcion=descripcion;
-        this.fechaInicio=fechaInicio;
-        this.fechaFinal=fechaFinal;
-        //this.fotoId = photoId;
-    }*/
 
     protected Evento(Parcel in) {
         id = in.readLong();
@@ -82,10 +59,13 @@ public class Evento implements Parcelable {
         tipo = in.readString();
         hashtag = in.readString();
         favorito = in.readByte() != 0;
-        fecha = in.readString();
-        horarioInicio = in.readString();
-        horarioFinal = in.readString();
     }
+
+
+
+
+
+
 
     public static final Creator<Evento> CREATOR = new Creator<Evento>() {
         @Override
@@ -127,32 +107,8 @@ public class Evento implements Parcelable {
         return fechaFinal;
     }
 
-    public String getFecha(){
-        return fecha;
-    }
-
     public void setFechaFinal(Date fechaFinal) {
         this.fechaFinal = fechaFinal;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getHorarioInicio() {
-        return horarioInicio;
-    }
-
-    public void setHorarioInicio(String horarioInicio) {
-        this.horarioInicio = horarioInicio;
-    }
-
-    public String getHorarioFinal() {
-        return horarioFinal;
-    }
-
-    public void setHorarioFinal(String horarioFinal) {
-        this.horarioFinal = horarioFinal;
     }
 
     public String getDescripcion() {
@@ -171,6 +127,23 @@ public class Evento implements Parcelable {
         this.lugar = lugar;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+
+    public String getHashtag() {
+        return hashtag;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
+    }
+
     public boolean isFavorito() {
         return favorito;
     }
@@ -179,13 +152,14 @@ public class Evento implements Parcelable {
         this.favorito = favorito;
     }
 
-    public String getTipo() {
-        return tipo;
+    public long getTema_id() {
+        return tema_id;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTema_id(long tema_id) {
+        this.tema_id = tema_id;
     }
+
 
     public String formatoFecha(Date fecha) throws ParseException {
 
@@ -207,7 +181,7 @@ public class Evento implements Parcelable {
 
     public String toString ()
     {
-        return "ID: "+getId()+" "+getTitulo()+" "+getFechaInicio()+" "+getFechaFinal()+" "+" favorito "+isFavorito()+" "+getLugar()+" "+getDescripcion();
+        return "ID: "+ getId()+" "+getTitulo()+" "+getFechaInicio()+" "+getFechaFinal()+" "+" favorito "+isFavorito()+" "+getLugar()+" "+getDescripcion();
     }
 
     @Override
@@ -224,8 +198,5 @@ public class Evento implements Parcelable {
         parcel.writeString(tipo);
         parcel.writeString(hashtag);
         parcel.writeString((favorito ? "true" : "false"));
-        parcel.writeString(fecha);
-        parcel.writeString(horarioInicio);
-        parcel.writeString(horarioFinal);
     }
 }

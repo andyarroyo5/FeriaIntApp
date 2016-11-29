@@ -57,6 +57,8 @@ public class Fragment_Perfil extends Fragment{
     TextView usuarioCorreo;
     TextView usuarioCarrera;
     TextView usuarioTwitter;
+    TextView usuarioPuntos;
+
 
     RecyclerView rvEventos;
     RecyclerView rvContCultural;
@@ -113,6 +115,7 @@ public class Fragment_Perfil extends Fragment{
         usuarioNombre=(TextView) rootView.findViewById(R.id.txtUsuarioNombre);
         usuarioCarrera=(TextView) rootView.findViewById(R.id.txtUsuarioCarrera);
         usuarioTwitter=(TextView) rootView.findViewById(R.id.txtUsuarioTwitter);
+        usuarioPuntos=(TextView) rootView.findViewById(R.id.usuario_puntos);
 
 
      /*   try {
@@ -305,6 +308,7 @@ public class Fragment_Perfil extends Fragment{
         usuarioCorreo.setText(MainActivity.currentUsuario.getCorreo()!=""? MainActivity.currentUsuario.getCarrera():"No tienes agregado tu mail ");
         usuarioCarrera.setText(MainActivity.currentUsuario.getCarrera()!="" ? MainActivity.currentUsuario.getCarrera():"No tienes agregada tu carrera" );
         usuarioTwitter.setText(MainActivity.currentUsuario.getTwitter());
+
 
         Log.e(TAG,MainActivity.currentUsuario.toString());
 

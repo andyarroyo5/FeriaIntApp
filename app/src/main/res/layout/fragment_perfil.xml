@@ -117,7 +117,7 @@
                         android:text="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/textView2"
+                        android:id="@+id/usuario_puntos"
                         tools:ignore="HardcodedText,ObsoleteLayoutParam"
                         android:layout_marginStart="10dp"
                         android:layout_alignParentBottom="true"

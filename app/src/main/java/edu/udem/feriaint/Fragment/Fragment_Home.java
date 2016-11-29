@@ -71,14 +71,14 @@ public class Fragment_Home extends Fragment{
         Calendar c= new GregorianCalendar();
         c.getTime();
 
-        items.add(new Evento("Ceremonia inaugural y conferencia",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
+       /* items.add(new Evento("Ceremonia inaugural y conferencia",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
         items.add("image");
         items.add(new ContenidoCultural("Corea y su gastronomía",R.drawable.evento));
         items.add(new Evento("Evento2",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
         items.add(new ContenidoCultural("Fun Facts",R.drawable.evento2));
         items.add("image");
         items.add(new Evento("Evento3",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
-        items.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));
+        items.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));*/
 
         return items;
     }

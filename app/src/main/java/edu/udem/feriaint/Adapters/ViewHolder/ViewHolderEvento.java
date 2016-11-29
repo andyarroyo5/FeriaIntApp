@@ -162,9 +162,11 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
                 Intent intent=new Intent(v.getContext(), Detalle_EventoActivity.class);
                 intent.putExtra("titulo", evento.getTitulo().toString());
-                intent.putExtra("fecha", evento.getFecha());
+                //intent.putExtra("fecha", evento.getFecha());
 
                 intent.putExtra("fechaInicio",evento.getFechaInicio());
+                intent.putExtra("fechaFinal",evento.getFechaFinal());
+
                 intent.putExtra("dia",dia.format(evento.getFechaInicio()));
                 intent.putExtra("mes",mes.format(evento.getFechaInicio()));
 

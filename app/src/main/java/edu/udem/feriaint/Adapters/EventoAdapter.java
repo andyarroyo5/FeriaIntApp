@@ -84,7 +84,7 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
             else
             {
                 if(evento.getFechaInicio()!=null)
-                    fechaVista=evento.formatoFecha(evento.getFechaInicio())+"\n"+evento.getHorarioInicio();
+                    fechaVista=evento.formatoFecha(evento.getFechaInicio());
             }
             holder.getFecha().setText(fechaVista);
 

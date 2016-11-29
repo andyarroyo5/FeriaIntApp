@@ -10,6 +10,8 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import android.util.Log;
@@ -83,6 +85,17 @@ public class AcercaDe extends AppCompatActivity {
         fecha.setText(fechaInicio+ " -  "+ fechaFinal);
 
 
+    }
+
+    public void verEdicionesPasadas(View view )
+    {
+        WebView paginaWeb = new WebView(this);
+        paginaWeb.loadUrl("http://www.udem.edu.mx/Esp/Vida-Estudiantil/Feria-Internacional/Paginas/default.aspx");
+
+        paginaWeb.getSettings().setJavaScriptEnabled(true);
+        paginaWeb.getSettings().setUserAgentString("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");
+
+        paginaWeb.setWebViewClient(new WebViewClient());
     }
 
 }

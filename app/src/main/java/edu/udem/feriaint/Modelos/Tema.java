@@ -1,6 +1,10 @@
 package edu.udem.feriaint.Modelos;
 
-import java.util.ArrayList;
+import android.graphics.Color;
+
+import java.util.Random;
+
+import edu.udem.feriaint.Activities.MainActivity;
 
 /**
  * Created by Andrea Arroyo on 25/10/2016.
@@ -8,24 +12,27 @@ import java.util.ArrayList;
 
 public class Tema {
 
-    long id;
-    String nombre;
-    ArrayList<Evento> listaEventos;
-    ArrayList<Evento> listaContCultural;
-    //color?
+   private long id;
+   private String nombre;
+   private int color;
+   private boolean isEvento;
+   private boolean isContCult;
 
-    public Tema(String tema) {
-        this.nombre = tema;
+    public Tema() {  }
+
+    public Tema(Long temaId, String tema) {
+        this.id=temaId;
+        this.nombre=tema;
+
     }
 
-    public Tema(Long temaId, String temaNombre) {
+    public Tema(Long temaId, String temaNombre,String tipo) {
         this.id=temaId;
         this.nombre=temaNombre;
+        setTipo(tipo, true);
+        this.color= getColorRandom();
     }
 
-    public Tema() {
-
-    }
 
     public long getId() {
         return id;
@@ -43,8 +50,76 @@ public class Tema {
         this.nombre = tema;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public boolean isEvento() {
+        return isEvento;
+    }
+
+
+   public void setTipo(String tipo, boolean bool)
+   {
+
+       //TODO ejemplo de var estatica, hacer CONS
+       //if (tipo.equals(android.R.string.EVENTO))
+
+       //Si quiere decir que el tipo es de evento
+       if (tipo.equals("evento") && bool)
+       {
+           setEvento(true);
+           setContCult(false);
+       }
+       else
+       {
+           setContCult(true);
+           setEvento(false);
+       }
+   }
+
+
+    public void setEvento(boolean evento) {
+        isEvento = evento;
+
+    }
+
+    public boolean isContCult() {
+        return isContCult;
+    }
+
+    public void setContCult(boolean contCult) {
+        isContCult = contCult;
+    }
+
     public String toString()
     {
         return getId()+" Tema: "+getNombre();
     }
+
+
+    public int getColorRandom() {
+        final int colorBase = Color.WHITE;
+        Random random = new Random();
+        final int baseRojo = Color.red(colorBase);
+        final int baseVerde = Color.green(colorBase);
+        final int baseAzul = Color.blue(colorBase);
+
+        final int rojo = (baseRojo + random.nextInt(256)) / 2;
+        final int verde = (baseVerde + random.nextInt(256)) / 2;
+        final int azul = (baseAzul + random.nextInt(256)) / 2;
+
+        return Color.rgb(rojo, verde, azul);
+    }
+
+    public void checarRepetido(int colorChecar)
+    {
+        if (color==colorChecar)
+            color= getColorRandom();
+    }
+
 }

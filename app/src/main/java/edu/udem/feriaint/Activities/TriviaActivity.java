@@ -2,10 +2,12 @@ package edu.udem.feriaint.Activities;
 
         import android.content.Intent;
         import android.graphics.drawable.ColorDrawable;
+        import android.support.design.widget.Snackbar;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
         import android.view.View;
+        import android.view.ViewGroup;
         import android.widget.Button;
         import android.widget.ImageView;
         import android.widget.TextView;
@@ -298,8 +300,7 @@ public class TriviaActivity extends AppCompatActivity {
             // if over do this
 
             if (puntosTotal != 0) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Ganaste " + puntosTotal + " Puntos", Toast.LENGTH_LONG);
-                toast.show();
+                Toast.makeText(getApplicationContext(), "Ganaste " + puntosTotal + " Puntos", Toast.LENGTH_LONG).show();
             }
 
 
