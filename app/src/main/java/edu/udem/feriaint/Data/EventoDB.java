@@ -174,13 +174,13 @@ public class EventoDB {
 
 
 
-    public void setEventoFavorito(Evento evento)
+    public void setEventoFavorito(Evento evento, boolean fav)
     {
         open();
-        boolean fav;
+       // boolean fav;
 
         ContentValues cv = new ContentValues();
-
+/*
         Log.e(TAG, String.valueOf(evento.isFavorito()));
         if (evento.isFavorito())
         {
@@ -193,7 +193,7 @@ public class EventoDB {
             cv.put(BDHandler.FAVORITO, true);
             cv.put(BDHandler.FAVORITO, 1);
              fav=true;
-        }
+        }*/
 
 
 

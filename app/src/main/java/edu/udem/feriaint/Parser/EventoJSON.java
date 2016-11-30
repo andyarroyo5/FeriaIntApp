@@ -107,7 +107,7 @@ public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
                     String lugarJSON = evento.getString("lugar");
                     String descripcionJSON = evento.getString("descripcion");
                     Long tema_idJSON=evento.getLong("tema_id");
-                    String hashtagJSON=evento.getString("hashtag");
+                    String hashtagJSON="#"+evento.getString("hashtag");
 
 
 
@@ -117,7 +117,7 @@ public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
 
                     Evento e = new Evento(idJSON,tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON,tema_idJSON,hashtagJSON);
                     //e.setFavorito(false);
-                    Log.e(TAG, "evento agregado"+ e.getTitulo()+" "+ e.getTema_id());
+                    Log.e(TAG, "evento agregado"+ e.getTitulo()+" "+ e.getTema_id() + e.getFechaInicio()+" "+e.getFechaFinal());
                     listaEventos.add(e);
                 }
 

@@ -29,7 +29,8 @@ public class Detalle_EventoActivity extends  ListActivity{
     private LayoutInflater detalle;
 
     private static final String TAG = "DetalleEventoActivity";
-    private static final String SEARCH_QUERY = "(from:FeriaIntUDEM OR from:UDEM) AND #feriaintudem";//OR #CoreaenlaUDEM OR @FeriaIntUDEM";
+    private String hasthtag;
+    private static  String SEARCH_QUERY ;//OR #CoreaenlaUDEM OR @FeriaIntUDEM";
             //"(#KPOP OR #nature OR #romance OR #mystery)";;
 
 
@@ -59,6 +60,7 @@ public class Detalle_EventoActivity extends  ListActivity{
         dia.setText(b.getString("dia"));
         mes.setText(b.getString("mes"));
         descripcion.setText(b.getString("descripcion"));
+        hasthtag=b.getString("hashtag");
 
 
         setListaTweets();
@@ -87,7 +89,7 @@ public class Detalle_EventoActivity extends  ListActivity{
     public void setListaTweets() {
 
     //RecyclerView rvTweet=(RecyclerView) findViewById(R.id.rvTweetEvento);
-
+        SEARCH_QUERY="(from:FeriaIntUDEM OR from:UDEM) AND #feriaintudem  OR "+hasthtag;
         SearchTimeline searchTimeline = new SearchTimeline.Builder()
                 .query(SEARCH_QUERY)
                 .build();
@@ -116,7 +118,8 @@ public class Detalle_EventoActivity extends  ListActivity{
 
         // getListView().setEmptyView(findViewById(android.R.id.list));
 
-
+        //Cambiar si por search query o timeline
+        //setListAdapter(timelineAdapter);
     }
 
 

@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LoginEvent;
 import com.google.android.gms.auth.api.Auth;
@@ -28,6 +30,9 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
+import com.twitter.sdk.android.core.models.UserValue;
+import com.twitter.sdk.android.core.services.AccountService;
 
 import edu.udem.feriaint.Activities.ActivityInicial;
 import edu.udem.feriaint.Activities.MainActivity;
@@ -50,7 +55,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
         setContentView(R.layout.activity_twitter);
         mGoogleApiClient=buildGoogleAPIClient();
 
-        Bundle intent=getIntent().getExtras();
+        final Bundle intent=getIntent().getExtras();
 
         if (intent.getBoolean("cerrarS"))
         {
@@ -70,14 +75,44 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 // TODO: Remove toast and use the TwitterSession's userID
                 // with your app's user model
                 String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+
+                 Intent  main= new Intent(getApplicationContext(), MainActivity.class);
+
+                final String[] usuarioInfo = new String[4];
+
+                /*
+
+                Twitter.getApiClient(session).getAccountService().
+                        .verifyCredentials(null,null,new Callback<User>() {
+
+                    @Override
+                    public void success(Result<User> userResult) {
+                        Bundle b=new Bundle();
+                        Intent intent=new Intent();
+                        intent.putExtra("user",userResult.data.name);
+                        Intent user = intent.putExtra("user", userResult.data.email);
+
+
+                        // b.putExtra("img",userResult.data.profileImageUrlHttps);
+
+
+
+                    }
+
+                    @Override
+                    public void failure(TwitterException exception) {
+
+                    }
+                });
+                */
+
+
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                Intent main= new Intent(getApplicationContext(), MainActivity.class);
                 main.putExtra("user",session.getUserName());
                 main.putExtra("token",session.getAuthToken());
                 main.putExtra("id",session.getUserId());
                 main.putExtra("session",session.getClass());
                 main.putExtra("tipo","twitter");
-
 
                 startActivity(main);
                 finish();
@@ -98,13 +133,19 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
         // Make sure that the loginButtonTwitter hears the result from any
         // Activity that it triggered.
 
+        switch (requestCode)
+        {
+            case RC_SIGN_IN:  GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                //Calling a new function to handle signin
+                handleSignInResult(result);
+                break;
 
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            //Calling a new function to handle signin
-            handleSignInResult(result);
+            default:
+                loginButtonTwitter.onActivityResult(requestCode, resultCode, data);
+                break;
         }
-        loginButtonTwitter.onActivityResult(requestCode, resultCode, data);
+
+
 
     }
 
@@ -123,22 +164,22 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
             Log.e("InicioSesion", "display name: " + acct.getDisplayName());
 
             //Displaying name and email
-           /* textViewName.setText(acct.getDisplayName());
-            textViewEmail.setText(acct.getEmail());
 
             //Initializing image loader
-            imageLoader = CustomVolleyRequest.getInstance(this.getApplicationContext())
-                    .getImageLoader();
 
-            imageLoader.get(acct.getPhotoUrl().toString(),
-                    ImageLoader.getImageListener(profilePhoto,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher));
+
+            Intent main=new Intent(getApplicationContext(), MainActivity.class);
+            main.putExtra("user ",acct.getDisplayName());
+            main.putExtra("correo", acct.getEmail());
+            main.putExtra("img", acct.getPhotoUrl());
+
+
+           startActivity(main);
 
             //Loading image
-            profilePhoto.setImageUrl(acct.getPhotoUrl().toString(), imageLoader);
+           // profilePhoto.setImageUrl(acct.getPhotoUrl().toString(), imageLoader);
 
-*/
+
             finish();
         } else {
             //If login fails

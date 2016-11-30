@@ -14,7 +14,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import edu.udem.feriaint.Adapters.ContenidoCulturalAdapter;
-import edu.udem.feriaint.Adapters.EventoAdapter;
 import edu.udem.feriaint.Data.TemaContCulturalBD;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Tema;
@@ -23,7 +22,7 @@ import edu.udem.feriaint.Modelos.Tema;
  * Created by Andrea Arroyo on 09/11/2016.
  */
 
-public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
+public class ContCulturalJSON extends AsyncTask<Object, Object, ArrayList<ContenidoCultural>> {
 
     private Context context;
     RecyclerView mRecyclerView;
@@ -67,7 +66,7 @@ public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
 
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected ArrayList<ContenidoCultural> doInBackground(Object... voids) {
 
         HttpHandler sh = new HttpHandler();
 
@@ -144,13 +143,13 @@ public class ContCulturalJSON extends AsyncTask<Void, Void, Void > {
             }
 
 
-            return null;
+            return listaContenidos;
     }
 
     @Override
-    protected void onPostExecute( Void result) {
+    protected void onPostExecute( ArrayList<ContenidoCultural> result) {
         super.onPostExecute(result);
-
+        if (swipeContainerCultura!=null)
         swipeContainerCultura.setRefreshing(false);
 
         try {

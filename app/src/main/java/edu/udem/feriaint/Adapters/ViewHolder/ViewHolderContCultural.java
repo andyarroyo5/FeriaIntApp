@@ -1,17 +1,19 @@
 package edu.udem.feriaint.Adapters.ViewHolder;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.udem.feriaint.Activities.Detalle_ContCultural;
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Activities.TriviaActivity;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.R;
@@ -22,6 +24,9 @@ import edu.udem.feriaint.R;
 
 public class ViewHolderContCultural extends RecyclerView.ViewHolder {
 
+
+    private String TAG=getClass().getSimpleName();
+
     private CardView cv_cont_cult;
 
 
@@ -30,6 +35,8 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
     private TextView titulo;
     private ImageView imgPortada;
     private TextView tema;
+    private ImageButton agregarFavoritos;
+    private ImageButton compartir;
 
     public ViewHolderContCultural(View v) {
             super(v);
@@ -38,7 +45,8 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
             imgPortada = (ImageView) v.findViewById(R.id.contenido_img_portada);
             titulo = (TextView) v.findViewById(R.id.contenido_titulo);
             tema = (TextView) v.findViewById(R.id.txtTemaNombre);
-
+            agregarFavoritos =(ImageButton) v.findViewById(R.id.contenido_agregar_favoritos);
+            compartir=(ImageButton) v.findViewById(R.id.contenido_compartir);
 
     }
 
@@ -83,6 +91,23 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
         this.tema = tema;
     }
 
+
+    public ImageView getAgregarFavoritos() {
+        return agregarFavoritos;
+    }
+
+    public void setAgregarFavoritos(ImageButton agregarFavoritos) {
+        this.agregarFavoritos = agregarFavoritos;
+    }
+
+    public ImageButton getCompartir() {
+        return compartir;
+    }
+
+    public void setCompartir(ImageButton compartir) {
+        this.compartir = compartir;
+    }
+
     public void verDetalleContCult()
     {
         getCv_cont_cult().setOnClickListener(new View.OnClickListener(){
@@ -125,6 +150,70 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
         });
 
 
+
+    }
+
+
+    public void compartir()
+    {
+        getCompartir().setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                String[] TO = {""};
+                String[] CC = {""};
+                Intent compartir = new Intent(Intent.ACTION_SEND);
+
+
+                String mensaje= contenidoCultural.getTitulo();
+
+                compartir.setData(Uri.parse("mailto:"));
+                compartir.setType("text/plain");
+                compartir.putExtra(Intent.EXTRA_EMAIL, TO);
+                compartir.putExtra(Intent.EXTRA_CC, CC);
+                compartir.putExtra(Intent.EXTRA_SUBJECT, contenidoCultural.getTema().getNombre());
+                compartir.putExtra(Intent.EXTRA_TEXT, mensaje);
+
+                try {
+                    v.getContext().startActivity(Intent.createChooser(compartir, "Compartir..."));
+                    //finish();
+                    Log.i("Termino mandar...", "");
+                }
+                catch (android.content.ActivityNotFoundException ex) {
+                    //  Toast.makeText(EnviarCorreo.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void agregarFavoritos() {
+        getAgregarFavoritos().setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                ImageButton fav= (ImageButton) v.findViewById(R.id.contenido_agregar_favoritos);
+
+
+                if (contenidoCultural.isFavorito())
+                {
+                    //  evento.setFavorito(false);
+
+                    fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.icons));
+                    //fav.setColorFilter(R.color.icons,  PorterDuff.Mode.SRC_IN);
+                    MainActivity.currentUsuario.getListaContCultFavoritos().remove(contenidoCultural);
+                    contenidoCultural.setFavorito(false);
+
+                }
+                else {
+
+                    fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
+                    // fav.setColorFilter(R.color.colorAccent,  PorterDuff.Mode.SRC_IN);
+                    MainActivity.currentUsuario.getListaContCultFavoritos().add(contenidoCultural);
+                    contenidoCultural.setFavorito(true);
+                }
+
+
+            }
+        });
 
     }
 

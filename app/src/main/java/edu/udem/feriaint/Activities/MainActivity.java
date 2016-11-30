@@ -19,6 +19,14 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterApiClient;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.models.User;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -30,6 +38,7 @@ import edu.udem.feriaint.Modelos.Edicion;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.Modelos.Usuario;
+import edu.udem.feriaint.Parser.ContCulturalJSON;
 import edu.udem.feriaint.Parser.EdicionJSON;
 import edu.udem.feriaint.Parser.EventoJSON;
 import edu.udem.feriaint.Parser.TemaJSON;
@@ -47,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 //listas que obtienen info de JSON
     public static Usuario currentUsuario;
     public static ArrayList<Evento> listaEventos;
-    public static ArrayList<ContenidoCultural> contCult;
+    public static ArrayList<ContenidoCultural> listaContCult;
     public static ArrayList<Tema> listaTemasEventos;
     public static ArrayList<Tema> listaTemasContCult;
 
@@ -93,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             getEdicionJSON();
             getTemasEventos();
-           // getListaEventosJSON();
+            getListaEventosJSON();
+            getListaContenidoCultural();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -117,6 +127,16 @@ public class MainActivity extends AppCompatActivity {
         currentUsuario.setTwitter(bUsuario.getString("user"));
         currentUsuario.setNombre("Andrea");
        // currentUsuario.setCarrera("ITC");
+
+        if(bUsuario.getString("user").equals("twitter"))
+        {
+            TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
+
+
+        }
+        else {
+            String msg = "@" + bUsuario.getString("user") + " iniciaste sesión por google!";
+        }
 
         //Add User BD
         UsuarioDB usuarioDB=new UsuarioDB(this);
@@ -384,11 +404,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void getListaEventosJSON()
-    {
+    public void getListaEventosJSON() throws ExecutionException, InterruptedException {
+        listaEventos=new ArrayList<>();
         EventoJSON eventosJSON=new EventoJSON(this);
-        eventosJSON.execute();
-        listaEventos=eventosJSON.getListaEventos();
+        listaEventos= eventosJSON.execute().get();
+      /*  eventosJSON.execute();
+        listaEventos=eventosJSON.getListaEventos();*/
+
+    }
+
+    public void getListaContenidoCultural() throws ExecutionException, InterruptedException {
+        listaContCult=new ArrayList<>();
+        ContCulturalJSON contCultJSON=new ContCulturalJSON(this);
+        listaContCult=contCultJSON.execute().get();
+        //listaContCult=contCultJSON.getListaContCultural();
 
     }
 

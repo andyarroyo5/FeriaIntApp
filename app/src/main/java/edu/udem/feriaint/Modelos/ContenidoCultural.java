@@ -22,6 +22,8 @@ public class ContenidoCultural implements Parcelable {
     private ArrayList <String> formato;
     private ArrayList<String> contenido;
 
+    private boolean favorito;
+
 
     public ContenidoCultural(String titulo, Tema tema) {
         this.titulo = titulo;
@@ -118,6 +120,14 @@ public class ContenidoCultural implements Parcelable {
 
     public void setContenido(ArrayList<String> contenido) {
         this.contenido = contenido;
+    }
+
+    public boolean isFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
     }
 
     public String toString ()

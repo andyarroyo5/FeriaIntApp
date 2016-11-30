@@ -70,35 +70,10 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/txtUsuarioNombre"
                         android:layout_weight="1"
+                        android:textColor="@color/primary_text"
                         android:paddingRight="20dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
-
-                    <ImageButton
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/heart_outline"
-                    android:id="@+id/imageButton2"
-                    tools:ignore="ContentDescription,ObsoleteLayoutParam,RtlHardcoded,RtlSymmetry,VectorDrawableCompat"
-                    android:background="@android:color/transparent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignStart="@+id/btnAdministrarPerfil"
-                        android:layout_weight="1"
-                        android:paddingLeft="10dp" />
-
-                    <TextView
-                        android:text="55"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/txtFavoritos"
-                        tools:ignore="HardcodedText,ObsoleteLayoutParam"
-                        android:layout_marginStart="10dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_toEndOf="@+id/imageButton2"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:textAlignment="center"
-                        android:gravity="center_vertical" />
 
                     <ImageButton
                         android:layout_width="match_parent"
@@ -117,12 +92,13 @@
                         android:text="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/usuario_puntos"
+                        android:id="@+id/txtUsuarioPuntos"
                         tools:ignore="HardcodedText,ObsoleteLayoutParam"
                         android:layout_marginStart="10dp"
                         android:layout_alignParentBottom="true"
                         android:layout_toEndOf="@+id/imageButton2"
                         android:layout_weight="1"
+                        android:textColor="@color/primary_text"
                         android:gravity="center_vertical|center_horizontal" />
                 </LinearLayout>
 

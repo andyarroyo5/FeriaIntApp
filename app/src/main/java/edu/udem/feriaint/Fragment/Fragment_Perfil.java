@@ -2,7 +2,6 @@ package edu.udem.feriaint.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,18 +17,13 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import edu.udem.feriaint.Activities.AdminPerfil_Activity;
 import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.ComplexRecyclerViewAdapter;
 import edu.udem.feriaint.Data.EventoDB;
-import edu.udem.feriaint.Data.UsuarioDB;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
-import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.R;
 import edu.udem.feriaint.TwitterInicioSesion;
 
@@ -115,7 +109,7 @@ public class Fragment_Perfil extends Fragment{
         usuarioNombre=(TextView) rootView.findViewById(R.id.txtUsuarioNombre);
         usuarioCarrera=(TextView) rootView.findViewById(R.id.txtUsuarioCarrera);
         usuarioTwitter=(TextView) rootView.findViewById(R.id.txtUsuarioTwitter);
-        usuarioPuntos=(TextView) rootView.findViewById(R.id.usuario_puntos);
+        usuarioPuntos=(TextView) rootView.findViewById(R.id.txtUsuarioPuntos);
 
 
      /*   try {
@@ -149,7 +143,7 @@ public class Fragment_Perfil extends Fragment{
                 mRecyclerViewFavoritos.setLayoutManager(mLayoutManager);
 
 
-                ArrayList<Object> feed= getFavoritos();
+                ArrayList<Object> feed= getContenidoFavoritos();
 
                 compAdapter=new ComplexRecyclerViewAdapter(feed);
                 mRecyclerViewFavoritos.setAdapter(compAdapter);
@@ -183,7 +177,7 @@ public class Fragment_Perfil extends Fragment{
 
                 ArrayList<Object> feed= null;
                 try {
-                    feed = getEventos();
+                    feed = getEventosFavoritos();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -302,21 +296,27 @@ public class Fragment_Perfil extends Fragment{
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUsuarioInfo();
+    }
+
     public void setUsuarioInfo()
     {
         usuarioNombre.setText(MainActivity.currentUsuario.getNombre());
-        usuarioCorreo.setText(MainActivity.currentUsuario.getCorreo()!=""? MainActivity.currentUsuario.getCarrera():"No tienes agregado tu mail ");
+        usuarioCorreo.setText(MainActivity.currentUsuario.getCorreo()!=""? MainActivity.currentUsuario.getCorreo():"No tienes agregado tu mail ");
         usuarioCarrera.setText(MainActivity.currentUsuario.getCarrera()!="" ? MainActivity.currentUsuario.getCarrera():"No tienes agregada tu carrera" );
         usuarioTwitter.setText(MainActivity.currentUsuario.getTwitter());
+        usuarioPuntos.setText(String.valueOf(MainActivity.currentUsuario.getPuntos()));
 
 
-        Log.e(TAG,MainActivity.currentUsuario.toString());
+        Log.e(TAG,"SET USUARIO UPDATE");
 
     }
 
 
-
-     private ArrayList<Object> getEventos() throws ParseException {
+     private ArrayList<Object> getEventosFavoritos() throws ParseException {
 
 
         ArrayList<Evento> eventos = new ArrayList<Evento>();
@@ -343,21 +343,34 @@ public class Fragment_Perfil extends Fragment{
 
 
 
+
+
+
         return listaEventos;
     }
 
-    private ArrayList<Object> getFavoritos() {
+    private ArrayList<Object> getContenidoFavoritos() {
        ArrayList<Object> items = new ArrayList<>();
-/*
-        Date p=new Date();
-        Calendar c= new GregorianCalendar();
-        c.getTime();
 
-        items.add("image");
-        items.add(new ContenidoCultural("Corea y su gastronomía",R.drawable.evento));
-        items.add(new ContenidoCultural("Fun Facts",R.drawable.evento2));
-        items.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));
-*/
+        ArrayList<ContenidoCultural> contCult=MainActivity.currentUsuario.getListaContCultFavoritos();
+        items.addAll(contCult);
+
+       /* for  (int i =0; i<contCult.size(); i++)
+        {
+            if(contCult.get(i).isFavorito())
+            {
+                MainActivity.currentUsuario.getListaContCultFavoritos().add(contCult.get(i));
+            }
+        }*/
+
+
+        /*
+                Date p=new Date();
+                Calendar c= new GregorianCalendar();
+                c.getTime();
+        */
+
+
         return items;
 
     }

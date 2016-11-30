@@ -3,6 +3,8 @@ package edu.udem.feriaint.Activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -81,7 +83,6 @@ public class AcercaDe extends AppCompatActivity {
 
 
         fecha=(TextView) findViewById(R.id.edicion_fecha);
-        //fecha.setText(b.getString("fechaInicio")+ "al "+ b.getString("fechaFinal"));
         fecha.setText(fechaInicio+ " -  "+ fechaFinal);
 
 
@@ -89,13 +90,8 @@ public class AcercaDe extends AppCompatActivity {
 
     public void verEdicionesPasadas(View view )
     {
-        WebView paginaWeb = new WebView(this);
-        paginaWeb.loadUrl("http://www.udem.edu.mx/Esp/Vida-Estudiantil/Feria-Internacional/Paginas/default.aspx");
-
-        paginaWeb.getSettings().setJavaScriptEnabled(true);
-        paginaWeb.getSettings().setUserAgentString("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");
-
-        paginaWeb.setWebViewClient(new WebViewClient());
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.udem.edu.mx/Esp/Vida-Estudiantil/Feria-Internacional/Paginas/default.aspx"));
+        startActivity(browserIntent);
     }
 
 }

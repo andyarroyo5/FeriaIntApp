@@ -13,11 +13,13 @@ import java.util.ArrayList;
 public class Usuario implements Parcelable {
 
     private long id;
+    private int imgPerfil;
     private String correo;
     private String nombre;
     private String carrera;
     private String twitter;
     private int puntos;
+
 
     private ArrayList<Evento> listaEventosFavoritos;
     private ArrayList<ContenidoCultural> listaContCultFavoritos;
@@ -124,6 +126,13 @@ public class Usuario implements Parcelable {
         this.listaContCultFavoritos = listaContCultFavoritos;
     }
 
+    public int getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(int imgPerfil) {
+        this.imgPerfil = imgPerfil;
+    }
 
     public void agregarPuntos(int puntos)
     {

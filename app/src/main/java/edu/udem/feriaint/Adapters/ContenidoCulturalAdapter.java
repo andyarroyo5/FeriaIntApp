@@ -59,6 +59,8 @@ public class ContenidoCulturalAdapter extends RecyclerView.Adapter<ViewHolderCon
         holder.getTitulo().setText(cont_cult.getTitulo());
         holder.getTema().setText(cont_cult.getTema().getNombre());
         holder.verDetalleContCult();
+        holder.agregarFavoritos();
+        holder.compartir();
 
 
 

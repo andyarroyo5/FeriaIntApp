@@ -98,6 +98,9 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         //  agregarEventos();
         getJSON();
 
+
+        layoutAdapter();
+
         return rootView;
     }
 
@@ -134,17 +137,24 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void getJSON()
     {
-        EventoJSON refreshJSON=new EventoJSON(getContext());
-        refreshJSON.setRecyclerViewer(mRecyclerView);
-        refreshJSON.setSwipeContainer(swipeContainer);
-       // if(refreshJSON.getStatus()!= AsyncTask.Status.PENDING)
-        refreshJSON.execute();
-        try {
-            listaEventos=eventoDB.getTodosLosEventos();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
+        if(MainActivity.listaEventos.isEmpty()) {
+
+            EventoJSON refreshJSON = new EventoJSON(getContext());
+            refreshJSON.setRecyclerViewer(mRecyclerView);
+            refreshJSON.setSwipeContainer(swipeContainer);
+            // if(refreshJSON.getStatus()!= AsyncTask.Status.PENDING)
+            refreshJSON.execute();
+            try {
+                listaEventos = eventoDB.getTodosLosEventos();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            listaEventos=MainActivity.listaEventos;
+        }
         //layoutAdapter();
     }
 

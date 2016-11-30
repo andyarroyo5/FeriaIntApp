@@ -2,11 +2,14 @@ package edu.udem.feriaint.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.ComplexRecyclerViewAdapter;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
@@ -47,10 +50,10 @@ public class Fragment_Home extends Fragment{
             mRecyclerView.setHasFixedSize(true);
         }
 
-       // mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(getActivity());
 
 
-       /* mLayoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+       // mLayoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
@@ -58,7 +61,7 @@ public class Fragment_Home extends Fragment{
 
         compAdapter=new ComplexRecyclerViewAdapter(feed);
         mRecyclerView.setAdapter(compAdapter);
-        compAdapter.notifyDataSetChanged();*/
+        compAdapter.notifyDataSetChanged();
 
 
         return rootView;
@@ -71,14 +74,18 @@ public class Fragment_Home extends Fragment{
         Calendar c= new GregorianCalendar();
         c.getTime();
 
-       /* items.add(new Evento("Ceremonia inaugural y conferencia",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
-        items.add("image");
-        items.add(new ContenidoCultural("Corea y su gastronomía",R.drawable.evento));
-        items.add(new Evento("Evento2",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
-        items.add(new ContenidoCultural("Fun Facts",R.drawable.evento2));
-        items.add("image");
-        items.add(new Evento("Evento3",  c.getTime(),  c.getTime(), "Teatro UDEM", "descripcion"));
-        items.add(new ContenidoCultural("Historia de Corea",R.drawable.corea_logo));*/
+        ArrayList<Evento>listaEventos;
+
+        ArrayList<ContenidoCultural>listaContCult;
+
+        listaEventos= MainActivity.listaEventos;
+
+        listaContCult=MainActivity.listaContCult;
+        for (int i=0; i<listaEventos.size();i++)
+        {
+            items.add(listaEventos.get(i));
+            items.add(listaContCult.get(i));
+        }
 
         return items;
     }

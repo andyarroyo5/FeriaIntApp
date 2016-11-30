@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import edu.udem.feriaint.Activities.Detalle_EventoActivity;
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Fragment.Fragment_Perfil;
 import edu.udem.feriaint.Modelos.Evento;
@@ -151,35 +152,6 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
         this.evento = evento;
     }
 
-    public void verDetalleEvento()
-    {
-        getCVEvento().setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-
-                SimpleDateFormat dia=new SimpleDateFormat("dd");
-                SimpleDateFormat mes=new SimpleDateFormat("MMMM");
-
-                Intent intent=new Intent(v.getContext(), Detalle_EventoActivity.class);
-                intent.putExtra("titulo", evento.getTitulo().toString());
-                //intent.putExtra("fecha", evento.getFecha());
-
-                intent.putExtra("fechaInicio",evento.getFechaInicio());
-                intent.putExtra("fechaFinal",evento.getFechaFinal());
-
-                intent.putExtra("dia",dia.format(evento.getFechaInicio()));
-                intent.putExtra("mes",mes.format(evento.getFechaInicio()));
-
-                intent.putExtra("lugar", evento.getLugar());
-                intent.putExtra("descripcion", evento.getDescripcion());
-
-                v.getContext().startActivity(intent);
-            }
-        });
-
-    }
-
-
     public CardView getCv_evento() {
         return cv_evento;
     }
@@ -195,6 +167,39 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
     public void setTwitter(ImageButton twitter) {
         this.twitter = twitter;
     }
+
+
+    public void verDetalleEvento()
+    {
+        getCVEvento().setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                SimpleDateFormat dia=new SimpleDateFormat("dd");
+                SimpleDateFormat mes=new SimpleDateFormat("MMMM");
+                SimpleDateFormat fechaFormato= new SimpleDateFormat("EEEE MMM dd");
+
+                Intent intent=new Intent(v.getContext(), Detalle_EventoActivity.class);
+                intent.putExtra("titulo", evento.getTitulo().toString());
+                //intent.putExtra("fecha", evento.getFecha());
+
+                intent.putExtra("fechaInicio",fechaFormato.format(evento.getFechaInicio()));
+                intent.putExtra("fechaFinal",fechaFormato.format(evento.getFechaFinal()));
+
+                intent.putExtra("dia",dia.format(evento.getFechaInicio()));
+                intent.putExtra("mes",mes.format(evento.getFechaInicio()));
+
+                intent.putExtra("lugar", evento.getLugar());
+                intent.putExtra("descripcion", evento.getDescripcion());
+
+                intent.putExtra("hashtag", evento.getHashtag());
+
+                v.getContext().startActivity(intent);
+            }
+        });
+
+    }
+
 
     public void compartir()
     {
@@ -269,7 +274,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
                 TweetComposer.Builder builder = null;
 
                     builder = new TweetComposer.Builder(v.getContext())
-                            .text(evento.getTitulo()+" en "+evento.getLugar()+ " el "+ fechaFormato.format(evento.getFechaInicio() )+ " #FeriaIntUDEM");
+                            .text(evento.getTitulo()+" en "+evento.getLugar()+ " el "+ fechaFormato.format(evento.getFechaInicio() )+ evento.getHashtag()+ " #FeriaIntUDEM");
 
                 //.image(myImageUri);
                 builder.show();
@@ -294,26 +299,29 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
                    fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.icons));
                     //fav.setColorFilter(R.color.icons,  PorterDuff.Mode.SRC_IN);
                         Log.e(TAG,"FavBD, eliminar : " + evento.toString());
+              //      MainActivity.listaEventos.get(MainActivity.listaEventos.indexOf(evento)).setFavorito(false);
+                    evento.setFavorito(false);
+                    eventoDB.setEventoFavorito(evento,false);
+
+
+
                 }
                 else {
 
                     fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
                    // fav.setColorFilter(R.color.colorAccent,  PorterDuff.Mode.SRC_IN);
+                 //   MainActivity.listaEventos.get(MainActivity.listaEventos.indexOf(evento)).setFavorito(true);
                         Log.e(TAG,"FavBD, agregar : " + evento.toString());
-
+                //    MainActivity.listaEventos.add(evento);
+                    evento.setFavorito(true);
+                    eventoDB.setEventoFavorito(evento,true);
                 }
 
-                eventoDB.setEventoFavorito(evento);
+
             }
         });
 
     }
 
-
-    public void setFavorito()
-    {
-            ImageButton fav= getAgregarFavoritos();
-            fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
-    }
 
 }

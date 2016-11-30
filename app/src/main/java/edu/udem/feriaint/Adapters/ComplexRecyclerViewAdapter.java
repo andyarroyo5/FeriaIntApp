@@ -112,7 +112,10 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         vh.getLugar().setText(evento.getLugar());
 
 
-     //   vh.agregarFavoritos();
+        vh.getAgregarFavoritos().setVisibility(View.GONE);
+        vh.getCompartir().setVisibility(View.GONE);
+        vh.getTwitter().setVisibility(View.GONE);
+        vh.getAgregarEvento().setVisibility(View.GONE);
         vh.agregarCalendario();
         vh.verDetalleEvento();
         vh.compartir();
@@ -137,6 +140,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         vh3.getTitulo().setText(contcult.getTitulo());
         //vh3.getImgPortada().setImageResource(contcult.getImg());
         vh3.verDetalleContCult();
+        vh3.getAgregarFavoritos().setVisibility(View.GONE);
+        vh3.getCompartir().setVisibility(View.GONE);
 
     }
 

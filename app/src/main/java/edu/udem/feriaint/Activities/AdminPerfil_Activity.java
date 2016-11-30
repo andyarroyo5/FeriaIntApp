@@ -66,18 +66,6 @@ public class AdminPerfil_Activity extends AppCompatActivity {
 
         usuarioDB.actualizar(MainActivity.currentUsuario);
 
-        /*
-        resultInfo.putExtra("nombre",nombre.getText().toString());
-        resultInfo.putExtra("correo",correo.getText().toString());
-        resultInfo.putExtra("carrera",carrera.getText().toString());
-        resultInfo.putExtra("twitter",twitter.getText().toString());
-
-        resultInfo.putString("nombre",nombre.getText().toString());
-        resultInfo.putString("correo",correo.getText().toString());
-        resultInfo.putString("carrera",carrera.getText().toString());
-        resultInfo.putString("twitter",twitter.getText().toString());
-
-        */
         //startActivity(resultInfo);
         finish();
     }

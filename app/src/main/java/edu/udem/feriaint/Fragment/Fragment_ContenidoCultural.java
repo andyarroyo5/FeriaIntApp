@@ -1,11 +1,9 @@
 package edu.udem.feriaint.Fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.ContenidoCulturalAdapter;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
-import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Parser.ContCulturalJSON;
 import edu.udem.feriaint.R;
 
@@ -66,28 +63,39 @@ public class Fragment_ContenidoCultural extends android.support.v4.app.Fragment 
         //swipeContainerCultura.setRefreshing(true);
         getJSON();
 
+        mContenidoCulturalAdapter = new ContenidoCulturalAdapter(listaContenidoCultural);
+        //Especificar Adapter
+        mRecyclerView.setAdapter(mContenidoCulturalAdapter);
+        mContenidoCulturalAdapter.notifyDataSetChanged();
+
 
         return rootView;
     }
 
     private void getJSON() {
 
-        ContCulturalJSON contCultJson=new ContCulturalJSON(getContext());
-        contCultJson.setRecyclerViewer(mRecyclerView);
-        contCultJson.setSwipeContainer(swipeContainerCultura);
-        contCultJson.execute();
+      if(MainActivity.listaContCult.isEmpty()) {
+          ContCulturalJSON contCultJson = new ContCulturalJSON(getContext());
 
-        if (contCultJson.getStatus() == AsyncTask.Status.FINISHED) {
-            swipeContainerCultura.setRefreshing(false);
-        }
+          contCultJson.setRecyclerViewer(mRecyclerView);
+          contCultJson.setSwipeContainer(swipeContainerCultura);
+          contCultJson.execute();
 
-        //Log.d(TAG, String.valueOf(contCultJson.execute().getStatus()));
+          if (contCultJson.getStatus() == AsyncTask.Status.FINISHED) {
+              swipeContainerCultura.setRefreshing(false);
+          }
+
+          Log.d(TAG, String.valueOf(contCultJson.execute().getStatus()));
+      }
+        else
+      {
+          listaContenidoCultural=MainActivity.listaContCult;
+      }
 
     }
 
     @Override
     public void onRefresh() {
-
 
         getJSON();
 
