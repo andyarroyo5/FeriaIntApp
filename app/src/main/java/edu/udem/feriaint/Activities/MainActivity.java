@@ -1,6 +1,7 @@
 package edu.udem.feriaint.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
@@ -121,28 +122,35 @@ public class MainActivity extends AppCompatActivity {
 
         Intent tIntent=getIntent();
         Bundle bUsuario=tIntent.getExtras();
-        bUsuario.putString("tipo","twitter");
+        //bUsuario.putString("tipo","twitter");
 
         //if correo else twitter
-        currentUsuario.setTwitter(bUsuario.getString("user"));
-        currentUsuario.setNombre("Andrea");
-       // currentUsuario.setCarrera("ITC");
 
-        if(bUsuario.getString("user").equals("twitter"))
+       // currentUsuario.setCarrera("ITC");
+        String msg ="";
+
+        if(bUsuario.getString("tipo").equals("twitter"))
         {
             TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
 
+             msg = "@" + bUsuario.getString("user") + " iniciaste sesión por Twitter!";
+            currentUsuario.setTwitter(bUsuario.getString("user"));
 
         }
         else {
-            String msg = "@" + bUsuario.getString("user") + " iniciaste sesión por google!";
+             msg = "@" + bUsuario.getString("user") +bUsuario.getString("token")+ " iniciaste sesión por google!";
+            currentUsuario.setNombre(bUsuario.getString("user"));
+            currentUsuario.setCorreo(bUsuario.getString("correo"));
+           // String img=bUsuario.getString("img");
+           // currentUsuario.setImgPerfil(Uri.parse(img));
+
         }
 
         //Add User BD
         UsuarioDB usuarioDB=new UsuarioDB(this);
         usuarioDB.insertar(currentUsuario);
 
-        String msg = "@" + bUsuario.getString("user") + " logged in!";
+
        Toast t= Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         t.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
         t.show();
@@ -380,8 +388,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void getTemasEventos() throws ExecutionException, InterruptedException {
         //TODO variables como evento hacer CONS
-        String URL_TEMAS="http://feriaint.herokuapp.com/app/temasEventos";
-        TemaJSON temasEJSON=new TemaJSON(this.getApplicationContext(), URL_TEMAS, EVENTO);
+
+        TemaJSON temasEJSON=new TemaJSON(this.getApplicationContext(), EVENTO);
         listaTemasEventos=temasEJSON.execute().get();
         if(temasEJSON.getStatus()== AsyncTask.Status.FINISHED)
         Log.e(TAG, "lista termino"+listaTemasEventos.size());
@@ -395,9 +403,8 @@ public class MainActivity extends AppCompatActivity {
     public void getTemasContCult()
     {
 
-        //TODO GUARDAR  URL Y DERIVANDOLO DEL TIPO MANDADO DENTRO DEL JSON
-        String URL_CONTENIDO="http://feriaint.herokuapp.com/app/temasModulos";
-        TemaJSON temasContCultJSON=new TemaJSON(this.getApplicationContext(), URL_CONTENIDO, CONTCULT);
+
+        TemaJSON temasContCultJSON=new TemaJSON(this.getApplicationContext(), CONTCULT);
         //listaTemasEventos=temasEJSON.execute().get();  esto hace esperar al thread principal
         temasContCultJSON.execute();
         listaTemasContCult=temasContCultJSON.getListaContenidos();

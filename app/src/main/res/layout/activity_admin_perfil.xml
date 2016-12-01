@@ -11,125 +11,151 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.udem.feriaint.Activities.AdminPerfil_Activity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_Info2"
-        tools:ignore="InefficientWeight,InvalidId,ObsoleteLayoutParam,UselessParent"
-        android:visibility="visible"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-       <!-- <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar6"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize"
-            app:title="Cambia la Información de tu Perfil"
-            app:textAppearance="@style/TextAppearance.AppCompat.Button"
-            app:titleTextColor="@color/primary_text"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Button" />-->
+            android:id="@+id/layout_Info2"
+            tools:ignore="InefficientWeight,InvalidId,ObsoleteLayoutParam,UselessParent"
+            android:visibility="visible"
+            android:layout_weight="1"
+            android:weightSum="1">
+
+           <!-- <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:theme="?attr/actionBarTheme"
+                android:minHeight="?attr/actionBarSize"
+                app:title="Cambia la Información de tu Perfil"
+                app:textAppearance="@style/TextAppearance.AppCompat.Button"
+                app:titleTextColor="@color/primary_text"
+                app:titleTextAppearance="@style/TextAppearance.AppCompat.Button" />-->
 
 
-        <TextView
-            android:text="Nombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lblNombre"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            <Button
+                android:text="Agregar Foto Perfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_img_perfil"
+                tools:ignore="HardcodedText"
+                android:onClick="getGaleriaQuitarFoto"
+                android:textColor="@color/primary_text"
+                android:backgroundTint="@color/accent" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#fff"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:padding="20dp"
-            android:text="Andrea Arroyo"
-            android:id="@+id/usuario_nombre"
-            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/perfil"
+                android:id="@+id/img_perfil_detalle"
+                style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:text="Nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lblNombre"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Andrea Arroyo"
+                android:id="@+id/usuario_nombre"
+                tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute" />
 
 
-        <TextView
-            android:text="Correo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            <TextView
+                android:text="Correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#fff"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:padding="20dp"
-            android:text="sonia.arroyo@udem.edu"
-            android:id="@+id/usuario_correo"
-            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="sonia.arroyo@udem.edu"
+                android:id="@+id/usuario_correo"
+                tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute" />
 
-        <TextView
-            android:text="Carrera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            <TextView
+                android:text="Carrera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:background="#fff"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:padding="20dp"
-            android:text="ITC"
-            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute"
-            android:id="@+id/usuario_carrera" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="ITC"
+                tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute"
+                android:id="@+id/usuario_carrera" />
 
-        <TextView
-            android:text="Twitter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtTwitter1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            <TextView
+                android:text="Twitter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtTwitter1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:background="#fff"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:padding="20dp"
-            android:text="No tienes vinculada tu cuenta"
-            tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute"
-            android:id="@+id/usuario_twitter" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="No tienes vinculada tu cuenta"
+                tools:ignore="HardcodedText,LabelFor,TextFields,UnusedAttribute"
+                android:id="@+id/usuario_twitter" />
 
-        <Button
-            android:text="Guardar Cambios"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/button5"
-            tools:ignore="HardcodedText"
-            android:onClick="guardarCambios" />
-    </LinearLayout>
+            <Button
+                android:text="Guardar Cambios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button5"
+                tools:ignore="HardcodedText"
+                android:onClick="guardarCambios" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 
 </RelativeLayout>

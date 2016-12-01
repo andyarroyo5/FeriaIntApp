@@ -1,5 +1,6 @@
 package edu.udem.feriaint.Modelos;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class Usuario implements Parcelable {
 
     private long id;
-    private int imgPerfil;
+    private Uri imgPerfil;
     private String correo;
     private String nombre;
     private String carrera;
@@ -126,11 +127,11 @@ public class Usuario implements Parcelable {
         this.listaContCultFavoritos = listaContCultFavoritos;
     }
 
-    public int getImgPerfil() {
+    public Uri getImgPerfil() {
         return imgPerfil;
     }
 
-    public void setImgPerfil(int imgPerfil) {
+    public void setImgPerfil(Uri imgPerfil) {
         this.imgPerfil = imgPerfil;
     }
 

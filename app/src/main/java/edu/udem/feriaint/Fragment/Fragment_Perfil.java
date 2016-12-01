@@ -1,9 +1,15 @@
 package edu.udem.feriaint.Fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,11 +18,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+
+import java.io.File;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import edu.udem.feriaint.Activities.AdminPerfil_Activity;
 import edu.udem.feriaint.Activities.MainActivity;
@@ -35,7 +49,8 @@ public class Fragment_Perfil extends Fragment{
 
     private String TAG;
 
-    int REQUEST_CODE=555;
+    public final int REQUEST_CODE=555;
+
 
     ImageButton btnFavoritoPerfil;
     ImageButton btnEventosPerfil;
@@ -52,6 +67,8 @@ public class Fragment_Perfil extends Fragment{
     TextView usuarioCarrera;
     TextView usuarioTwitter;
     TextView usuarioPuntos;
+
+    ImageView img_perfil;
 
 
     RecyclerView rvEventos;
@@ -110,6 +127,8 @@ public class Fragment_Perfil extends Fragment{
         usuarioCarrera=(TextView) rootView.findViewById(R.id.txtUsuarioCarrera);
         usuarioTwitter=(TextView) rootView.findViewById(R.id.txtUsuarioTwitter);
         usuarioPuntos=(TextView) rootView.findViewById(R.id.txtUsuarioPuntos);
+        img_perfil=(ImageView) rootView.findViewById(R.id.img_perfil);
+
 
 
      /*   try {
@@ -232,8 +251,19 @@ public class Fragment_Perfil extends Fragment{
                 Intent cerrarS=new Intent(getContext(), TwitterInicioSesion.class);
                 cerrarS.putExtra("cerrarS",true);
                 startActivity(cerrarS);
+                getActivity().finish();
             }
         });
+
+
+        if ( MainActivity.currentUsuario.getImgPerfil()!=null && !MainActivity.currentUsuario.getImgPerfil().toString().isEmpty())
+        {
+            if(MainActivity.currentUsuario.getImgPerfil().toString().equals(""))
+            {
+                img_perfil.setVisibility(View.GONE);
+            }
+        }
+
 
         return rootView;
     }
@@ -287,11 +317,22 @@ public class Fragment_Perfil extends Fragment{
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
+
         if (resultCode == MainActivity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
-               // mPostsAdapter.notifyDataSetChanged();
-                setUsuarioInfo();
+
+            switch (requestCode)
+            {
+                case REQUEST_CODE:
+                    setUsuarioInfo();
+                    break;
+
+
             }
+
+            setUsuarioInfo();
+
         }
     }
 
@@ -309,6 +350,38 @@ public class Fragment_Perfil extends Fragment{
         usuarioCarrera.setText(MainActivity.currentUsuario.getCarrera()!="" ? MainActivity.currentUsuario.getCarrera():"No tienes agregada tu carrera" );
         usuarioTwitter.setText(MainActivity.currentUsuario.getTwitter());
         usuarioPuntos.setText(String.valueOf(MainActivity.currentUsuario.getPuntos()));
+
+        if (MainActivity.currentUsuario.getImgPerfil()!=null)
+        {
+
+            if(!MainActivity.currentUsuario.getImgPerfil().toString().equals(""))
+                img_perfil.setVisibility(View.VISIBLE);
+
+
+            Glide.with(getContext()).load(MainActivity.currentUsuario.getImgPerfil()).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop().into(new BitmapImageViewTarget(img_perfil) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    img_perfil.setImageDrawable(circularBitmapDrawable);
+                }
+            });
+
+            /*Glide.with(this)
+                    .load(MainActivity.currentUsuario.getImgPerfil())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(img_perfil);*/
+
+
+        }
+        else
+        {
+            img_perfil.setVisibility(View.GONE);
+        }
+
+
+
 
 
         Log.e(TAG,"SET USUARIO UPDATE");

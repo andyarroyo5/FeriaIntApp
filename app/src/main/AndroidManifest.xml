@@ -38,14 +38,15 @@
         <activity android:name=".Activities.Detalle_ContCultural" />
         <activity android:name=".Activities.Filtrar_Activity" />
         <activity android:name=".Activities.ActivityInicial">
+
+        </activity>
+        <activity android:name=".TwitterInicioSesion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TwitterInicioSesion" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="8f89e7c01d71e8b241c240db16bd1122048d8c9a" />

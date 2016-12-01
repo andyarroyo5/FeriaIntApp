@@ -59,8 +59,7 @@
                     android:layout_gravity="bottom"
                     app:tabIndicatorColor="@android:color/black"
                     app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Info"
-                    app:tabSelectedTextColor="@color/cardview_dark_background"
-                    android:background="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color" />
+                    app:tabSelectedTextColor="@color/cardview_dark_background" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 

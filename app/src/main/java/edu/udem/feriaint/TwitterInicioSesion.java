@@ -1,5 +1,6 @@
 package edu.udem.feriaint;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,13 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.LoginEvent;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -23,41 +19,79 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.plus.Plus;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.TwitterAuthProvider;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Session;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.core.models.User;
-import com.twitter.sdk.android.core.models.UserValue;
-import com.twitter.sdk.android.core.services.AccountService;
 
-import edu.udem.feriaint.Activities.ActivityInicial;
 import edu.udem.feriaint.Activities.MainActivity;
 
 public class TwitterInicioSesion extends AppCompatActivity implements  View.OnClickListener,GoogleApiClient.OnConnectionFailedListener {
 
+    private String TAG;
     private static final int RC_SIGN_IN =55 ;
     TwitterLoginButton loginButtonTwitter;
     SignInButton loginButtonGoogle;
 
+    private final String TWITTER="twitter";
+    private final String GOOGLE="google";
+
 
     Button cerrarSesion;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     GoogleApiClient mGoogleApiClient;
-
+    AuthCredential credentialGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_twitter);
+
+        TAG=getClass().getSimpleName();
+        mAuth = FirebaseAuth.getInstance();
         mGoogleApiClient=buildGoogleAPIClient();
+
+
+        setContentView(R.layout.activity_twitter);
+
+
+        // Configure Google Sign In
+
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+
+
 
         final Bundle intent=getIntent().getExtras();
 
-        if (intent.getBoolean("cerrarS"))
+
+
+        if (intent!=null && intent.getBoolean("cerrarS"))
         {
             cerrarS();
         }
@@ -72,15 +106,12 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 // The TwitterSession is also available through:
                 // Twitter.getInstance().core.getSessionManager().getActiveSession()
                 TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                // with your app's user model
-                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+                handleTwitterSession(result.data);
+               empezarAplicacionTwitter(TWITTER,session);
 
-                 Intent  main= new Intent(getApplicationContext(), MainActivity.class);
 
-                final String[] usuarioInfo = new String[4];
 
-                /*
+              /*
 
                 Twitter.getApiClient(session).getAccountService().
                         .verifyCredentials(null,null,new Callback<User>() {
@@ -106,16 +137,6 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 });
                 */
 
-
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                main.putExtra("user",session.getUserName());
-                main.putExtra("token",session.getAuthToken());
-                main.putExtra("id",session.getUserId());
-                main.putExtra("session",session.getClass());
-                main.putExtra("tipo","twitter");
-
-                startActivity(main);
-                finish();
             }
             @Override
             public void failure(TwitterException exception) {
@@ -135,9 +156,23 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
 
         switch (requestCode)
         {
-            case RC_SIGN_IN:  GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            case RC_SIGN_IN:
+
+
                 //Calling a new function to handle signin
-                handleSignInResult(result);
+
+
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if (result.isSuccess()) {
+                    // Google Sign In was successful, authenticate with Firebase
+                    GoogleSignInAccount account = result.getSignInAccount();
+                   // firebaseAuthWithGoogle(account);
+                    handleSignInResult(result);
+
+                } else {
+                    // Google Sign In failed, update UI appropriately
+                    // ...
+                }
                 break;
 
             default:
@@ -160,27 +195,26 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
         if (result.isSuccess()) {
             //Getting google account
             GoogleSignInAccount acct = result.getSignInAccount();
+
             Log.e("Inicio",String.valueOf(result.getStatus())+result.toString());
             Log.e("InicioSesion", "display name: " + acct.getDisplayName());
+
+            empezarAplicacionGoogle(acct);
 
             //Displaying name and email
 
             //Initializing image loader
 
+           // firebaseAuthWithGoogle(acct);
 
-            Intent main=new Intent(getApplicationContext(), MainActivity.class);
-            main.putExtra("user ",acct.getDisplayName());
-            main.putExtra("correo", acct.getEmail());
-            main.putExtra("img", acct.getPhotoUrl());
+           /* Intent main=new Intent(getApplicationContext(), MainActivity.class);
+           main.putExtra("user ",acct.getDisplayName());
+           main.putExtra("correo", acct.getEmail());
+           main.putExtra("img", acct.getPhotoUrl());
 
 
            startActivity(main);
-
-            //Loading image
-           // profilePhoto.setImageUrl(acct.getPhotoUrl().toString(), imageLoader);
-
-
-            finish();
+           finish();*/
         } else {
             //If login fails
             Log.e("ERROR",String.valueOf(result.getStatus())+result.toString());
@@ -189,7 +223,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
     }
 
     private void googleInicioSesion() {
-       Toast.makeText(this, "Iniciar Sesion", Toast.LENGTH_LONG).show();
+       Toast.makeText(this, "Iniciar Sesion", Toast.LENGTH_SHORT).show();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -215,37 +249,48 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
         return mGoogleApiClient;
     }
 
+
+
+    private void empezarAplicacionTwitter(String tipo, Session activeSession)
+    {
+        Intent main= new Intent(this, MainActivity.class);
+
+        TwitterSession session= Twitter.getSessionManager().getSession(activeSession.getId());
+        main.putExtra("user",session.getUserName());
+        main.putExtra("token",session.getAuthToken());
+        main.putExtra("id",session.getUserId());
+        main.putExtra("session",session.getClass());
+        main.putExtra("tipo","twitter");
+
+        startActivity(main);
+        finish();
+    }
+
+    public void empezarAplicacionGoogle(GoogleSignInAccount account)
+    {
+        Intent main= new Intent(this, MainActivity.class);
+        main.putExtra("user", account.getDisplayName());
+        main.putExtra("correo", account.getEmail());
+        main.putExtra("img", account.getPhotoUrl());
+        main.putExtra("token", account.getIdToken());
+        main.putExtra("tipo","google");
+        main.putExtra("id",account.getId());
+        startActivity(main);
+        finish();
+
+    }
+
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
     private void cerrarS() {
 
-            if(mGoogleApiClient.isConnected()) {
 
-                Toast.makeText(this, "Conectado Google",
-                        Toast.LENGTH_SHORT).show();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status status) {
-                                //updateUI(false);
-                                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-                                mGoogleApiClient.disconnect();
+        FirebaseAuth.getInstance().signOut();
 
-                            }
-                        });
-            }
-            else
-            {
-                Twitter.getSessionManager().clearActiveSession();
-
-                SessionRecorder.recordSessionInactive("About: accounts deactivated");
-                Answers.getInstance().logLogin(new LoginEvent().putMethod("Twitter").putSuccess(false));
-
-
-                Toast.makeText(this, "Haz cerrado sesión",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-
-        }
+    }
 
 
     @Override
@@ -254,12 +299,83 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
 
         switch (id) {
             case R.id.sign_in_button_google:
-                googleInicioSesion();
+                //googleInicioSesion();
+                signIn();
                 break;
 
             case R.id.btnCerrarSesion:
                 cerrarS();
                 break;
+        }
+    }
+
+
+
+
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+
+                            //empezarAplicacionGoogle(acct);
+
+                        }
+                        // ...
+                    }
+                });
+    }
+    private void handleTwitterSession(TwitterSession session) {
+        Log.d(TAG, "handleTwitterSession:" + session);
+
+        AuthCredential credential = TwitterAuthProvider.getCredential(
+                session.getAuthToken().token,
+                session.getAuthToken().secret);
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 

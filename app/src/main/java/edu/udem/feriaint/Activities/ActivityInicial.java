@@ -40,12 +40,9 @@ public class ActivityInicial extends AppCompatActivity implements GoogleApiClien
 
         conectadoGoogle=false;
 
-
         final Session activeSession = SessionRecorder.recordInitialSessionState(
                 Twitter.getSessionManager().getActiveSession()
         );
-
-
 
         Log.e("IA",String.valueOf(activeSession));
         mGoogleApiClient = buildGoogleAPIClient();

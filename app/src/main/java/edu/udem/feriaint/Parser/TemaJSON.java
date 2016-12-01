@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import edu.udem.feriaint.Adapters.TemaAdapter;
 import edu.udem.feriaint.Modelos.Tema;
@@ -28,15 +29,27 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
     private ArrayList<Tema> listaTemas;
     private TemaAdapter temaAdapter;
     private String tipo;
+    String URL_TEMAS="http://feriaint.herokuapp.com/app/temasEventos";
+    String URL_CONTENIDO="http://feriaint.herokuapp.com/app/temasModulos";
+
 
     private String TAG;
 
-    public TemaJSON(Context context, String url, String tipo) {
+    public TemaJSON(Context context,String tipo) {
 
         listaTemas=new ArrayList<Tema>();
         this.context = context;
-        this.url=url;
         this.tipo=tipo;
+
+        if(tipo.equals("evento"))
+        {
+            url=URL_TEMAS;
+        }
+        else
+        {
+            url=URL_CONTENIDO;
+        }
+
 
     }
 
@@ -67,18 +80,55 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
         if (jsonStr != null) {
             try{
 
-                JSONArray temaArray = new JSONArray(jsonStr);
+                JSONArray temaArray=new JSONArray();
 
-                for (int i = 0; i < temaArray.length(); i++) {
-                    JSONObject temaJSON = temaArray.getJSONObject(i);
+                if(tipo.equals("contenidoCultural")){
+                    JSONObject jObject = new JSONObject(jsonStr);
+                    Iterator<String> keys = jObject.keys();
 
-                    Long temaId=temaJSON.getLong("id");
-                    String temaNombre=temaJSON.getString("nombre");
+                    while (keys.hasNext())
+                    {
+                        // Get the key
+                        Log.e(TAG,keys.toString());
 
-                    Tema tema=new Tema(temaId, temaNombre,tipo);
-                    Log.e(TAG,tema.toString());
-                    listaTemas.add(tema);
+                       /* String key = keys.next();
+
+                        // Get the value
+                        JSONObject value = jObject.getJSONObject(key);
+                        Long temaId=value.getLong("id");
+                        String temaNombre=value.getString("nombre");
+
+                        Tema tema=new Tema(temaId, temaNombre,tipo);
+                        Log.e(TAG,tema.toString());
+                        listaTemas.add(tema);*/
+
+
+                        // Do something...
+                    }
+
+
                 }
+                else
+                {
+                    temaArray = new JSONArray(jsonStr);
+                    for (int i = 0; i < temaArray.length(); i++) {
+                        JSONObject temaJSON = temaArray.getJSONObject(i);
+
+                        Long temaId=temaJSON.getLong("id");
+                        String temaNombre=temaJSON.getString("nombre");
+
+                        Tema tema=new Tema(temaId, temaNombre,tipo);
+                        Log.e(TAG,tema.toString());
+                        listaTemas.add(tema);
+                    }
+
+                }
+
+
+
+
+
+
 
 
                 Log.d(TAG,"LISTA TEMAS QUEDO"+listaTemas.size());

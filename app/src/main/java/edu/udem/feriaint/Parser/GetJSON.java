@@ -33,8 +33,7 @@ final public class GetJSON {
 
     public void getTemasEventos() throws ExecutionException, InterruptedException {
 
-        String URL_TEMAS="http://feriaint.herokuapp.com/app/temasEventos";
-        TemaJSON temasEJSON=new TemaJSON(context, URL_TEMAS, "evento");
+        TemaJSON temasEJSON=new TemaJSON(context, "evento");
         listaTemasEventos=temasEJSON.execute().get();
     }
 
