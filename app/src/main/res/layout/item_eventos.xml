@@ -46,7 +46,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.52"
                     android:background="@color/colorAccent"
-                    tools:ignore="NestedWeights">
+                    tools:ignore="NestedWeights"
+                    android:id="@+id/evento_portada">
 
                     <TextView
                         android:id="@+id/evento_fecha"

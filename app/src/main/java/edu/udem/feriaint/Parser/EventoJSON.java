@@ -43,9 +43,6 @@ public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
     RecyclerView mRecyclerView;
 
     private ArrayList<Evento> listaEventos;
-
-
-
     //private SQLiteDatabase bd;
 
     public EventoJSON(Context context) {
@@ -110,14 +107,8 @@ public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
                     String hashtagJSON="#"+evento.getString("hashtag");
 
 
-
-
-                    //TODO get var tipo
-                    //String tipoJSON = descripcionJSON;
-
                     Evento e = new Evento(idJSON,tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON,tema_idJSON,hashtagJSON);
-                    //e.setFavorito(false);
-                    Log.e(TAG, "evento agregado"+ e.getTitulo()+" "+ e.getTema_id() + e.getFechaInicio()+" "+e.getFechaFinal());
+                    Log.e(TAG, "evento agregado"+ e.getTitulo()+" "+ e.getTema().getId() + e.getFechaInicio()+" "+e.getFechaFinal());
                     listaEventos.add(e);
                 }
 
@@ -152,15 +143,11 @@ public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
         super.onPostExecute(result);
         // Dismiss the progress dialog
 
-            try {
-                if (mRecyclerView!=null)
-                layoutAdapter();
+        if (mRecyclerView!=null)
+     //   layoutAdapter();
 
-                if (swipeContainerEventos!=null)
-                swipeContainerEventos.setRefreshing(false);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if (swipeContainerEventos!=null)
+        swipeContainerEventos.setRefreshing(false);
 
         //animación mientras espera
       /*  if (pd != null)

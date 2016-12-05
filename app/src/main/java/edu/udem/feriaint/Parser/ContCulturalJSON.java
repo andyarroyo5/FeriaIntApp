@@ -12,7 +12,9 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.ContenidoCulturalAdapter;
 import edu.udem.feriaint.Data.TemaContCulturalBD;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
@@ -89,11 +91,10 @@ public class ContCulturalJSON extends AsyncTask<Object, Object, ArrayList<Conten
                     //información relacionada al TEMA
                     Long temaId=contCult.getLong("tema_id");
                     String temaNombre=contCult.getString("tema_nombre");
-                    Tema tema=new Tema(temaId, temaNombre);
 
                     String tipo=contCult.getString("tipo");
 
-                  ContenidoCultural contCultural=new ContenidoCultural(titulo,tema);
+                  ContenidoCultural contCultural=new ContenidoCultural(titulo,temaId,temaNombre);
 
                     contCultural.setId(id);
                     contCultural.setTipo(tipo);

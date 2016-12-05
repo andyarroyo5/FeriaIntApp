@@ -36,10 +36,6 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
 
         //Creating a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_eventos,parent,false);
-
-        //set the view's size, margins, paddings and layout parameters
-
-        //ViewHolder vh = new ViewHolder(v);
         ViewHolderEvento vh = new ViewHolderEvento(v);
 
         return vh;
@@ -53,10 +49,7 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
         // - replace the contents of the view with that element
         final Evento evento = listaEvento.get(position);
 
-
         holder.setEvento(evento);
-
-       // holder.getAgregarFavoritos().callOnClick();
         if(evento.isFavorito())
         holder.getAgregarFavoritos().setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorAccent));
 
@@ -68,6 +61,8 @@ public class EventoAdapter extends RecyclerView.Adapter<ViewHolderEvento> {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        holder.getEvento_portada().setBackgroundColor(evento.getTema().getColor());
         holder.agregarCalendario();
         holder.verDetalleEvento();
         holder.compartir();

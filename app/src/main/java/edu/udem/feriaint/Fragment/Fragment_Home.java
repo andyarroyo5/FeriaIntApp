@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.ExecutionException;
 
 public class Fragment_Home extends Fragment{
 
@@ -35,6 +36,7 @@ public class Fragment_Home extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
@@ -42,7 +44,6 @@ public class Fragment_Home extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_recycler_viewer, container, false);
-
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv);
 
@@ -57,7 +58,14 @@ public class Fragment_Home extends Fragment{
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
-        ArrayList<Object> feed= this.getSampleArrayList();
+        ArrayList<Object> feed= null;
+        try {
+            feed = this.getSampleArrayList();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         compAdapter=new ComplexRecyclerViewAdapter(feed);
         mRecyclerView.setAdapter(compAdapter);
@@ -67,7 +75,7 @@ public class Fragment_Home extends Fragment{
         return rootView;
     }
 
-    private ArrayList<Object> getSampleArrayList() {
+    private ArrayList<Object> getSampleArrayList() throws ExecutionException, InterruptedException {
         ArrayList<Object> items = new ArrayList<>();
 
         Date p=new Date();
@@ -78,14 +86,33 @@ public class Fragment_Home extends Fragment{
 
         ArrayList<ContenidoCultural>listaContCult;
 
-        listaEventos= MainActivity.listaEventos;
+        listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(false);
+        listaContCult=MainActivity.repositorioJSON.getListaContenidoCultural(false);
 
-        listaContCult=MainActivity.listaContCult;
-        for (int i=0; i<listaEventos.size();i++)
+        if(listaEventos.size()>listaContCult.size())
         {
-            items.add(listaEventos.get(i));
-            items.add(listaContCult.get(i));
+
+            for (int i = 0; i <listaEventos.size() ; i++) {
+
+                items.add(listaEventos.get(i));
+                if(i<listaContCult.size())
+                {
+                    items.add(listaContCult.get(i));
+                }
+            }
         }
+        else
+        {
+            for (int i = 0; i <listaContCult.size() ; i++) {
+
+                items.add(listaContCult.get(i));
+                if(i<listaEventos.size())
+                {
+                    items.add(listaEventos.get(i));
+                }
+            }
+        }
+
 
         return items;
     }

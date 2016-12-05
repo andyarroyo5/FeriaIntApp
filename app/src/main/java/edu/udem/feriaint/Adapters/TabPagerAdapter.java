@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 
 
 import edu.udem.feriaint.Activities.MainActivity;
@@ -26,6 +27,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private String TAG;
     private Edicion edicion;
+    public TabLayout tabLayout;
+    public Context context;
 
     //private TabLayout tabLayout;
     private int[] tabIcons = {
@@ -41,7 +44,9 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
 
 
-    public void setupTabIcons(TabLayout tabLayout) {
+    public void setupTabIcons(TabLayout tabLayout, Context context) {
+        this.tabLayout=tabLayout;
+        this.context=context;
         tabLayout.getTabAt(0).setIcon( R.drawable.ic_home_white_24dp);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
@@ -50,12 +55,16 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     }
 
-    public void setColorTabs(TabLayout tablayout, Context context)
+    public void setColorTabs(int posicion)
     {
-        tablayout.getTabAt(0).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
-        tablayout.getTabAt(1).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
-        tablayout.getTabAt(2).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
-        tablayout.getTabAt(3).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
+
+        this.tabLayout.getTabAt(0).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
+        this.tabLayout.getTabAt(1).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
+        this.tabLayout.getTabAt(2).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
+        this.tabLayout.getTabAt(3).getIcon().setColorFilter(context.getResources().getColor(R.color.primary_text), PorterDuff.Mode.SRC_IN);
+
+        this.tabLayout.getTabAt(posicion).getIcon().setColorFilter(ContextCompat.getColor(context, R.color.accent),PorterDuff.Mode.SRC_ATOP);
+
 
     }
 
@@ -75,13 +84,16 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
             case 0: // siempre empieza desde 0
 
                 Fragment_Home home=new Fragment_Home();
+
                 return home;
 
             case 1:
                 return new Fragment_Evento();
 
             case 2:
+
                 return new Fragment_ContenidoCultural();
+
 
             case 3:
                 return new Fragment_Perfil();

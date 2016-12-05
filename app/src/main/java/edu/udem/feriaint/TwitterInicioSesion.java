@@ -78,6 +78,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                   empezaAplicacionFB(user);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -166,7 +167,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 if (result.isSuccess()) {
                     // Google Sign In was successful, authenticate with Firebase
                     GoogleSignInAccount account = result.getSignInAccount();
-                   // firebaseAuthWithGoogle(account);
+                    firebaseAuthWithGoogle(account);
                     handleSignInResult(result);
 
                 } else {
@@ -199,7 +200,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
             Log.e("Inicio",String.valueOf(result.getStatus())+result.toString());
             Log.e("InicioSesion", "display name: " + acct.getDisplayName());
 
-            empezarAplicacionGoogle(acct);
+           // empezarAplicacionGoogle(acct);
 
             //Displaying name and email
 
@@ -280,6 +281,22 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
 
     }
 
+
+
+    public void empezaAplicacionFB(FirebaseUser user)
+    {
+        Intent main= new Intent(this, MainActivity.class);
+        main.putExtra("user", user.getDisplayName());
+        main.putExtra("correo", user.getEmail());
+        main.putExtra("img", user.getPhotoUrl());
+        main.putExtra("provider", user.getProviderId());
+        main.putExtra("tipo","firebase");
+        main.putExtra("id",user.getUid());
+        startActivity(main);
+        finish();
+
+    }
+
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -331,7 +348,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                                     Toast.LENGTH_SHORT).show();
 
 
-                            //empezarAplicacionGoogle(acct);
+                            empezarAplicacionGoogle(acct);
 
                         }
                         // ...

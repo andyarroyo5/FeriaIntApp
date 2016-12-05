@@ -1,11 +1,14 @@
 package edu.udem.feriaint.Activities;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -42,6 +46,7 @@ import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.Parser.ContCulturalJSON;
 import edu.udem.feriaint.Parser.EdicionJSON;
 import edu.udem.feriaint.Parser.EventoJSON;
+import edu.udem.feriaint.Parser.GetJSON;
 import edu.udem.feriaint.Parser.TemaJSON;
 import edu.udem.feriaint.R;
 
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private TabPagerAdapter mTabPagerAdapter;
-    private ViewPager mViewPager;
+    public static ViewPager mViewPager;
     private BDHandler bdHandler;
 
     //clase JSON
@@ -61,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Tema> listaTemasEventos;
     public static ArrayList<Tema> listaTemasContCult;
 
+    public static GetJSON repositorioJSON;
     public static Edicion edicion;
 
 
+    public static TextView toolbarTitulo;
 
     public final String EVENTO="evento";
     public final String CONTCULT="contenidoCultural";
@@ -76,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private final int  REQUEST_CODE_FILTRAR=111;
-
-
     FloatingActionButton fab;
 
     @Override
@@ -89,29 +94,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
+        toolbarTitulo=(TextView) findViewById(R.id.appTitulo);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        setLayoutMain();
 
-        upgradeBD();
+      //  upgradeBD();
+        repositorioJSON=new GetJSON(this);
         try {
-            getEdicionJSON();
-            getTemasEventos();
-            getListaEventosJSON();
-            getListaContenidoCultural();
+            edicion= MainActivity.repositorioJSON.getEdicionJSON();
+           // MainActivity.repositorioJSON.getTemasEventos(false);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        setCurrentUser();
 
+        setLayoutMain();
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, "+ ON START +");
+
+        setCurrentUser();
 
     }
 
@@ -119,7 +128,13 @@ public class MainActivity extends AppCompatActivity {
     protected void setCurrentUser()
     {
         currentUsuario=new Usuario();
+        currentUsuario.setCarrera("ITC");
+        currentUsuario.setNombre("Andrea Arroyo");
+        UsuarioDB usuarioDB=new UsuarioDB(this);
+        usuarioDB.insertar(currentUsuario);
 
+
+/*
         Intent tIntent=getIntent();
         Bundle bUsuario=tIntent.getExtras();
         //bUsuario.putString("tipo","twitter");
@@ -153,11 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
        Toast t= Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         t.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
-        t.show();
-       // Snackbar.make(this.findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
-
-
-
+        t.show();*/
     }
 
     protected void setLayoutMain()
@@ -176,89 +187,65 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(mViewPager);
         //Configuar los íconos en las pestañas
-        mTabPagerAdapter.setupTabIcons(tabLayout);
-        mTabPagerAdapter.setColorTabs(tabLayout,getApplicationContext());
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                                               @Override
-                                               public void onTabSelected(TabLayout.Tab tab) {
-                                                   int position = tab.getPosition();
-                                                   switch (position) {
-                                                       case 0:
-                                                           //hideFab
-                                                           Log.e("Main", String.valueOf(position));
-                                                           fab.hide();
-                                                           break;
-                                                       case 1:
-                                                           //get temas eventos
-
-                                                           //fab.setVisibility(View.VISIBLE);
-                                                           fab.show();
-
-                                                           break;
-                                                       case 2:
-                                                           //get temas de edicion
-                                                           //fab.setVisibility(View.VISIBLE);
-                                                           fab.show();
-
-
-                                                           break;
-                                                       case 3:
-                                                           //hideFab
-                                                           Log.e("Main", String.valueOf(position));
-
-                                                           //fab.setVisibility(View.GONE);
-                                                           fab.hide();
-
-                                                           break;
-                                                   }
-
-                                               }
-
-                                               @Override
-                                               public void onTabUnselected(TabLayout.Tab tab) {
-                                               }
-
-                                               @Override
-                                               public void onTabReselected(TabLayout.Tab tab) {
-                                                   int position = tab.getPosition();
-                                                   switch (position) {
-                                                       case 0:
-                                                           //hideFab
-                                                           Log.e("Main", String.valueOf(position));
-                                                           fab.hide();
-                                                           break;
-                                                       case 1:
-                                                           //get temas eventos
-
-                                                           //fab.setVisibility(View.VISIBLE);
-                                                           fab.show();
-
-                                                           break;
-                                                       case 2:
-                                                           //get temas de edicion
-                                                           //fab.setVisibility(View.VISIBLE);
-                                                           fab.show();
-
-
-                                                           break;
-                                                       case 3:
-                                                           //hideFab
-                                                           Log.e("Main", String.valueOf(position));
-
-                                                           //fab.setVisibility(View.GONE);
-                                                           fab.hide();
-
-                                                           break;
-                                                   }
-                                               }
-
-                                           });
-
-
-        //Mostrar fab por temas
+        mTabPagerAdapter.setupTabIcons(tabLayout,getApplicationContext());
+        mTabPagerAdapter.setColorTabs(tabLayout.getSelectedTabPosition());
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.hide();
+
+
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                switch (position) {
+                    case 0:
+                        //hideFab
+                        toolbarTitulo.setText("Feria Internacional");
+                        fab.hide();
+
+                        break;
+                    case 1:
+                        //get temas eventos
+                        toolbarTitulo.setText("Eventos");
+                        fab.show();
+                        //fab.setVisibility(View.VISIBLE);
+
+                        break;
+                    case 2:
+                        //get temas de edicion
+                        //fab.setVisibility(View.VISIBLE);
+                        toolbarTitulo.setText("Cultura");
+
+                        fab.show();
+                        break;
+                    case 3:
+                        //hideFab
+                        fab.hide();
+                        toolbarTitulo.setText("Perfil");
+                        break;
+                }
+
+                mTabPagerAdapter.setColorTabs(position);
+
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+        });
+
+        //Mostrar fab por temas
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,33 +257,22 @@ public class MainActivity extends AppCompatActivity {
                 Bundle b=new Bundle();
                 if(tab==1)
                 {
+
                     b.putString("tipo",EVENTO);
-                    if(listaTemasEventos==null)
-                    {
-                        try {
-                            getTemasEventos();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Log.e(TAG,"no hay temas eventos pedir json otra vez");
-                    }
+
 
                 }
                 else
                 {
-                    b.putString("tipo",CONTCULT);
-                    if(listaTemasContCult==null)
+                    if (tab==2)
                     {
-                        getTemasContCult();
-                        Log.e(TAG,"no hay temas contCult pedir json otra vez");
+                        b.putString("tipo",CONTCULT);
+
                     }
+
                 }
 
                 Log.d(TAG, "GET in FAB"+ tab);
-
-
                 filtrar.putExtras(b);
                 startActivityForResult(filtrar, REQUEST_CODE_FILTRAR);
             }
@@ -312,6 +288,9 @@ public class MainActivity extends AppCompatActivity {
         {
 
             case REQUEST_CODE_FILTRAR:
+
+               // mTabPagerAdapter.getItem(mViewPager.getCurrentItem()).;
+
                 Log.e(TAG, "Regreso intent filtrar");//+REQUEST_CODE_FILTRAR+ "data "+data.toString());
 
                 break;
@@ -372,77 +351,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
             return super.onOptionsItemSelected(item);
-
-    }
-
-
-   //TODO getJSONs class? y al hacer refresh llamar otra vez depende de lo que se quiera
-
-    public void getEdicionJSON() throws ExecutionException, InterruptedException {
-        edicionJSON=new EdicionJSON(this);
-        //edicionJSON.execute();
-        edicion= edicionJSON.execute().get();
-        //while(!edicionJSON.getStatus().equals(AsyncTask.Status.FINISHED));
-
-    }
-
-    public void getTemasEventos() throws ExecutionException, InterruptedException {
-        //TODO variables como evento hacer CONS
-
-        TemaJSON temasEJSON=new TemaJSON(this.getApplicationContext(), EVENTO);
-        listaTemasEventos=temasEJSON.execute().get();
-        if(temasEJSON.getStatus()== AsyncTask.Status.FINISHED)
-        Log.e(TAG, "lista termino"+listaTemasEventos.size());
-
-
-        // temasEJSON.execute();
-       // listaTemasEventos=temasEJSON.getListaContenidos().get();
-    }
-
-
-    public void getTemasContCult()
-    {
-
-
-        TemaJSON temasContCultJSON=new TemaJSON(this.getApplicationContext(), CONTCULT);
-        //listaTemasEventos=temasEJSON.execute().get();  esto hace esperar al thread principal
-        temasContCultJSON.execute();
-        listaTemasContCult=temasContCultJSON.getListaContenidos();
-
-    }
-
-    public void getListaEventosJSON() throws ExecutionException, InterruptedException {
-        listaEventos=new ArrayList<>();
-        EventoJSON eventosJSON=new EventoJSON(this);
-        listaEventos= eventosJSON.execute().get();
-      /*  eventosJSON.execute();
-        listaEventos=eventosJSON.getListaEventos();*/
-
-    }
-
-    public void getListaContenidoCultural() throws ExecutionException, InterruptedException {
-        listaContCult=new ArrayList<>();
-        ContCulturalJSON contCultJSON=new ContCulturalJSON(this);
-        listaContCult=contCultJSON.execute().get();
-        //listaContCult=contCultJSON.getListaContCultural();
-
-    }
-
-
-
-
-
-
-
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "+ ON START +");
-
-
-        //ver si existe en web
 
     }
 

@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "254526817018",
-    "project_id": "feriaint"
+    "firebase_url": "https://feriaint.firebaseio.com",
+    "project_id": "feriaint",
+    "storage_bucket": "feriaint.appspot.com"
   },
   "client": [
     {
@@ -21,6 +23,10 @@
           }
         },
         {
+          "client_id": "254526817018-h149ah4i6r7rlejdb255ln535glmivf7.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "254526817018-fcun090paii06pe7d0n3ei7397vneu76.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -38,11 +44,16 @@
           }
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254526817018-h149ah4i6r7rlejdb255ln535glmivf7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

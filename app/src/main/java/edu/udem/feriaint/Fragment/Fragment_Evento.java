@@ -8,26 +8,38 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 ;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.ExecutionException;
 
 import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.EventoAdapter;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.Evento;
+import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.Parser.EventoJSON;
 
+import edu.udem.feriaint.Parser.GetJSON;
 import edu.udem.feriaint.R;
 
 /**
@@ -49,6 +61,8 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
    // private Usuario currentUsuario;
     TextView txtError;
     CalendarView cal;
+    MaterialCalendarView calendario;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,20 +80,51 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
 
         // Inflate the layout for this fragment
        View rootView = inflater.inflate(R.layout.fragment_evento, container, false);
-
         eventoDB=new EventoDB(rootView.getContext());
 
         cal=(CalendarView) rootView.findViewById(R.id.calendarView);
 
-
         cal.setMinDate(MainActivity.edicion.getFechaInicio().getTime());
         cal.setMaxDate(MainActivity.edicion.getFechaFinal().getTime());
+
 
         cal.setDate(cal.getDate());
 
 
+        cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month,
+                                            int dayOfMonth) {
+                Toast.makeText(getContext(), ""+dayOfMonth, Toast.LENGTH_SHORT).show();// TODO Auto-generated method stub
+
+            }
+        });
+
+        calendario=(MaterialCalendarView) rootView.findViewById(R.id.calendario);
+        Calendar c=Calendar.getInstance();
+        Log.e(TAG, "today"+ c.getTime());
+
+        CalendarDay today = CalendarDay.from(2016,9,29);
+        calendario.setCurrentDate(today);
+        calendario.setSelectedDate(today);
+
+
+      /*  calendario.state().edit()
+                .setMinimumDate(MainActivity.edicion.getFechaInicio())
+                .setMaximumDate(MainActivity.edicion.getFechaFinal())
+                .commit();
+*/
+
+
+        calendario.setTitleAnimationOrientation(MaterialCalendarView.HORIZONTAL);
+
+        //calendario.setOnMonthChangedListener(this);
+
      //   txtError =(TextView) rootView.findViewById(R.id.txtError);
       swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
+        setColorRefresh();
+
         // Setup refresh listener which triggers new data loading
       swipeContainer.setOnRefreshListener(this);
 
@@ -93,13 +138,21 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
        mLayoutManager = new LinearLayoutManager(getActivity());
        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        //sample
-       // getSampleArrayList();
-        //  agregarEventos();
-        getJSON();
+        try {
+            listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(false);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-
-        layoutAdapter();
+        try {
+            layoutAdapter(listaEventos);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return rootView;
     }
@@ -110,9 +163,11 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         try {
           //  eJson.getEventosBD();
            System.out.println("On refresh");
+           listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(true);
+         //  MainActivity.repositorioJSON.getTemasEventos(true);
+          // setColorTemas();
 
-            getJSON();
-            //layoutAdapter();
+            layoutAdapter(listaEventos);
 
             swipeContainer.setRefreshing(false);
 
@@ -121,45 +176,116 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+   public void layoutAdapter(ArrayList<Evento> listaEventos) throws ExecutionException, InterruptedException {
+        if(listaEventos.isEmpty())
+        {
+            listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(true);
+            //MainActivity.repositorioJSON.getTemasEventos(true);
+            //setColorTemas();
+        }
 
-    //agregar lista db
-    //if refresh true solo agrega los que no estan en bd
-
-
-   public void layoutAdapter()
-    {
         eventoAdapter = new EventoAdapter(listaEventos);
         //Especificar Adapter
         mRecyclerView.setAdapter(eventoAdapter);
         eventoAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    public void getJSON()
-    {
-
-        if(MainActivity.listaEventos.isEmpty()) {
-
-            EventoJSON refreshJSON = new EventoJSON(getContext());
-            refreshJSON.setRecyclerViewer(mRecyclerView);
-            refreshJSON.setSwipeContainer(swipeContainer);
-            // if(refreshJSON.getStatus()!= AsyncTask.Status.PENDING)
-            refreshJSON.execute();
-            try {
-                listaEventos = eventoDB.getTodosLosEventos();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            listaEventos=MainActivity.listaEventos;
-        }
-        //layoutAdapter();
+        if(requestCode==111)
+        Log.e(TAG, "Regreso intent filtrar en FRAGMENT EVENTO");//+REQUEST_CODE_FILTRAR+ "data "+data.toString());
     }
 
+    public void filtrarFecha() throws ExecutionException, InterruptedException {
+        ArrayList<Evento> listaFiltrarFecha=new ArrayList<>();
+
+        for (Evento f:listaFiltrarFecha) {
+
+            if (f.getFechaInicio().getMonth()==calendario.getSelectedDate().getMonth())
+            {
+             listaFiltrarFecha.add(f);
+            }
+        }
+        layoutAdapter(listaFiltrarFecha);
+    }
+
+    public void filtrarTemasEventos() throws ExecutionException, InterruptedException {
+        ArrayList<Tema> listaTemasEventos=new ArrayList<>();
+
+        for (Tema t:MainActivity.repositorioJSON.getTemasEventos(false)) {
+
+            if (t.isSeleccionado())
+            {
+                listaTemasEventos.add(t);
+            }
+        }
+
+        ArrayList<Evento> listaEventosporTemas=new ArrayList<>();
+
+        for (Evento e:listaEventos) {
 
 
+            for (Tema t:listaTemasEventos) {
 
+                if (t.isSeleccionado())
+                {
+                    if(e.getTema().getId()==t.getId())
+                        listaEventosporTemas.add(e);
+                }
+            }
 
+        }
+
+        for (int i = 0; i < listaEventosporTemas.size(); i++) {
+
+            Log.e(TAG,"Filtrar"+listaEventosporTemas.get(i).getTema().getId());
+
+        }
+
+       layoutAdapter(listaEventosporTemas);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            filtrarTemasEventos();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Color del refresh
+    private void setColorRefresh() {
+        swipeContainer.setColorSchemeResources(R.color.accent,
+               android.R.color.holo_green_light ,
+               android.R.color.holo_orange_light ,
+               android.R.color.holo_red_light);
+    }
+
+    public void setColorTemas() throws ExecutionException, InterruptedException {
+        for (Evento e:listaEventos) {
+
+            for (Tema t:MainActivity.repositorioJSON.getTemasEventos(false)) {
+
+                if(e.getTema().getId()==t.getId())
+                {
+                    e.setTema(t);
+                }
+
+            }
+
+        }
+    }
+
+   /* @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        Toast.makeText(getContext(), "Date "+date.getMonth(), Toast.LENGTH_SHORT).show();
+    }*/
 }

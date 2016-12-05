@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.R;
 import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderContCultural;
@@ -44,33 +45,15 @@ public class ContenidoCulturalAdapter extends RecyclerView.Adapter<ViewHolderCon
     public void onBindViewHolder(ViewHolderContCultural holder, int position) {
         final ContenidoCultural cont_cult = listaContenido.get(position);
 
-        if(cont_cult.getImgPortada()!=null )
-        {
-            Log.e("IMGPORTADA ADAPTER",cont_cult.getTitulo()+" "+cont_cult.getImgPortada());
-            Glide.with(holder.itemView.getContext())
-                    .load(cont_cult.getImgPortada())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.getImgPortada());
-
-            holder.getImgPortada().setVisibility(View.VISIBLE);
-        }
-
         holder.setContenidoCultural(cont_cult);
+
+        holder.setPortada(holder.itemView);
         holder.getTitulo().setText(cont_cult.getTitulo());
         holder.getTema().setText(cont_cult.getTema().getNombre());
         holder.verDetalleContCult();
         holder.agregarFavoritos();
         holder.compartir();
-
-
-
-
-
-    }
-
-
-
-
+ }
     @Override
     public int getItemCount() {
         return listaContenido.size();

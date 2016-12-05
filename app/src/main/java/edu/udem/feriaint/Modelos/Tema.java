@@ -17,8 +17,13 @@ public class Tema {
    private int color;
    private boolean isEvento;
    private boolean isContCult;
+   private boolean seleccionado;
 
     public Tema() {  }
+
+    public Tema(long temaId) {
+        this.id=temaId;
+    }
 
     public Tema(Long temaId, String tema) {
         this.id=temaId;
@@ -31,6 +36,7 @@ public class Tema {
         this.nombre=temaNombre;
         setTipo(tipo, true);
         this.color= getColorRandom();
+        seleccionado=false;
     }
 
 
@@ -122,4 +128,11 @@ public class Tema {
             color= getColorRandom();
     }
 
+    public boolean isSeleccionado() {
+        return seleccionado;
+    }
+
+    public void setSeleccionado(boolean seleccionado) {
+        this.seleccionado = seleccionado;
+    }
 }

@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,29 +9,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.udem.feriaint.Activities.MainActivity">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.54"
-        tools:ignore="InefficientWeight,ObsoleteLayoutParam">
 
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:ignore="UselessParent"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:baselineAligned="false">
 
 
-
-        <CalendarView
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendario"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:id="@+id/calendarView" />
+            android:layout_height="76dp"
+            app:mcv_showOtherDates="all"
+            app:mcv_selectionColor="#00F"
+            android:background="@color/tw__composer_white"
+            app:mcv_headerTextAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:layout_gravity="center_vertical"
+            app:mcv_calendarMode="month"
+            android:visibility="gone" />
 
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:ignore="InefficientWeight,ObsoleteLayoutParam">
 
 
         <android.support.v7.widget.RecyclerView
@@ -41,21 +48,30 @@
             android:layout_toEndOf="@+id/section_label"
             tools:ignore="ObsoleteLayoutParam"
             android:background="@color/cardview_light_background"
-            tools:listitem="@layout/item_eventos">
+            tools:listitem="@layout/item_eventos"
+            android:layout_weight="0.20">
 
         </android.support.v7.widget.RecyclerView>
 
+     </android.support.v4.widget.SwipeRefreshLayout>
 
+        <CalendarView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:id="@+id/calendarView"
+            android:visibility="gone"/>
 
         <TextView
             android:text="Ups, al  parecer hay un problema con el internet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:ignore="HardcodedText"
             android:visibility="gone"
-            android:id="@+id/txtError" />
+            android:id="@+id/txtError"
+            android:layout_weight="0.20" />
     </LinearLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 </RelativeLayout>

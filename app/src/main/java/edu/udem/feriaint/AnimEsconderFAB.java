@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
+import edu.udem.feriaint.Activities.MainActivity;
+
 /**
  * Created by Andrea Arroyo on 28/11/2016.
  */
@@ -24,10 +26,11 @@ public class AnimEsconderFAB extends CoordinatorLayout.Behavior<FloatingActionBu
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
 
         //child -> Floating Action Button
+
         if (child.getVisibility() == View.VISIBLE && dyConsumed > 0) {
             child.hide();
 
-        } else if (child.getVisibility() == View.GONE && dyConsumed < 0) {
+        } else if (child.getVisibility() == View.GONE && dyConsumed < 0 && !(MainActivity.mViewPager.getCurrentItem()==0 || MainActivity.mViewPager.getCurrentItem()==3 )) {
             child.show();
         }
     }

@@ -98,7 +98,7 @@ public class EdicionJSON  extends AsyncTask<Object, Object, Edicion> {
     @Override
     protected void onPostExecute(Edicion result) {
         super.onPostExecute(result);
-        Log.e(TAG, "AFTER FINISHED"+ MainActivity.edicion.toString());
+       // Log.e(TAG, "AFTER FINISHED"+ MainActivity.edicion.toString());
     }
 
 

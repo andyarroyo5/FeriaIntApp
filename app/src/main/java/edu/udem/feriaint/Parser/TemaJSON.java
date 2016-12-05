@@ -1,5 +1,6 @@
 package edu.udem.feriaint.Parser;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
     RecyclerView mRecyclerView;
 
     private String url;
+    private ProgressDialog pDialog;
     private ArrayList<Tema> listaTemas;
     private TemaAdapter temaAdapter;
     private String tipo;
@@ -66,6 +68,9 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
     protected void onPreExecute() {
         super.onPreExecute();
 
+        //pDialog=new ProgressDialog(context);
+       // pDialog.show();
+
     }
 
 
@@ -80,36 +85,23 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
         if (jsonStr != null) {
             try{
 
-                JSONArray temaArray=new JSONArray();
+                JSONObject jObject = new JSONObject(jsonStr);
+                Iterator<String> keys = jObject.keys();
 
-                if(tipo.equals("contenidoCultural")){
-                    JSONObject jObject = new JSONObject(jsonStr);
-                    Iterator<String> keys = jObject.keys();
-
-                    while (keys.hasNext())
-                    {
-                        // Get the key
-                        Log.e(TAG,keys.toString());
-
-                       /* String key = keys.next();
-
-                        // Get the value
-                        JSONObject value = jObject.getJSONObject(key);
-                        Long temaId=value.getLong("id");
-                        String temaNombre=value.getString("nombre");
-
-                        Tema tema=new Tema(temaId, temaNombre,tipo);
-                        Log.e(TAG,tema.toString());
-                        listaTemas.add(tema);*/
-
-
-                        // Do something...
-                    }
-
+                while (keys.hasNext()) {
+                    // Get the key
+                    Log.e(TAG, keys.toString());
+                    String key = keys.next();
+                    JSONObject value = jObject.getJSONObject(key);
+                    Long temaId=value.getLong("id");
+                    String temaNombre=value.getString("nombre");
+                    Tema tema=new Tema(temaId, temaNombre,tipo);
+                    Log.e(TAG,tema.toString());
+                    listaTemas.add(tema);
 
                 }
-                else
-                {
+                 /*
+
                     temaArray = new JSONArray(jsonStr);
                     for (int i = 0; i < temaArray.length(); i++) {
                         JSONObject temaJSON = temaArray.getJSONObject(i);
@@ -122,7 +114,7 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
                         listaTemas.add(tema);
                     }
 
-                }
+                */
 
 
 
@@ -150,6 +142,7 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
     protected void onPostExecute( ArrayList<Tema> result) {
         super.onPostExecute(result);
 
+     //   pDialog.hide();
         Log.e(TAG,"TERMINO TemaJSON "+tipo);
 
         /*
@@ -165,7 +158,7 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
 
     public void layoutAdapter() throws ParseException {
 
-        temaAdapter = new TemaAdapter (listaTemas);
+        temaAdapter = new TemaAdapter (listaTemas,tipo);
 
         //Especificar Adapter
         mRecyclerView.setAdapter(temaAdapter);

@@ -19,7 +19,7 @@ public class Evento implements Parcelable {
     private Date fechaFinal;
     private String lugar;
     private String descripcion;
-    private long tema_id;
+    private Tema tema;
     private String hashtag;
 
     private String tipo;
@@ -45,7 +45,7 @@ public class Evento implements Parcelable {
         this.fechaInicio=fechaInicio;
         this.fechaFinal=fechaFinal;
         this.descripcion=descripcion;
-        this.tema_id=tema_id;
+        tema=new Tema(tema_id);
         this.hashtag=hashtag;
 
         //Al crear favorito false
@@ -135,7 +135,6 @@ public class Evento implements Parcelable {
         this.tipo = tipo;
     }
 
-
     public String getHashtag() {
         return hashtag;
     }
@@ -152,14 +151,13 @@ public class Evento implements Parcelable {
         this.favorito = favorito;
     }
 
-    public long getTema_id() {
-        return tema_id;
+    public Tema getTema() {
+        return tema;
     }
 
-    public void setTema_id(long tema_id) {
-        this.tema_id = tema_id;
+    public void setTema(Tema tema) {
+        this.tema = tema;
     }
-
 
     public String formatoFecha(Date fecha) throws ParseException {
 

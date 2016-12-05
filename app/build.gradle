@@ -58,6 +58,9 @@ dependencies {
 //api youtube
    // compile 'com.google.apis:google-api-services-youtube:v3-rev180-1.22.0'
 
+    //calendar
+    compile 'com.prolificinteractive:material-calendarview:1.4.2'
+
 
     testCompile 'junit:junit:4.12'
 

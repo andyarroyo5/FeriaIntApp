@@ -10,7 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import edu.udem.feriaint.Activities.Detalle_ContCultural;
 import edu.udem.feriaint.Activities.MainActivity;
@@ -34,6 +38,7 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
 
     private TextView titulo;
     private ImageView imgPortada;
+    private RelativeLayout contenidoPortada;
     private TextView tema;
     private ImageButton agregarFavoritos;
     private ImageButton compartir;
@@ -41,6 +46,7 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
     public ViewHolderContCultural(View v) {
             super(v);
 
+            contenidoPortada=(RelativeLayout)v.findViewById(R.id.contenido_portada);
             cv_cont_cult=(CardView) v.findViewById(R.id.cv_cont_cult);
             imgPortada = (ImageView) v.findViewById(R.id.contenido_img_portada);
             titulo = (TextView) v.findViewById(R.id.contenido_titulo);
@@ -48,6 +54,14 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
             agregarFavoritos =(ImageButton) v.findViewById(R.id.contenido_agregar_favoritos);
             compartir=(ImageButton) v.findViewById(R.id.contenido_compartir);
 
+    }
+
+    public RelativeLayout getContenidoPortada() {
+        return contenidoPortada;
+    }
+
+    public void setContenidoPortada(RelativeLayout contenidoPortada) {
+        this.contenidoPortada = contenidoPortada;
     }
 
     public TextView getTitulo() {
@@ -184,6 +198,33 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
                 }
             }
         });
+    }
+
+    public void setPortada(View view)
+    {
+        if(contenidoCultural.getImgPortada()!=null)
+        {
+
+            Glide.with(view.getContext())
+                    .load(contenidoCultural.getImgPortada())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(getImgPortada());
+
+            getImgPortada().setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            getContenidoPortada().setBackgroundColor(contenidoCultural.getTema().getColor());
+            getImgPortada().setVisibility(View.GONE);
+
+
+            // holder.getBoxTema().setBackgroundColor(Color.WHITE);
+          //  holder.getBoxTema().setBackgroundColor(tema.getColor());
+           // holder.getBoxTema().setAlpha((float) 0.4);
+            // holder.getBoxTema().setBackgroundColor(holder.itemView.getResources().getColor(R.color.accent));
+        }
+
     }
 
     public void agregarFavoritos() {

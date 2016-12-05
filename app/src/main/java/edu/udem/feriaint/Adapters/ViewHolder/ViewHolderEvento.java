@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
     private ImageButton compartir;
     private CardView cv_evento;
     private ImageButton twitter;
+    private LinearLayout evento_portada;
     SimpleDateFormat fechaFormato;
 
     private Evento evento;
@@ -64,6 +66,7 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
         fechaFormato= new SimpleDateFormat("EEEE dd hh:mm");
 
+        evento_portada=(LinearLayout) v.findViewById(R.id.evento_portada);
         titulo = (TextView) v.findViewById(R.id.evento_titulo);
         fecha = (TextView) v.findViewById(R.id.evento_fecha);
         horario = (TextView) v.findViewById(R.id.evento_horario);
@@ -79,6 +82,14 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
 
 
 
+    }
+
+    public LinearLayout getEvento_portada() {
+        return evento_portada;
+    }
+
+    public void setEvento_portada(LinearLayout evento_portada) {
+        this.evento_portada = evento_portada;
     }
 
     public TextView getTitulo() {
