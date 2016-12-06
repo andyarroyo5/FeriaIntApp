@@ -311,6 +311,9 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
                     //fav.setColorFilter(R.color.icons,  PorterDuff.Mode.SRC_IN);
                         Log.e(TAG,"FavBD, eliminar : " + evento.toString());
               //      MainActivity.listaEventos.get(MainActivity.listaEventos.indexOf(evento)).setFavorito(false);
+
+                    int index=MainActivity.currentUsuario.getListaEventosFavoritos().indexOf(evento);
+                    MainActivity.currentUsuario.getListaEventosFavoritos().remove(index);
                     evento.setFavorito(false);
                     eventoDB.setEventoFavorito(evento,false);
 
@@ -326,6 +329,8 @@ public class ViewHolderEvento extends RecyclerView.ViewHolder {
                 //    MainActivity.listaEventos.add(evento);
                     evento.setFavorito(true);
                     eventoDB.setEventoFavorito(evento,true);
+                    MainActivity.currentUsuario.getListaEventosFavoritos().add(evento);
+
                 }
 
 

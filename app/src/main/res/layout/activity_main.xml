@@ -99,7 +99,7 @@
         android:tint="@color/primary_text"
         app:elevation="5dp"
         app:fabSize="normal"
-        app:layout_behavior="edu.udem.feriaint.AnimEsconderFAB"/>
+        app:layout_behavior="edu.udem.feriaint.Adapters.AnimEsconderFAB"/>
 
 
 

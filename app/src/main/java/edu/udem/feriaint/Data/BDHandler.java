@@ -18,10 +18,10 @@ public class BDHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String BD_NOMBRE = "feriaIntUDEM";
 
-    // Contacts table name
+    //Nombre de tabla
     public static final String TABLA_EVENTO = "Evento";
 
-    // Contacts Table Columns names
+
     public static final String ID_EVENTO = "id_Evento";
     public static final String TITULO = "titulo";
     public static final String FECHA_INICIO = "fechaInicio";
@@ -45,7 +45,7 @@ public class BDHandler extends SQLiteOpenHelper {
 
     public static final String TABLA_USUARIO = "Usuario";
 
-    // Contacts Table Columns names
+
     public static final String ID_USUARIO = "id_Usuario";
     public static final String CORREO = "correo";
     public static final String NOMBRE = "nombre";
@@ -98,6 +98,21 @@ public class BDHandler extends SQLiteOpenHelper {
             + FECHA_INICIO_EDICION + " TEXT,"
             + FECHA_FINAL_EDICION + "TEXT"+")";
 
+
+    public static final String TABLA_CONTCULT= "TABLA_CONTCULT";
+
+    public static final String ID_CONTCULT = "id_ContCult";
+    public static final String TITULO_CONTCULT= "titulo";
+    public static final String FAV_CONTCULT = "favorito";
+
+    String CREAR_TABLA_CONTCULT = "CREATE TABLE " + TABLA_CONTCULT + "("
+            + ID_CONTCULT + " INTEGER PRIMARY KEY,"
+            + TITULO_CONTCULT + " TEXT, "
+            + FAV_CONTCULT + "TEXT"+")";
+
+
+
+
     public BDHandler(Context context) {
         super(context, BD_NOMBRE, null, BD_VERSION);
     }
@@ -114,7 +129,7 @@ public class BDHandler extends SQLiteOpenHelper {
 
         bd.execSQL(CREAR_TABLA_EVENTO);
         bd.execSQL(CREAR_TABLA_USUARIO);
-        bd.execSQL(CREAR_TABLA_TEMA_CONTCULTURAL);
+        bd.execSQL(CREAR_TABLA_CONTCULT);
         bd.execSQL(CREAR_TABLA_EDICION);
 
     }
@@ -125,7 +140,7 @@ public class BDHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_EVENTO);
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIO);
-        bd.execSQL("DROP TABLE IF EXISTS " + TABLA_TEMA_CONTCULTURAL);
+        bd.execSQL("DROP TABLE IF EXISTS " + TABLA_CONTCULT);
         bd.execSQL("DROP TABLE IF EXISTS " + TABLA_EDICION);
              // Create tables again
         onCreate(bd);

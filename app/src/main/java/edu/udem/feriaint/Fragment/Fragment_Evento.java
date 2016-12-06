@@ -55,7 +55,6 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
     EventoAdapter eventoAdapter;
     private SwipeRefreshLayout swipeContainer;
     private ArrayList<Evento> listaEventos;
-    private ArrayList<Evento> listaEventosRefresh;
 
     private EventoDB eventoDB;
    // private Usuario currentUsuario;
@@ -164,8 +163,8 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
           //  eJson.getEventosBD();
            System.out.println("On refresh");
            listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(true);
-         //  MainActivity.repositorioJSON.getTemasEventos(true);
-          // setColorTemas();
+           //MainActivity.repositorioJSON.getTemasEventos(true);
+           //setColorTemas();
 
             layoutAdapter(listaEventos);
 
@@ -179,11 +178,12 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
    public void layoutAdapter(ArrayList<Evento> listaEventos) throws ExecutionException, InterruptedException {
         if(listaEventos.isEmpty())
         {
-            listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(true);
-            //MainActivity.repositorioJSON.getTemasEventos(true);
-            //setColorTemas();
+            listaEventos = MainActivity.repositorioJSON.getListaEventosJSON(false);
+          //  MainActivity.repositorioJSON.getTemasEventos(true);
+           // setColorTemas();
         }
 
+       checarFavoritos();
         eventoAdapter = new EventoAdapter(listaEventos);
         //Especificar Adapter
         mRecyclerView.setAdapter(eventoAdapter);
@@ -228,12 +228,9 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
 
 
             for (Tema t:listaTemasEventos) {
-
-                if (t.isSeleccionado())
-                {
                     if(e.getTema().getId()==t.getId())
                         listaEventosporTemas.add(e);
-                }
+
             }
 
         }
@@ -276,6 +273,7 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
 
                 if(e.getTema().getId()==t.getId())
                 {
+                    t.setColor(e.getTema().getColor());
                     e.setTema(t);
                 }
 
@@ -283,6 +281,27 @@ public class Fragment_Evento extends Fragment implements SwipeRefreshLayout.OnRe
 
         }
     }
+
+
+    public void checarFavoritos()
+    {
+
+        ArrayList<Evento> listaFavoritos=MainActivity.currentUsuario.getListaEventosFavoritos();
+
+        for (Evento cont:listaEventos) {
+
+            for (Evento fav:listaFavoritos) {
+
+                if (cont.getId()==fav.getId())
+                {
+                    cont.setFavorito(true);
+                }
+
+            }
+
+        }
+    }
+
 
    /* @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {

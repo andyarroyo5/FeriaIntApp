@@ -15,6 +15,7 @@ import edu.udem.feriaint.Adapters.TemaAdapter;
 import edu.udem.feriaint.Data.TemaContCulturalBD;
 import edu.udem.feriaint.Data.TemaEventosBD;
 import edu.udem.feriaint.Fragment.Fragment_Evento;
+import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.R;
@@ -47,6 +48,7 @@ public class Filtrar_Activity extends AppCompatActivity {
         tipo=b.getString("tipo");
         try {
             inicializarDatos();
+           // setColorTemas(tipo);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -94,6 +96,8 @@ public class Filtrar_Activity extends AppCompatActivity {
             Log.e(TAG,"Lista de "+tipo+"está vacía");
         else
             Log.e(TAG,"Lista de "+tipo+" "+listaTemas.size());
+
+        setColorTemas(tipo);
     }
 
     public void aplicarFiltro(View view) throws ExecutionException, InterruptedException {
@@ -109,6 +113,47 @@ public class Filtrar_Activity extends AppCompatActivity {
 
 
     }
+
+    public void setColorTemas(final String tipo) throws ExecutionException, InterruptedException {
+
+
+        if (tipo.equals("evento")) {
+
+            listaTemas = MainActivity.repositorioJSON.getTemasEventos(false);
+            for (Evento e : MainActivity.repositorioJSON.getListaEventosJSON(false)) {
+
+                for (Tema t : listaTemas) {
+
+                    if (e.getTema().getId() == t.getId()) {
+                        t.setColor(e.getTema().getColor());
+                        e.getTema().setNombre(t.getNombre());
+                    }
+
+                }
+
+            }
+        } else {
+
+            listaTemas = MainActivity.repositorioJSON.getTemasContCult(false);
+            for (ContenidoCultural contCult : MainActivity.repositorioJSON.getListaContenidoCultural(false)) {
+
+                for (Tema t : listaTemas) {
+
+                    if (contCult.getTema().getId() == t.getId()) {
+                        t.setColor(contCult.getTema().getColor());
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
+
+
+
+
 
 
 }

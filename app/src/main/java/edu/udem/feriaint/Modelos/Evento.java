@@ -11,6 +11,7 @@ import java.util.Date;
  * Created by Andrea Arroyo on 07/10/2016.
  */
 
+
 public class Evento implements Parcelable {
 
     private long id;
@@ -38,14 +39,14 @@ public class Evento implements Parcelable {
 
     public Evento() { }
 
-    public Evento(Long id, String titulo, Date fechaInicio, Date fechaFinal, String lugar, String descripcion, Long tema_id, String hashtag) {
+    public Evento(Long id, String titulo, Date fechaInicio, Date fechaFinal, String lugar, String descripcion, Tema tema, String hashtag) {
         this.id = id;
         this.titulo = titulo;
         this.lugar=lugar;
         this.fechaInicio=fechaInicio;
         this.fechaFinal=fechaFinal;
         this.descripcion=descripcion;
-        tema=new Tema(tema_id);
+        this.tema=tema;
         this.hashtag=hashtag;
 
         //Al crear favorito false
@@ -198,3 +199,4 @@ public class Evento implements Parcelable {
         parcel.writeString((favorito ? "true" : "false"));
     }
 }
+

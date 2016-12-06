@@ -22,12 +22,17 @@ public class Tema {
     public Tema() {  }
 
     public Tema(long temaId) {
+
         this.id=temaId;
+        this.color= getColorRandom();
+        seleccionado=false;
     }
 
     public Tema(Long temaId, String tema) {
         this.id=temaId;
         this.nombre=tema;
+        this.color= getColorRandom();
+        seleccionado=false;
 
     }
 
@@ -35,7 +40,7 @@ public class Tema {
         this.id=temaId;
         this.nombre=temaNombre;
         setTipo(tipo, true);
-        this.color= getColorRandom();
+       // this.color= getColorRandom();
         seleccionado=false;
     }
 

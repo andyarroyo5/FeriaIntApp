@@ -13,8 +13,12 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
+import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.TemaAdapter;
+import edu.udem.feriaint.Modelos.ContenidoCultural;
+import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Tema;
 
 /**
@@ -84,52 +88,77 @@ public class TemaJSON extends AsyncTask<Object, Object, ArrayList<Tema>> {
 
         if (jsonStr != null) {
             try{
+                Tema tema = new Tema();
+                if (tipo.equals("evento"))
+                {
 
-                JSONObject jObject = new JSONObject(jsonStr);
-                Iterator<String> keys = jObject.keys();
 
-                while (keys.hasNext()) {
-                    // Get the key
-                    Log.e(TAG, keys.toString());
-                    String key = keys.next();
-                    JSONObject value = jObject.getJSONObject(key);
-                    Long temaId=value.getLong("id");
-                    String temaNombre=value.getString("nombre");
-                    Tema tema=new Tema(temaId, temaNombre,tipo);
-                    Log.e(TAG,tema.toString());
-                    listaTemas.add(tema);
 
-                }
-                 /*
+                    JSONArray array=new JSONArray(jsonStr);
+                    for (int i = 0; i <array.length() ; i++) {
+                        JSONObject jObject = array.getJSONObject(i);
 
-                    temaArray = new JSONArray(jsonStr);
-                    for (int i = 0; i < temaArray.length(); i++) {
-                        JSONObject temaJSON = temaArray.getJSONObject(i);
-
-                        Long temaId=temaJSON.getLong("id");
-                        String temaNombre=temaJSON.getString("nombre");
-
-                        Tema tema=new Tema(temaId, temaNombre,tipo);
-                        Log.e(TAG,tema.toString());
+                        Long temaId = jObject.getLong("id");
+                        String temaNombre = jObject.getString("nombre");
+                        tema = new Tema(temaId, temaNombre, tipo);
                         listaTemas.add(tema);
+
                     }
 
-                */
 
 
 
 
 
 
+                }
+                else {
+
+                    JSONObject jObject = new JSONObject(jsonStr);
+                    Iterator<String> keys = jObject.keys();
+
+                    while (keys.hasNext()) {
+                        // Get the key
+                        Log.e(TAG, keys.toString());
+                        String key = keys.next();
+                        JSONObject value = jObject.getJSONObject(key);
+                        Long temaId = value.getLong("id");
+                        String temaNombre = value.getString("nombre");
+                        tema = new Tema(temaId, temaNombre, tipo);
+                        Log.e(TAG, tema.toString());
+                        listaTemas.add(tema);
 
 
+                    }
+
+
+                    for (ContenidoCultural e : MainActivity.repositorioJSON.getListaContenidoCultural(false)) {
+                        if (!listaTemas.contains(e.getTema())) {
+                            Log.e(TAG, "no contiene a " + e.getTema());
+                        }
+
+                        for (Tema t : listaTemas) {
+
+                            if (t.getId() == e.getTema().getId()) {
+                                t.setColor(e.getTema().getColor());
+                            }
+
+                        }
+                    }
+
+                }
                 Log.d(TAG,"LISTA TEMAS QUEDO"+listaTemas.size());
 
 
             } catch (final JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
-        } else {
+
+            }else {
             Log.e(TAG, "Couldn't get json from server.");
 
         }

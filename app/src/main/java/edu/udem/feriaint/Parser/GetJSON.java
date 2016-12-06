@@ -62,9 +62,8 @@ public class GetJSON {
         if(listaTemasEventos.isEmpty() || refresh) {
             // listaTemasEventos=temasEJSON.execute().get();
             listaTemasEventos=temasEJSON.execute().get();
-            setColorTemas(EVENTO);
         }
-
+        setColorTemas(EVENTO);
         return listaTemasEventos;
 
     }
@@ -76,11 +75,11 @@ public class GetJSON {
         if(listaTemasContCult.isEmpty() || refresh) {
             //listaTemasEventos=temasEJSON.execute().get();  esto hace esperar al thread principal
             listaTemasContCult= temasContCultJSON.execute().get();
-            setColorTemas(CONTCULT);
+
 
 
         }
-
+        setColorTemas(CONTCULT);
         return listaTemasContCult;
 
     }
@@ -90,8 +89,7 @@ public class GetJSON {
         if(listaEventos.isEmpty() || refresh)
         {
             EventoJSON eventosJSON=new EventoJSON(context);
-            listaEventos= eventosJSON.execute().get();
-            setColorTemas(EVENTO);
+           listaEventos= eventosJSON.execute().get();
 
         }
 
@@ -100,49 +98,52 @@ public class GetJSON {
 
     public ArrayList<ContenidoCultural> getListaContenidoCultural(boolean refresh) throws ExecutionException, InterruptedException {
 
-        if(listaContCult.isEmpty() || refresh)
-        {
-            ContCulturalJSON contCultJSON=new ContCulturalJSON(context);
-            listaContCult= contCultJSON.execute().get();
-            setColorTemas(CONTCULT);
+        if (listaContCult.isEmpty() || refresh) {
+
+            ContCulturalJSON contCultJSON = new ContCulturalJSON(context);
+            listaContCult = contCultJSON.execute().get();
+
+
         }
+
         return listaContCult;
-
     }
 
-    public void setColorTemas(String tipo) throws ExecutionException, InterruptedException {
-        if(tipo.equals(EVENTO))
-        {
-            for (Evento e:getListaEventosJSON(false)) {
 
-                for (Tema t:getTemasEventos(false)) {
+    public void setColorTemas(final String tipo) throws ExecutionException, InterruptedException {
 
-                    if(e.getTema().getId()==t.getId())
-                    {
-                        e.setTema(t);
+
+        if (tipo.equals("evento")) {
+
+
+            for (Evento e : getListaEventosJSON(false)) {
+
+                for (Tema t : listaTemasEventos) {
+
+                    if (e.getTema().getId() == t.getId()) {
+                        t.setColor(e.getTema().getColor());
+                        e.getTema().setNombre(t.getNombre());
+                    }
+
+                }
+
+            }
+        } else {
+
+            for (ContenidoCultural contCult : getListaContenidoCultural(false)) {
+
+                for (Tema t : listaTemasContCult) {
+
+                    if (contCult.getTema().getId() == t.getId()) {
+                        t.setColor(contCult.getTema().getColor());
                     }
 
                 }
 
             }
         }
-        else
-        {
-            for (ContenidoCultural contCult:listaContCult) {
-
-                for (Tema t:getTemasContCult(false)) {
-
-                    if(contCult.getTema().getId()==t.getId())
-                    {
-                        contCult.setTema(t);
-                    }
-
-                }
-
-            }
-        }
-
     }
+
 
 
 }

@@ -25,9 +25,9 @@ public class ContenidoCultural implements Parcelable {
     private boolean favorito;
 
 
-    public ContenidoCultural(String titulo,Long id, String nombre) {
+    public ContenidoCultural(String titulo,Tema tema) {
         this.titulo = titulo;
-        tema=new Tema(id, nombre);
+        this.tema=tema;
         formato=new ArrayList<>();
         contenido=new ArrayList<>();
     }
@@ -64,6 +64,8 @@ public class ContenidoCultural implements Parcelable {
         formato=new ArrayList<>();
         contenido=new ArrayList<>();
     }
+
+    public ContenidoCultural(){}
 
     public long getId() {
         return id;

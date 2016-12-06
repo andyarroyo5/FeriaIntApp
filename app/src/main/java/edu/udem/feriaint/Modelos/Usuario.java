@@ -34,7 +34,6 @@ public class Usuario implements Parcelable {
     public Usuario(String twitter) {
 
         this.twitter = twitter;
-
         listaEventosFavoritos=new ArrayList<Evento>();
         listaContCultFavoritos=new ArrayList<ContenidoCultural>();
 

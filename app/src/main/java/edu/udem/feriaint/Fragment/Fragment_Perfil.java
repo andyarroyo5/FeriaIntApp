@@ -21,10 +21,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.File;
 import java.text.ParseException;
@@ -33,24 +41,26 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import edu.udem.feriaint.Activities.AdminPerfil_Activity;
+import edu.udem.feriaint.Activities.InicioSesionEjemplo;
 import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Adapters.ComplexRecyclerViewAdapter;
+import edu.udem.feriaint.Data.ContCultBD;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.R;
 import edu.udem.feriaint.TwitterInicioSesion;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Andrea Arroyo on 09/10/2016.
  */
 
-public class Fragment_Perfil extends Fragment{
+public class Fragment_Perfil extends Fragment {
 
     private String TAG;
 
     public final int REQUEST_CODE=555;
-
 
     ImageButton btnFavoritoPerfil;
     ImageButton btnEventosPerfil;
@@ -68,6 +78,9 @@ public class Fragment_Perfil extends Fragment{
     TextView usuarioTwitter;
     TextView usuarioPuntos;
 
+
+
+
     ImageView img_perfil;
 
 
@@ -84,6 +97,8 @@ public class Fragment_Perfil extends Fragment{
     RecyclerView mRecyclerViewFavoritos;
     RecyclerView.LayoutManager mLayoutManager;
     ComplexRecyclerViewAdapter compAdapter;
+    LinearLayout layoutCarrera;
+    LinearLayout layoutTwitter;
 
     public Fragment_Perfil() {
     }
@@ -94,9 +109,8 @@ public class Fragment_Perfil extends Fragment{
         super.onCreate(savedInstanceState);
 
         TAG=getClass().getSimpleName();
-
-        //currentUsuario= ((MainActivity)getActivity()).getCurrentUsuario();
-
+        //TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.TWITTER_KEY,getString(R.string.TWITTER_SECRET);
+        //Fabric.with(this, new Twitter(authConfig));
 
     }
 
@@ -129,14 +143,15 @@ public class Fragment_Perfil extends Fragment{
         usuarioPuntos=(TextView) rootView.findViewById(R.id.txtUsuarioPuntos);
         img_perfil=(ImageView) rootView.findViewById(R.id.img_perfil);
 
+        layoutCarrera=(LinearLayout)rootView.findViewById(R.id.layout_UsuarioCarrera);
+        layoutTwitter=(LinearLayout)rootView.findViewById(R.id.layout_UsuarioTwitter);
 
 
-     /*   try {
-            getUsuario();
-            getBundleInfo();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
+
+
+
+
+
         setUsuarioInfo();
 
         btnFavoritoPerfil.setOnClickListener(new View.OnClickListener()
@@ -144,7 +159,7 @@ public class Fragment_Perfil extends Fragment{
             @Override
             public void onClick(View view)
             {
-                btnFavoritoPerfil.setColorFilter(getContext().getResources().getColor(R.color.accent));
+                btnFavoritoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(),R.color.accent));
                 btnInfoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
                 btnEventosPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
                 lytFav.setVisibility(LinearLayout.VISIBLE);
@@ -177,7 +192,7 @@ public class Fragment_Perfil extends Fragment{
             public void onClick(View view)
             {
                 btnEventosPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.accent));
-                btnFavoritoPerfil.setColorFilter(getContext().getResources().getColor(R.color.primary_text));
+                btnFavoritoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(),R.color.primary_text));
                 btnInfoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
 
                 lytEventos.setVisibility(LinearLayout.VISIBLE);
@@ -215,11 +230,10 @@ public class Fragment_Perfil extends Fragment{
             {
                 btnInfoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.accent));
                 btnEventosPerfil.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.primary_text));
-                btnFavoritoPerfil.setColorFilter(getContext().getResources().getColor(R.color.primary_text));
+                btnFavoritoPerfil.setColorFilter(ContextCompat.getColor(view.getContext(),R.color.primary_text));
                 lytFav.setVisibility(LinearLayout.GONE);
                 lytEventos.setVisibility(LinearLayout.GONE);
                 lytInfo.setVisibility(LinearLayout.VISIBLE);
-
 
             }
         });
@@ -247,16 +261,16 @@ public class Fragment_Perfil extends Fragment{
             @Override
             public void onClick(View v) {
 
-
-                Intent cerrarS=new Intent(getContext(), TwitterInicioSesion.class);
+                Intent cerrarS=new Intent(getContext(), InicioSesionEjemplo.class);
                 cerrarS.putExtra("cerrarS",true);
                 startActivity(cerrarS);
                 getActivity().finish();
+
             }
         });
 
 
-        if ( MainActivity.currentUsuario.getImgPerfil()!=null && !MainActivity.currentUsuario.getImgPerfil().toString().isEmpty())
+       if ( MainActivity.currentUsuario.getImgPerfil()!=null && !MainActivity.currentUsuario.getImgPerfil().toString().isEmpty())
         {
             if(MainActivity.currentUsuario.getImgPerfil().toString().equals(""))
             {
@@ -268,87 +282,69 @@ public class Fragment_Perfil extends Fragment{
         return rootView;
     }
 
-    /*
-    private void getBundleInfo() {
-
-       bUsuario =getActivity().getIntent().getExtras();
-       if ((bUsuario.containsKey("tipo")))
-        switch(bUsuario.getString("tipo"))
-        {
-            case "evento":
-                Log.d("BUNDLE",bUsuario.getString("tipo") );
-                break;
-            case "twitter":
-                Log.d("BUNDLE",bUsuario.getString("tipo") );
-              currentUsuario.setTwitter(bUsuario.getString("user"));
-
-                Log.d("BUNDLE",currentUsuario.toString());
-
-                //  agregarUsuario(bUsuario);
-
-                break;
-
-            case "ejemplo":
-                Bundle b = getArguments();
-                String s = b.getString("tipo");
-                Log.d("BUNDLE", s);
-                break;
-        }
-        else
-       {
-
-           Log.d(TAG, "bundle without tipo");
-
-       }
-
-
-    }
-
-
-    public void getUsuario() throws ParseException {
-        UsuarioDB usuario=new UsuarioDB(getContext());
-
-        currentUsuario=usuario.getTodosLosUsuarios();
-
-        Log.e(TAG,"GET IN PERFIL"+currentUsuario.toString());
-
-    }*/
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
 
         if (resultCode == MainActivity.RESULT_OK) {
 
             switch (requestCode)
             {
                 case REQUEST_CODE:
+                    Log.e(TAG, "ON REQUEST CODE");
                     setUsuarioInfo();
                     break;
-
-
             }
+            Log.e(TAG, "FRAGMENT -- ON REQ CODE");
 
-            setUsuarioInfo();
+         // signInResult(requestCode,resultCode,data);
+
 
         }
     }
 
 
+
+
     @Override
     public void onResume() {
         super.onResume();
+
         setUsuarioInfo();
     }
 
     public void setUsuarioInfo()
     {
         usuarioNombre.setText(MainActivity.currentUsuario.getNombre());
-        usuarioCorreo.setText(MainActivity.currentUsuario.getCorreo()!=""? MainActivity.currentUsuario.getCorreo():"No tienes agregado tu mail ");
-        usuarioCarrera.setText(MainActivity.currentUsuario.getCarrera()!="" ? MainActivity.currentUsuario.getCarrera():"No tienes agregada tu carrera" );
-        usuarioTwitter.setText(MainActivity.currentUsuario.getTwitter());
+        usuarioCorreo.setText(MainActivity.currentUsuario.getCorreo());
+
+
+        if(MainActivity.currentUsuario.getCarrera()==null || MainActivity.currentUsuario.getCarrera().isEmpty())
+        {
+
+            layoutCarrera.setVisibility(View.GONE);
+        }
+        else
+        {
+            usuarioCarrera.setText(MainActivity.currentUsuario.getCarrera());
+            layoutCarrera.setVisibility(View.VISIBLE);
+        }
+
+        if(MainActivity.currentUsuario.getTwitter()==null || MainActivity.currentUsuario.getTwitter().isEmpty())
+        {
+
+            layoutTwitter.setVisibility(View.GONE);
+        }
+        else
+        {
+            usuarioTwitter.setText(MainActivity.currentUsuario.getTwitter());
+
+            layoutTwitter.setVisibility(View.VISIBLE);
+        }
+
+
+
+
         usuarioPuntos.setText(String.valueOf(MainActivity.currentUsuario.getPuntos()));
 
         if (MainActivity.currentUsuario.getImgPerfil()!=null)
@@ -356,7 +352,6 @@ public class Fragment_Perfil extends Fragment{
 
             if(!MainActivity.currentUsuario.getImgPerfil().toString().equals(""))
                 img_perfil.setVisibility(View.VISIBLE);
-
 
             Glide.with(getContext()).load(MainActivity.currentUsuario.getImgPerfil()).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop().into(new BitmapImageViewTarget(img_perfil) {
                 @Override
@@ -368,88 +363,38 @@ public class Fragment_Perfil extends Fragment{
                 }
             });
 
-            /*Glide.with(this)
-                    .load(MainActivity.currentUsuario.getImgPerfil())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(img_perfil);*/
-
-
         }
         else
         {
             img_perfil.setVisibility(View.GONE);
         }
 
-
-
-
-
         Log.e(TAG,"SET USUARIO UPDATE");
 
     }
 
 
-     private ArrayList<Object> getEventosFavoritos() throws ParseException {
+    private ArrayList<Object> getEventosFavoritos() throws ParseException {
 
+        ArrayList<Object> items = new ArrayList<>();
 
-        ArrayList<Evento> eventos = new ArrayList<Evento>();
-        ArrayList<Object> listaEventos = new ArrayList<>();
+        ArrayList<Evento> eventos=MainActivity.currentUsuario.getListaEventosFavoritos();
+        items.addAll(eventos);
 
-        EventoDB eventoDB= new EventoDB(getContext());
-
-         try {
-             eventos=eventoDB.getTodosLosEventos();
-             if(eventos!=null)
-             for  (int i =0; i<eventos.size(); i++)
-             {
-                 if(eventos.get(i).isFavorito())
-                 {
-                     MainActivity.currentUsuario.getListaEventosFavoritos().add(eventos.get(i));
-                     listaEventos.add(eventos.get(i));
-                 }
-             }
-
-
-         } catch (ParseException e) {
-             e.printStackTrace();
-         }
-
-
-
-
-
-
-        return listaEventos;
+        return items;
     }
 
     private ArrayList<Object> getContenidoFavoritos() {
        ArrayList<Object> items = new ArrayList<>();
 
+        ContCultBD contCultBD=new ContCultBD(getContext());
         ArrayList<ContenidoCultural> contCult=MainActivity.currentUsuario.getListaContCultFavoritos();
+      //  ArrayList<ContenidoCultural> contCult=
         items.addAll(contCult);
-
-       /* for  (int i =0; i<contCult.size(); i++)
-        {
-            if(contCult.get(i).isFavorito())
-            {
-                MainActivity.currentUsuario.getListaContCultFavoritos().add(contCult.get(i));
-            }
-        }*/
-
-
-        /*
-                Date p=new Date();
-                Calendar c= new GregorianCalendar();
-                c.getTime();
-        */
-
 
         return items;
 
     }
-
-
-
 
 }
 

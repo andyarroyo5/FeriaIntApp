@@ -1,4 +1,4 @@
-package edu.udem.feriaint;
+package edu.udem.feriaint.Adapters;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;

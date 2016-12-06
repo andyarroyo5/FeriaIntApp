@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.twitter.sdk.android.core.TwitterApiClient;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.tweetui.SearchTimeline;
 import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
 import com.twitter.sdk.android.tweetui.TwitterListTimeline;
@@ -94,6 +96,9 @@ public class Detalle_EventoActivity extends  ListActivity{
                 .query(SEARCH_QUERY)
                 .build();
 
+        TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
+        //twitterApiClient.getSearchService().tweets(SEARCH_QUERY,null,null,null,null,null,null,null,null,null).;
+
 
         final TweetTimelineListAdapter timelineAdapter = new TweetTimelineListAdapter.Builder(this)
                 .setTimeline(searchTimeline)
@@ -113,7 +118,7 @@ public class Detalle_EventoActivity extends  ListActivity{
                 .setTimeline(userTimeline)
                 .build();
         setListAdapter(adapter);
-      //  setListAdapter(adapter);
+        //setListAdapter(timelineAdapter);
 
 
         // getListView().setEmptyView(findViewById(android.R.id.list));

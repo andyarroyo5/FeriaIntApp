@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +15,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
 
@@ -29,13 +39,22 @@ import edu.udem.feriaint.R;
 public class AdminPerfil_Activity extends AppCompatActivity {
 
     EditText nombre;
-    EditText correo;
+    TextView correo;
     EditText carrera;
     EditText twitter;
     ImageButton img_perfil;
+    LinearLayout layout_twitter;
     Button btn_img;
+    Button btn_quitar_img;
     Uri imgPath;
     boolean img=false;
+    Button sign_out;
+    private String TAG;
+
+
+    TwitterLoginButton signInTwitter;
+
+
 
     final int RESULT_LOAD_IMAGE=1010;
    // Usuario currentUsuario;
@@ -46,28 +65,91 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_perfil);
 
-        Bundle bUsuario = getIntent().getExtras();
-
         nombre=(EditText) findViewById(R.id.usuario_nombre);
-        correo=(EditText) findViewById(R.id.usuario_correo);
+        correo=(TextView) findViewById(R.id.usuario_correo);
         carrera=(EditText) findViewById(R.id.usuario_carrera);
         twitter=(EditText) findViewById(R.id.usuario_twitter);
         img_perfil=(ImageButton) findViewById(R.id.img_perfil_detalle);
         btn_img=(Button) findViewById(R.id.btn_img_perfil);
+        btn_quitar_img=(Button) findViewById(R.id.btn_quitar_img);
 
+        layout_twitter=(LinearLayout) findViewById(R.id.layout_admin_Twitter);
 
         nombre.setText(MainActivity.currentUsuario.getNombre());
         correo.setText(MainActivity.currentUsuario.getCorreo());
         carrera.setText(MainActivity.currentUsuario.getCarrera());
         twitter.setText(MainActivity.currentUsuario.getTwitter());
+        signInTwitter = (TwitterLoginButton) findViewById(R.id.signin_twitter);
+
+        signInTwitter.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                // The TwitterSession is also available through:
+                Twitter.getInstance().core.getSessionManager().getActiveSession();
+                String output = "Status: " +
+                        "Your login was successful " +
+                        result.data.getUserName() +
+                        "\nAuth Token Received: " +
+                        result.data.getAuthToken().token;
+
+                Toast.makeText(getApplicationContext(), output, Toast.LENGTH_SHORT).show();
+
+                Log.e(TAG, "TWIITER CONECTADOO"+result);
+                MainActivity.currentUsuario.setTwitter(result.data.getUserName());
+                Log.e(TAG,"TWITTER 2"+result.data.getUserName());
+                twitter.setText(result.data.getUserName());
+                twitter.setVisibility(View.VISIBLE);
+                signInTwitter.setVisibility(View.GONE);
+
+
+
+            }
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            }
+
+
+        });
+
+
+
+
+        if(MainActivity.currentUsuario.getTwitter()!=null)
+        {
+            sign_out=(Button) findViewById(R.id.sign_out_twitter);
+            sign_out.setVisibility(View.VISIBLE);
+            layout_twitter.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            twitter.setVisibility(View.GONE);
+            signInTwitter.setVisibility(View.VISIBLE);
+            sign_out.setVisibility(View.GONE);
+
+        }
+
 
         if ( MainActivity.currentUsuario.getImgPerfil()!=null && !MainActivity.currentUsuario.getImgPerfil().toString().isEmpty())
         {
-            img=true;
             imgPath=MainActivity.currentUsuario.getImgPerfil();
+            Glide.with(this)
+                    .load(imgPath)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(img_perfil);
+            img_perfil.setVisibility(View.VISIBLE);
+
+            btn_img.setVisibility(View.GONE);
+            btn_quitar_img.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            img_perfil.setVisibility(View.GONE);
+            btn_img.setVisibility(View.VISIBLE);
+            btn_quitar_img.setVisibility(View.GONE);
         }
 
-        esconderMostrarImg();
+
 
         img_perfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,9 +159,6 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         });
 
        // MaicurrentUsuario=bUsuario.getParcelable("usuario");
-
-
-
         
     }
 
@@ -89,19 +168,25 @@ public class AdminPerfil_Activity extends AppCompatActivity {
 
         Intent resultInfo=new Intent(this, Fragment_Perfil.class);
 
+
+
         UsuarioDB usuarioDB=new UsuarioDB(this);
         //Get usuario?
 
         MainActivity.currentUsuario.setNombre(nombre.getText().toString());
-        MainActivity.currentUsuario.setCorreo(correo.getText().toString());
-        MainActivity. currentUsuario.setCarrera(carrera.getText().toString());
-        MainActivity.currentUsuario.setTwitter(twitter.getText().toString());
+        MainActivity.currentUsuario.setCarrera(carrera.getText().toString());
+       // MainActivity.currentUsuario.setTwitter(twitter.getText().toString());
+        if(!imgPath.equals(""))
+        {
+            MainActivity.currentUsuario.setImgPerfil(imgPath);
 
-        MainActivity.currentUsuario.setImgPerfil(imgPath);
+        }
+        else
+        {
+            MainActivity.currentUsuario.setImgPerfil(null);
+        }
 
         usuarioDB.actualizar(MainActivity.currentUsuario);
-
-        //startActivity(resultInfo);
         finish();
     }
 
@@ -110,39 +195,41 @@ public class AdminPerfil_Activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 
-
-
-          /*  Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            imgPath = cursor.getString(columnIndex);
-            cursor.close();
-
-*/
             imgPath = data.getData();
-
 
             Glide.with(this)
                     .load(imgPath)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(img_perfil);
             img_perfil.setVisibility(View.VISIBLE);
-            img=true;
-
-            esconderMostrarImg();
+            btn_quitar_img.setVisibility(View.VISIBLE);
+            btn_img.setVisibility(View.GONE);
 
         }
 
     }
+
+    public void quitarImg(View view )
+    {
+        img_perfil.setVisibility(View.GONE);
+        imgPath=Uri.parse("");
+        btn_quitar_img.setVisibility(View.GONE);
+        btn_img.setVisibility(View.VISIBLE);
+    }
+
+    public void agregarImg(View view)
+    {
+       /* Glide.with(this)
+                .load(imgPath)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(img_perfil);
+        img_perfil.setVisibility(View.VISIBLE);*/
+        getGaleria();
+
+    }
+
 
     public void esconderMostrarImg() {
         if (img) {
@@ -153,30 +240,16 @@ public class AdminPerfil_Activity extends AppCompatActivity {
                     .into(img_perfil);
 
 
-            btn_img.setBackgroundColor(getResources().getColor(R.color.common_google_signin_btn_text_dark_disabled));
+            btn_img.setBackgroundColor(ContextCompat.getColor(this,R.color.tw__composer_light_gray));
 
         } else {
             btn_img.setText("Agregar Foto Perfil");
             img_perfil.setVisibility(View.GONE);
-            btn_img.setBackgroundColor(getResources().getColor(R.color.accent));
+            btn_img.setBackgroundColor(ContextCompat.getColor(this,R.color.accent));
         }
 
     }
 
-
-    public void getGaleriaQuitarFoto(View View)
-    {
-        if(img)
-        {
-          imgPath=Uri.parse("");
-          esconderMostrarImg();
-        }
-        else
-        {
-            getGaleria();
-        }
-
-    }
 
     public void getGaleria()
     {
@@ -187,4 +260,16 @@ public class AdminPerfil_Activity extends AppCompatActivity {
                 "Select Picture"), RESULT_LOAD_IMAGE);
     }
 
+
+    public void cerrarSesionTwitter(View view)
+    {
+        Twitter.getSessionManager().clearActiveSession();
+        Twitter.logOut();
+        MainActivity.currentUsuario.setTwitter(null);
+        twitter.setVisibility(View.GONE);
+        signInTwitter.setVisibility(View.VISIBLE);
+        sign_out.setVisibility(View.GONE);
+
+
+    }
 }

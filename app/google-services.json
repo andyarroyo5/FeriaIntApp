@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "254526817018-e9eie2s3cdvfuj83r68kktjgnml65iuu.apps.googleusercontent.com",
+          "client_id": "254526817018-2m7hn341opv23eruq8m0p1valdvc2ggc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "edu.udem.feriaint",
-            "certificate_hash": "2EE17FFB7322E728C493D31DB87F2D5571CA2302"
+            "certificate_hash": "B15C2748971A22F3869C50226E2352E75E4365FC"
           }
         },
         {
@@ -38,10 +38,7 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-86892602-1"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 2,

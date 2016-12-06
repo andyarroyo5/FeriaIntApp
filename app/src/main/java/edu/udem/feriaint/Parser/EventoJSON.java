@@ -21,6 +21,7 @@ import edu.udem.feriaint.Adapters.EventoAdapter;
 import edu.udem.feriaint.Data.BDHandler;
 import edu.udem.feriaint.Data.EventoDB;
 import edu.udem.feriaint.Modelos.Evento;
+import edu.udem.feriaint.Modelos.Tema;
 
 
 /**
@@ -105,9 +106,25 @@ public class EventoJSON extends AsyncTask<Object, Object, ArrayList<Evento>> {
                     String descripcionJSON = evento.getString("descripcion");
                     Long tema_idJSON=evento.getLong("tema_id");
                     String hashtagJSON="#"+evento.getString("hashtag");
+                    ArrayList<Tema> temas=new ArrayList<>();
+                    Tema tema=new Tema(tema_idJSON);
+
+                    for (Tema t:temas) {
+
+                        if(t.getId()==tema_idJSON)
+                        {
+                            tema=t;
+                            break;
+                        }
+                    }
+
+                    if(!temas.contains(tema))
+                    {
+                        temas.add(tema);
+                    }
 
 
-                    Evento e = new Evento(idJSON,tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON,tema_idJSON,hashtagJSON);
+                    Evento e = new Evento(idJSON,tituloJSON, fechaInicioJSON, fechaFinalJSON, lugarJSON, descripcionJSON,tema,hashtagJSON);
                     Log.e(TAG, "evento agregado"+ e.getTitulo()+" "+ e.getTema().getId() + e.getFechaInicio()+" "+e.getFechaFinal());
                     listaEventos.add(e);
                 }

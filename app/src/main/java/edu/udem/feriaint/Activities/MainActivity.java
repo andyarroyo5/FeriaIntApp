@@ -1,14 +1,11 @@
 package edu.udem.feriaint.Activities;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -19,18 +16,21 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Session;
 import com.twitter.sdk.android.core.TwitterApiClient;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.models.User;
+import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -43,12 +43,11 @@ import edu.udem.feriaint.Modelos.Edicion;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.Modelos.Tema;
 import edu.udem.feriaint.Modelos.Usuario;
-import edu.udem.feriaint.Parser.ContCulturalJSON;
 import edu.udem.feriaint.Parser.EdicionJSON;
-import edu.udem.feriaint.Parser.EventoJSON;
 import edu.udem.feriaint.Parser.GetJSON;
-import edu.udem.feriaint.Parser.TemaJSON;
 import edu.udem.feriaint.R;
+import edu.udem.feriaint.SessionRecorder;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<ContenidoCultural> listaContCult;
     public static ArrayList<Tema> listaTemasEventos;
     public static ArrayList<Tema> listaTemasContCult;
+
+    TwitterAuthConfig authConfig = new TwitterAuthConfig(String.valueOf(R.string.TWITTER_KEY), String.valueOf(R.string.TWITTER_SECRET));
+
+
+    private FirebaseUser firebaseUser;
 
     public static GetJSON repositorioJSON;
     public static Edicion edicion;
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-      //  upgradeBD();
+        upgradeBD();
         repositorioJSON=new GetJSON(this);
         try {
             edicion= MainActivity.repositorioJSON.getEdicionJSON();
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        setCurrentUser();
         setLayoutMain();
 
     }
@@ -120,45 +125,57 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.v(TAG, "+ ON START +");
 
-        setCurrentUser();
+
 
     }
 
-
     protected void setCurrentUser()
     {
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         currentUsuario=new Usuario();
-        currentUsuario.setCarrera("ITC");
-        currentUsuario.setNombre("Andrea Arroyo");
-        UsuarioDB usuarioDB=new UsuarioDB(this);
-        usuarioDB.insertar(currentUsuario);
-
-
-/*
         Intent tIntent=getIntent();
         Bundle bUsuario=tIntent.getExtras();
-        //bUsuario.putString("tipo","twitter");
-
-        //if correo else twitter
-
-       // currentUsuario.setCarrera("ITC");
         String msg ="";
+        currentUsuario.setPuntos(0);
 
-        if(bUsuario.getString("tipo").equals("twitter"))
+        Fabric.with(this, new Twitter(authConfig));
+        final Session activeSession = SessionRecorder.recordInitialSessionState(
+                Twitter.getSessionManager().getActiveSession()
+        );
+
+        if(activeSession!=null)
         {
-            TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
+            TwitterSession session= Twitter.getSessionManager().getSession(activeSession.getId());
+            Log.e(TAG, "TWITTER CONNECTED" + session.getUserName());
+            currentUsuario.setTwitter(session.getUserName());
+        }
+        else
+        {
+            Log.e(TAG, "TWITTER NOT CONNECTED");
 
-             msg = "@" + bUsuario.getString("user") + " iniciaste sesión por Twitter!";
-            currentUsuario.setTwitter(bUsuario.getString("user"));
+            //TwitterSession session=result.data;
+            currentUsuario.setTwitter(null);
+        }
+
+      // currentUsuario.setId(Long.parseLong(firebaseUser.getUid()));
+
+        if(bUsuario.getString("tipo").equals("firebase"))
+        {
+
+             msg = "@" + bUsuario.getString("user") + " fb!";
+          //  currentUsuario.setTwitter(bUsuario.getString("user"));
+
+            currentUsuario.setNombre(firebaseUser.getDisplayName());
+            currentUsuario.setCorreo(firebaseUser.getEmail());
+            currentUsuario.setImgPerfil(firebaseUser.getPhotoUrl());
+
+            //getPuntosUsuario
+
 
         }
         else {
-             msg = "@" + bUsuario.getString("user") +bUsuario.getString("token")+ " iniciaste sesión por google!";
-            currentUsuario.setNombre(bUsuario.getString("user"));
-            currentUsuario.setCorreo(bUsuario.getString("correo"));
-           // String img=bUsuario.getString("img");
-           // currentUsuario.setImgPerfil(Uri.parse(img));
-
+             msg = "@" + bUsuario.getString("user")+ " iniciaste sesión por google!";
         }
 
         //Add User BD
@@ -168,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
        Toast t= Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         t.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
-        t.show();*/
+        t.show();
     }
 
     protected void setLayoutMain()
@@ -296,10 +313,46 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             default:
-                Log.e(TAG, "Regreso intent"+requestCode);//+" result"+resultCode+ "data "+data.toString());
-                break;
 
-        }
+                if(resultCode == RESULT_OK)
+                {
+                    Log.e(TAG, "Regreso intent"+requestCode);
+
+                    Twitter.logIn(this, new Callback<TwitterSession>() {
+                        @Override
+                        public void success(Result<TwitterSession> result) {
+                            String output = "Status: " +
+                                    "Your login was successful " +
+                                    result.data.getUserName() +
+                                    "\nAuth Token Received: " +
+                                    result.data.getAuthToken().token;
+
+                            Toast.makeText(getApplicationContext(), output, Toast.LENGTH_SHORT).show();
+
+                            Log.e(TAG, "TWIITER CONECTADOO"+result);
+                            MainActivity.currentUsuario.setTwitter(result.data.getUserName());
+                        }
+
+                        @Override
+                        public void failure(TwitterException exception) {
+                            Toast.makeText(getApplicationContext(), "error twitter" +exception, Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                }
+
+
+                //+" result"+resultCode+ "data "+data.toString()).
+                Fragment f=mTabPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+               // f.onActivityResult(requestCode,resultCode,data);
+
+
+
+        break;
+
+    }
     }
 
     public void upgradeBD()
@@ -328,14 +381,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.acercade:
 
-                if (edicionJSON.getStatus() == AsyncTask.Status.FINISHED) {
 
                     Intent acercaDe = new Intent(this, AcercaDe.class);
                     acercaDe.putExtra("pais", edicion.getPais());
                     acercaDe.putExtra("fechaInicio", edicion.getFechaInicio());
                     acercaDe.putExtra("fechaFinal", edicion.getFechaFinal());
-                    startActivity(acercaDe);
-                }
+
 
                 break;
 
@@ -343,8 +394,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.ejemplo:
 
 
-                Intent acercaDe = new Intent(this, EjemploActivity.class);
-                startActivity(acercaDe);
+                Intent ejemplo = new Intent(this, EjemploActivity.class);
+                startActivity(ejemplo);
 
 
                 break;

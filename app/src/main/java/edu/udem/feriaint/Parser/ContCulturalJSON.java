@@ -83,6 +83,9 @@ public class ContCulturalJSON extends AsyncTask<Object, Object, ArrayList<Conten
                 JSONArray contCulturalArray = new JSONArray(jsonStr);
 
                 for (int i = 0; i < contCulturalArray.length(); i++) {
+
+                    ArrayList<Tema> temas=new ArrayList<>();
+
                     JSONObject contCult = contCulturalArray.getJSONObject(i);
 
                     Long id =contCult.getLong("id");
@@ -91,10 +94,28 @@ public class ContCulturalJSON extends AsyncTask<Object, Object, ArrayList<Conten
                     //información relacionada al TEMA
                     Long temaId=contCult.getLong("tema_id");
                     String temaNombre=contCult.getString("tema_nombre");
+                    Tema tema=new Tema(temaId,temaNombre);
+
+                    for (Tema t:temas) {
+
+                        if(t.getId()==temaId)
+                        {
+                            tema=t;
+                            break;
+                        }
+                    }
+
+                    if(!temas.contains(tema))
+                    {
+                        temas.add(tema);
+                    }
+
+
+
 
                     String tipo=contCult.getString("tipo");
 
-                  ContenidoCultural contCultural=new ContenidoCultural(titulo,temaId,temaNombre);
+                  ContenidoCultural contCultural=new ContenidoCultural(titulo,tema);
 
                     contCultural.setId(id);
                     contCultural.setTipo(tipo);
@@ -109,10 +130,7 @@ public class ContCulturalJSON extends AsyncTask<Object, Object, ArrayList<Conten
                         if (formato.equals("imagen") && contCultural.getImgPortada()==null)
                         {
                             contCultural.setImgPortada(cont);
-                            Log.e(TAG,"Portada "+cont);
                         }
-
-                        Log.e(TAG,formato+" "+cont);
 
                         contCultural.getFormato().add(formato);
                         contCultural.getContenido().add(cont);
@@ -120,8 +138,6 @@ public class ContCulturalJSON extends AsyncTask<Object, Object, ArrayList<Conten
                     }
 
                     listaContenidos.add(contCultural);
-
-                    Log.e(TAG,contCultural.toString());
                 }
 
 

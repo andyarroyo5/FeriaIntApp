@@ -1,5 +1,6 @@
 package edu.udem.feriaint.Adapters;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +47,8 @@ public class ContenidoCulturalAdapter extends RecyclerView.Adapter<ViewHolderCon
         final ContenidoCultural cont_cult = listaContenido.get(position);
 
         holder.setContenidoCultural(cont_cult);
+        if(cont_cult.isFavorito())
+            holder.getAgregarFavoritos().setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorAccent));
 
         holder.setPortada(holder.itemView);
         holder.getTitulo().setText(cont_cult.getTitulo());

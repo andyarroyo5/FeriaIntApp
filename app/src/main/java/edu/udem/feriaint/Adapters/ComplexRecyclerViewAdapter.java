@@ -11,8 +11,6 @@ import java.util.List;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.Modelos.Evento;
 import edu.udem.feriaint.R;
-import edu.udem.feriaint.Adapters.ViewHolder.ViewHolder1;
-import edu.udem.feriaint.Adapters.ViewHolder.ViewHolder2;
 import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderContCultural;
 import edu.udem.feriaint.Adapters.ViewHolder.ViewHolderEvento;
 
@@ -56,7 +54,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        RecyclerView.ViewHolder viewHolder;
+        RecyclerView.ViewHolder viewHolder=null;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         switch (viewType) {
@@ -64,16 +62,9 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 View v1 = inflater.inflate(R.layout.item_eventos, viewGroup, false);
                 viewHolder = new ViewHolderEvento(v1);
                 break;
-            case IMAGE:
-                View v2 = inflater.inflate(R.layout.layout_viewholder2, viewGroup, false);
-                viewHolder = new ViewHolder2(v2);
-                break;
             case CONTCULT:
                 View v3 = inflater.inflate(R.layout.item_contenido_cultural, viewGroup, false);
                 viewHolder = new ViewHolderContCultural(v3);
-                break;
-            default:
-                viewHolder=null;
                 break;
         }
         return viewHolder;
@@ -86,17 +77,12 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 ViewHolderEvento vh1 = (ViewHolderEvento) viewHolder;
                 configureViewHolderEvento(vh1, position);
                 break;
-            case IMAGE:
-                ViewHolder2 vh2 = (ViewHolder2) viewHolder;
-                configureViewHolder2(vh2);
-                break;
             case CONTCULT:
                 ViewHolderContCultural vh3 = (ViewHolderContCultural) viewHolder;
                 configureViewHolderContCultural(vh3, position);
                 break;
             default:
-                ViewHolder1 v = (ViewHolder1) viewHolder;
-                configureViewHolder1(v);
+
                 break;
         }
     }
@@ -124,14 +110,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     }
 
-    private void configureViewHolder1(ViewHolder1 vh1) {
-
-
-            vh1.getLabel1().setText("Name: Test1" );
-            vh1.getLabel2().setText("Hometown: Test2 ");
-
-    }
-
     private void configureViewHolderContCultural(ViewHolderContCultural vh3, int position) {
 
         ContenidoCultural contcult = (ContenidoCultural) items.get(position);
@@ -145,10 +123,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     }
 
-
-    private void configureViewHolder2(ViewHolder2 vh2) {
-        vh2.getImageView().setImageResource(R.drawable.sample_golden_gate);
-    }
 
 
 }

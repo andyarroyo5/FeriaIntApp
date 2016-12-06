@@ -4,8 +4,17 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_login">Iniciar Sesion</string>
     <string name="title_activity_acercaDe">Acerca de</string>
-    <string name="API_KEY_YT">AIzaSyBtSebTwZU2mmgbCAg0wXI9K9Sc42un7Ek</string>
 
+
+    <!-- Inicio Google-->
+    <string name="server_client_id">254526817018-2m7hn341opv23eruq8m0p1valdvc2ggc.apps.googleusercontent.com</string>
+    <!-- Inicio Youtube -->
+    <string name="API_KEY_YT">AIzaSyBtSebTwZU2mmgbCAg0wXI9K9Sc42un7Ek</string>
+    <string name="TWITTER_KEY">bW1d6ggoOed4QA8JkEv3lbHTy</string>
+    <string name="TWITTER_SECRET">hyob6v449NIj6NHAdZWSbWaXyyKGd4RS0tHrip5ONkY7gE9Y7o</string>
+
+
+    <!-- Twitter -->
 
     <!-- Strings relacionados al inicio de sesión -->
     <string name="prompt_email">Correo</string>
@@ -20,8 +29,6 @@
         Contacts permissions are needed for providing email completions."
     </string>
 
-    <!-- Inicio Google-->
-    <string name="server_client_id">254526817018-fcun090paii06pe7d0n3ei7397vneu76.apps.googleusercontent.com</string>
 
     <!-- Button text -->
     <string name="btn_logout_from_google">Logout from Google</string>

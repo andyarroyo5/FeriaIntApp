@@ -2,6 +2,7 @@ package edu.udem.feriaint;
 
 import android.accounts.Account;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,7 +79,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                   empezaAplicacionFB(user);
+                  // empezaAplicacionFB(user);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -167,7 +168,6 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
                 if (result.isSuccess()) {
                     // Google Sign In was successful, authenticate with Firebase
                     GoogleSignInAccount account = result.getSignInAccount();
-                    firebaseAuthWithGoogle(account);
                     handleSignInResult(result);
 
                 } else {
@@ -199,6 +199,11 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
 
             Log.e("Inicio",String.valueOf(result.getStatus())+result.toString());
             Log.e("InicioSesion", "display name: " + acct.getDisplayName());
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+            String personPhoneURL = acct.getPhotoUrl().toString();
 
            // empezarAplicacionGoogle(acct);
 
@@ -206,7 +211,7 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
 
             //Initializing image loader
 
-           // firebaseAuthWithGoogle(acct);
+            firebaseAuthWithGoogle(acct);
 
            /* Intent main=new Intent(getApplicationContext(), MainActivity.class);
            main.putExtra("user ",acct.getDisplayName());
@@ -238,7 +243,12 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
     private GoogleApiClient buildGoogleAPIClient() {
 
 
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();*/
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -304,8 +314,19 @@ public class TwitterInicioSesion extends AppCompatActivity implements  View.OnCl
 
     private void cerrarS() {
 
-
         FirebaseAuth.getInstance().signOut();
+
+        if (mGoogleApiClient.isConnected()) {
+            // Google sign out
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            Log.e(TAG, "salir google");
+                        }
+                    });
+        }
+
 
     }
 

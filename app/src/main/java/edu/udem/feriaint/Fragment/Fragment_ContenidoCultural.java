@@ -93,8 +93,11 @@ public class Fragment_ContenidoCultural extends Fragment implements SwipeRefresh
     public void layoutAdapter(ArrayList<ContenidoCultural> listaContenidoCultural) throws ExecutionException, InterruptedException {
         if(listaContenidoCultural.isEmpty())
         {
-            listaContenidoCultural = MainActivity.repositorioJSON.getListaContenidoCultural(true);
+            listaContenidoCultural = MainActivity.repositorioJSON.getListaContenidoCultural(false);
         }
+
+        checarFavoritos();
+
         mContenidoCulturalAdapter = new ContenidoCulturalAdapter(listaContenidoCultural);
         //Especificar Adapter
         mRecyclerView.setAdapter(mContenidoCulturalAdapter);
@@ -131,11 +134,9 @@ public class Fragment_ContenidoCultural extends Fragment implements SwipeRefresh
 
             for (Tema t:listaTemasContCult) {
 
-                if (t.isSeleccionado())
-                {
                     if(cont.getTema().getId()==t.getId())
                         listaContenidoFiltrar.add(cont);
-                }
+
             }
 
         }
@@ -177,5 +178,24 @@ public class Fragment_ContenidoCultural extends Fragment implements SwipeRefresh
                 android.R.color.holo_red_light);
     }
 
+
+    public void checarFavoritos()
+    {
+
+        ArrayList<ContenidoCultural> listaFavoritos=MainActivity.currentUsuario.getListaContCultFavoritos();
+
+        for (ContenidoCultural cont:listaContenidoCultural) {
+
+            for (ContenidoCultural fav:listaFavoritos) {
+
+                if (cont.getId()==fav.getId())
+                {
+                    cont.setFavorito(true);
+                }
+
+            }
+
+        }
+    }
 
 }

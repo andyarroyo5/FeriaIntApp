@@ -3,6 +3,7 @@ package edu.udem.feriaint.Activities;
         import android.content.Intent;
         import android.graphics.drawable.ColorDrawable;
         import android.support.design.widget.Snackbar;
+        import android.support.v4.content.ContextCompat;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
@@ -308,22 +309,15 @@ public class TriviaActivity extends AppCompatActivity {
             //TODO: Llevar cuenta de trivias hechas para no agregar puntos
 
             onBackPressed();
-
-            /*Intent intent = new Intent(this,
-                    onBackPressed());
-            Bundle b = new Bundle();
-            b.putInt("puntos", puntosTotal); //puntos obtenidos
-            intent.putExtras(b); // Put your score to your next
-            startActivity(intent);*/
             finish();
         }
     }
     public void inicializarColorBoton()
     {
-        btn1.setBackgroundColor(getResources().getColor(android.R.color.white));
-        btn2.setBackgroundColor(getResources().getColor(android.R.color.white));
-        btn3.setBackgroundColor(getResources().getColor(android.R.color.white));
-        btn4.setBackgroundColor(getResources().getColor(android.R.color.white));
+        btn1.setBackgroundColor(ContextCompat.getColor(this,android.R.color.white));
+        btn2.setBackgroundColor(ContextCompat.getColor(this,android.R.color.white));
+        btn3.setBackgroundColor(ContextCompat.getColor(this,android.R.color.white));
+        btn4.setBackgroundColor(ContextCompat.getColor(this,android.R.color.white));
     }
 
 

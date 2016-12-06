@@ -65,20 +65,22 @@
                     android:layout_toEndOf="@+id/img_perfil"
                     tools:ignore="NestedWeights,ObsoleteLayoutParam"
                     android:layout_gravity="center_horizontal"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:text="Andrea Arroyo"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/txtUsuarioNombre"
                         android:textColor="@color/primary_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textAlignment="center"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -217,51 +219,71 @@
                     android:id="@+id/txtUsuarioCorreo"
                     tools:ignore="HardcodedText,UnusedAttribute" />
 
-                <TextView
-                    android:text="Carrera"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/lblCarrera"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    tools:ignore="HardcodedText,RtlHardcoded" />
+                    android:layout_height="match_parent"
+                    android:id="@+id/layout_UsuarioCarrera">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:background="#fff"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp"
-                    android:text="ITC"
-                    tools:ignore="HardcodedText,UnusedAttribute"
-                    android:id="@+id/txtUsuarioCarrera" />
+                    <TextView
+                        android:text="Carrera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lblCarrera"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        tools:ignore="HardcodedText,RtlHardcoded" />
 
-                <TextView
-                    android:text="Twitter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/lblTwitter"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    tools:ignore="HardcodedText,RtlHardcoded" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:background="#fff"
+                        android:clickable="true"
+                        android:elevation="4dp"
+                        android:padding="20dp"
+                        android:text="ITC"
+                        tools:ignore="HardcodedText,UnusedAttribute"
+                        android:id="@+id/txtUsuarioCarrera" />
 
-                <TextView
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:background="#fff"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp"
-                    android:text="AndreaArroyo10"
-                    tools:ignore="HardcodedText,UnusedAttribute"
-                    android:id="@+id/txtUsuarioTwitter" />
+                    android:layout_height="match_parent"
+                    android:id="@+id/layout_UsuarioTwitter"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:text="Twitter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lblTwitter"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        tools:ignore="HardcodedText,RtlHardcoded"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:background="#fff"
+                        android:clickable="true"
+                        android:elevation="4dp"
+                        android:padding="20dp"
+                        android:text="AndreaArroyo10"
+                        tools:ignore="HardcodedText,UnusedAttribute"
+                        android:id="@+id/txtUsuarioTwitter"
+                        android:visibility="visible" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -270,7 +292,8 @@
                 android:layout_height="match_parent"
                 tools:ignore="InefficientWeight,InvalidId"
                 android:id="@+id/layout_Favoritos"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_weight="1">
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"

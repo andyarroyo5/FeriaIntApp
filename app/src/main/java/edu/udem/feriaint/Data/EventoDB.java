@@ -83,8 +83,6 @@ public class EventoDB {
         close();
     }
 
-
-
     public void eliminarFavoritos(Evento evento)
     {
         open();

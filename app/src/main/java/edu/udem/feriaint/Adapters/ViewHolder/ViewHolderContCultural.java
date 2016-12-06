@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import edu.udem.feriaint.Activities.Detalle_ContCultural;
 import edu.udem.feriaint.Activities.MainActivity;
 import edu.udem.feriaint.Activities.TriviaActivity;
+import edu.udem.feriaint.Data.ContCultBD;
 import edu.udem.feriaint.Modelos.ContenidoCultural;
 import edu.udem.feriaint.R;
 
@@ -33,6 +34,7 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
 
     private CardView cv_cont_cult;
 
+    private ContCultBD contCultBD;
 
     private ContenidoCultural contenidoCultural;
 
@@ -232,7 +234,7 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 ImageButton fav= (ImageButton) v.findViewById(R.id.contenido_agregar_favoritos);
-
+                contCultBD=new ContCultBD(v.getContext());
 
                 if (contenidoCultural.isFavorito())
                 {
@@ -240,8 +242,16 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
 
                     fav.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.icons));
                     //fav.setColorFilter(R.color.icons,  PorterDuff.Mode.SRC_IN);
-                    MainActivity.currentUsuario.getListaContCultFavoritos().remove(contenidoCultural);
+
+                    int index=MainActivity.currentUsuario.getListaContCultFavoritos().indexOf(contenidoCultural);
+                    Log.e(TAG, "REMOVE "+contenidoCultural.getTitulo()+index);
+                    //MainActivity.currentUsuario.getListaContCultFavoritos().remove(contenidoCultural);
+                    MainActivity.currentUsuario.getListaContCultFavoritos().remove(index);
+
                     contenidoCultural.setFavorito(false);
+                   // contCultBD.eliminarFavoritos(contenidoCultural);
+                    //contCultBD.setContenidoCulturalFav(contenidoCultural,false);
+
 
                 }
                 else {
@@ -250,6 +260,7 @@ public class ViewHolderContCultural extends RecyclerView.ViewHolder {
                     // fav.setColorFilter(R.color.colorAccent,  PorterDuff.Mode.SRC_IN);
                     MainActivity.currentUsuario.getListaContCultFavoritos().add(contenidoCultural);
                     contenidoCultural.setFavorito(true);
+                    //contCultBD.insertarContCult(contenidoCultural);
                 }
 
 
