@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarTitulo=(TextView) findViewById(R.id.appTitulo);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setCurrentUser();
         setLayoutMain();
 
 
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        setCurrentUser();
+
         // upgradeBD();
 
 
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
              msg = "@" + bUsuario.getString("user")+ " iniciaste sesión por google!";
+
 
             //currentUsuario.setNombre(bUsuario.getString("user"));
             //currentUsuario.setCorreo(bUsuario.getString("correo"));
