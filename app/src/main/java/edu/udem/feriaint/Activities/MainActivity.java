@@ -1,5 +1,6 @@
 package edu.udem.feriaint.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,6 +33,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     //clase JSON
     private EdicionJSON edicionJSON;
+    private ProgressDialog mProgressDialog;
 //listas que obtienen info de JSON
     public static Usuario currentUsuario;
     public static ArrayList<Evento> listaEventos;
@@ -96,16 +99,19 @@ public class MainActivity extends AppCompatActivity {
         TAG=this.getClass().getSimpleName();
 
         setContentView(R.layout.activity_main);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitulo=(TextView) findViewById(R.id.appTitulo);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setLayoutMain();
 
 
-        upgradeBD();
         repositorioJSON=new GetJSON(this);
         try {
+
             edicion= MainActivity.repositorioJSON.getEdicionJSON();
            // MainActivity.repositorioJSON.getTemasEventos(false);
         } catch (ExecutionException e) {
@@ -113,12 +119,28 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         setCurrentUser();
-        setLayoutMain();
+        // upgradeBD();
+
 
     }
 
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -131,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void setCurrentUser()
     {
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         currentUsuario=new Usuario();
         Intent tIntent=getIntent();
         Bundle bUsuario=tIntent.getExtras();
@@ -166,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
              msg = "@" + bUsuario.getString("user") + " fb!";
           //  currentUsuario.setTwitter(bUsuario.getString("user"));
 
-            currentUsuario.setNombre(firebaseUser.getDisplayName());
+
+            currentUsuario.setNombre(firebaseUser.getDisplayName()!=null? firebaseUser.getDisplayName(): bUsuario.getString("user"));
             currentUsuario.setCorreo(firebaseUser.getEmail());
             currentUsuario.setImgPerfil(firebaseUser.getPhotoUrl());
 
@@ -176,6 +197,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
              msg = "@" + bUsuario.getString("user")+ " iniciaste sesión por google!";
+
+            //currentUsuario.setNombre(bUsuario.getString("user"));
+            //currentUsuario.setCorreo(bUsuario.getString("correo"));
+            //currentUsuario.setImgPerfil(Uri.parse(bUsuario.getString("img")));
         }
 
         //Add User BD
@@ -355,16 +380,19 @@ public class MainActivity extends AppCompatActivity {
     }
     }
 
-    public void upgradeBD()
-    {
-        try {
+    public void upgradeBD() throws ParseException {
 
-          bdHandler=new BDHandler(this);
-          bdHandler.onUpgrade(bdHandler.getReadableDatabase(),bdHandler.getBDVersion(), bdHandler.getBDVersion()+1);
-            Log.e(TAG, "UPGRADE db "+bdHandler.getBDVersion());
-        } catch (Exception e) {
-            Log.e(TAG, "UPGRADE db "+e.toString());
-       }
+            try {
+
+                bdHandler=new BDHandler(this);
+                bdHandler.onUpgrade(bdHandler.getReadableDatabase(),bdHandler.getBDVersion(), bdHandler.getBDVersion()+1);
+                Log.e(TAG, "UPGRADE db "+bdHandler.getBDVersion());
+            } catch (Exception e) {
+                Log.e(TAG, "UPGRADE db "+e.toString());
+            }
+
+
+
     }
 
     //Menu Layout y caso de opciones
@@ -386,17 +414,7 @@ public class MainActivity extends AppCompatActivity {
                     acercaDe.putExtra("pais", edicion.getPais());
                     acercaDe.putExtra("fechaInicio", edicion.getFechaInicio());
                     acercaDe.putExtra("fechaFinal", edicion.getFechaFinal());
-
-
-                break;
-
-
-            case R.id.ejemplo:
-
-
-                Intent ejemplo = new Intent(this, EjemploActivity.class);
-                startActivity(ejemplo);
-
+                    startActivity(acercaDe);
 
                 break;
         }
@@ -421,6 +439,8 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         Log.v(TAG, "-- ON STOP --");
+
+
     }
 
     @Override

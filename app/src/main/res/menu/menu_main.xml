@@ -18,12 +18,6 @@
         android:title="Compose">
     </item>-->
 
-    <item
-        android:id="@+id/ejemplo"
-        android:orderInCategory="100"
-        android:title="Ejemplo"
-        app:showAsAction="never"
-        tools:ignore="HardcodedText" />
 
 
     <item

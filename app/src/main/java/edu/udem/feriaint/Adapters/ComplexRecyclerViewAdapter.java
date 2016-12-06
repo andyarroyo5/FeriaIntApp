@@ -94,10 +94,9 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 //        Log.e("COMPLEX", evento.getTitulo());
 
         vh.setEvento(evento);
+        vh.getEvento_portada().setBackgroundColor(evento.getTema().getColor());
         vh.getTitulo().setText(evento.getTitulo());
         vh.getLugar().setText(evento.getLugar());
-
-
         vh.getAgregarFavoritos().setVisibility(View.GONE);
         vh.getCompartir().setVisibility(View.GONE);
         vh.getTwitter().setVisibility(View.GONE);
@@ -116,7 +115,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
        // Log.e("COMPLEX",contcult.getTitulo());
         vh3.setContenidoCultural(contcult);
         vh3.getTitulo().setText(contcult.getTitulo());
-        //vh3.getImgPortada().setImageResource(contcult.getImg());
+        vh3.setPortada(vh3.itemView);
         vh3.verDetalleContCult();
         vh3.getAgregarFavoritos().setVisibility(View.GONE);
         vh3.getCompartir().setVisibility(View.GONE);

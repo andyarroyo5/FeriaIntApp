@@ -36,7 +36,7 @@ import edu.udem.feriaint.Fragment.Fragment_Perfil;
 import edu.udem.feriaint.Modelos.Usuario;
 import edu.udem.feriaint.R;
 
-public class AdminPerfil_Activity extends AppCompatActivity {
+public class AdminPerfil_Activity extends AppCompatActivity implements  View.OnClickListener {
 
     EditText nombre;
     TextView correo;
@@ -80,25 +80,30 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         carrera.setText(MainActivity.currentUsuario.getCarrera());
         twitter.setText(MainActivity.currentUsuario.getTwitter());
         signInTwitter = (TwitterLoginButton) findViewById(R.id.signin_twitter);
+        sign_out=(Button) findViewById(R.id.sign_out_twitter);
+
+        signInTwitter.setOnClickListener(this);
+
 
         signInTwitter.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 // The TwitterSession is also available through:
-                Twitter.getInstance().core.getSessionManager().getActiveSession();
+                TwitterSession session = result.data;
                 String output = "Status: " +
                         "Your login was successful " +
-                        result.data.getUserName() +
+                        session.getUserName() +
                         "\nAuth Token Received: " +
-                        result.data.getAuthToken().token;
+                        session.getAuthToken().token;
 
                 Toast.makeText(getApplicationContext(), output, Toast.LENGTH_SHORT).show();
 
-                Log.e(TAG, "TWIITER CONECTADOO"+result);
+                Log.e(TAG, "TWITTER CONECTADOO"+result);
                 MainActivity.currentUsuario.setTwitter(result.data.getUserName());
                 Log.e(TAG,"TWITTER 2"+result.data.getUserName());
                 twitter.setText(result.data.getUserName());
                 twitter.setVisibility(View.VISIBLE);
+                sign_out.setVisibility(View.VISIBLE);
                 signInTwitter.setVisibility(View.GONE);
 
 
@@ -109,15 +114,12 @@ public class AdminPerfil_Activity extends AppCompatActivity {
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
             }
 
-
         });
-
-
 
 
         if(MainActivity.currentUsuario.getTwitter()!=null)
         {
-            sign_out=(Button) findViewById(R.id.sign_out_twitter);
+            signInTwitter.setVisibility(View.GONE);
             sign_out.setVisibility(View.VISIBLE);
             layout_twitter.setVisibility(View.VISIBLE);
         }
@@ -168,15 +170,13 @@ public class AdminPerfil_Activity extends AppCompatActivity {
 
         Intent resultInfo=new Intent(this, Fragment_Perfil.class);
 
-
-
         UsuarioDB usuarioDB=new UsuarioDB(this);
         //Get usuario?
 
         MainActivity.currentUsuario.setNombre(nombre.getText().toString());
         MainActivity.currentUsuario.setCarrera(carrera.getText().toString());
        // MainActivity.currentUsuario.setTwitter(twitter.getText().toString());
-        if(!imgPath.equals(""))
+        if(imgPath!=null &&!imgPath.equals(""))
         {
             MainActivity.currentUsuario.setImgPerfil(imgPath);
 
@@ -207,6 +207,10 @@ public class AdminPerfil_Activity extends AppCompatActivity {
             btn_quitar_img.setVisibility(View.VISIBLE);
             btn_img.setVisibility(View.GONE);
 
+
+        }
+        else {
+            signInTwitter.onActivityResult(requestCode,resultCode,data);
         }
 
     }
@@ -221,12 +225,7 @@ public class AdminPerfil_Activity extends AppCompatActivity {
 
     public void agregarImg(View view)
     {
-       /* Glide.with(this)
-                .load(imgPath)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(img_perfil);
-        img_perfil.setVisibility(View.VISIBLE);*/
-        getGaleria();
+      getGaleria();
 
     }
 
@@ -270,6 +269,11 @@ public class AdminPerfil_Activity extends AppCompatActivity {
         signInTwitter.setVisibility(View.VISIBLE);
         sign_out.setVisibility(View.GONE);
 
+
+    }
+
+    @Override
+    public void onClick(View view) {
 
     }
 }

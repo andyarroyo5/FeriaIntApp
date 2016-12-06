@@ -114,8 +114,6 @@ public class Fragment_Perfil extends Fragment {
 
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -147,11 +145,6 @@ public class Fragment_Perfil extends Fragment {
         layoutTwitter=(LinearLayout)rootView.findViewById(R.id.layout_UsuarioTwitter);
 
 
-
-
-
-
-
         setUsuarioInfo();
 
         btnFavoritoPerfil.setOnClickListener(new View.OnClickListener()
@@ -165,7 +158,6 @@ public class Fragment_Perfil extends Fragment {
                 lytFav.setVisibility(LinearLayout.VISIBLE);
                 lytInfo.setVisibility(LinearLayout.GONE);
                 lytEventos.setVisibility(LinearLayout.GONE);
-
 
                 //Recycler Viewer
 
@@ -341,9 +333,6 @@ public class Fragment_Perfil extends Fragment {
 
             layoutTwitter.setVisibility(View.VISIBLE);
         }
-
-
-
 
         usuarioPuntos.setText(String.valueOf(MainActivity.currentUsuario.getPuntos()));
 

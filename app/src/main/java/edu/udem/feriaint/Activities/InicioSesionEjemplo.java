@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.twitter.sdk.android.Twitter;
 
 import edu.udem.feriaint.R;
 
@@ -93,7 +94,10 @@ public class InicioSesionEjemplo extends AppCompatActivity implements
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
-                    empezarApp(user);
+                    if(!cerrarS)
+                    {
+                        empezarApp(user);
+                    }
 
 
                 } else {
@@ -108,6 +112,8 @@ public class InicioSesionEjemplo extends AppCompatActivity implements
 
 
     }
+
+
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -221,6 +227,9 @@ public class InicioSesionEjemplo extends AppCompatActivity implements
                         }
                     });
 
+
+        Twitter.getSessionManager().clearActiveSession();
+        Twitter.logOut();
         cerrarS=false;
         signIn();
 
@@ -228,21 +237,7 @@ public class InicioSesionEjemplo extends AppCompatActivity implements
     }
 
 
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
 
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
-    }
 
     @Override
     public void onClick(View v) {
